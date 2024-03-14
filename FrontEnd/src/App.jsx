@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./Index";
 import Nav from "./component/Navigator";
@@ -22,8 +23,36 @@ import Friends from "./Friends";
 import ViewActivity from "./component/View-Activity";
 import FAQs from "./FAQs";
 
+
 const App = () => {
-  // const isAuthenticated = true;
+  // const [isAdmin, setIsAdmin] = useState(false);
+  // const [isAuth, setIsAuth] = useState(false);
+
+  // useEffect(() => {
+  //   const fetchUserRole = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:8081/api/check-user-role', { withCredentials: true });
+  //       setIsAdmin(response.data);
+  //     } catch (err) {
+  //       console.error('Ошибка при получении роли пользователя:', err);
+  //     }
+  //   };
+
+  //   fetchUserRole();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchUserRole = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:8081/api/validation', { withCredentials: true });
+  //       setIsAuth(response.data);
+  //     } catch (err) {
+  //       console.error('Ошибка при получении роли пользователя:', err);
+  //     }
+  //   };
+
+  //   fetchUserRole();
+  // }, []);
 
   return (
     <Router>
@@ -34,10 +63,7 @@ const App = () => {
         <Route path="/activity" element={<Activity />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/tools" element={<Tools />} />
-
         <Route path="/user-profile" element={<UserProfile />} />
-        {/* <Route path="/user-profile" element={isAuthenticated ? <UserProfile /> : <Navigate to="/sign-in" />} /> */}
-
         <Route path="/faq" element={<FAQs />} />
         <Route path="/view-activity/:activityId" element={<ViewActivity />} />
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
@@ -48,7 +74,7 @@ const App = () => {
         <Route path="/password-reset-email" element={<PasswordResetEmail />} />
         <Route path="/token-validation" element={<TokenValidation />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/admin-page" element={<AdminPage />} />
+        {/* <Route path="/admin-page" element={isAdmin ? <AdminPage /> : <Navigate to="/" />} /> */}
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         

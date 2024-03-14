@@ -5,7 +5,7 @@ export default function App() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:8081/api/view-users')
+            const response = await axios.get('http://localhost:8081/api/view-users', { withCredentials: true })
             setData(response.data);
         } catch (err) {
             console.error(err);

@@ -30,4 +30,20 @@ function authenticateToken(req, res, next) {
   }
 }
 
-module.exports = { authenticateToken };
+function validateParamsAndToken(req, res, next) {
+  // Проверяем наличие токена в куках
+  const token = req.cookies.token;
+  if (!token) {
+      return res.redirect('/login'); // Если токен отсутствует, перенаправляем пользователя на страницу входа
+  }
+
+  // Проверяем валидность токена
+  jwt.verify(token, jwtSecretKey, (err, decoded) => {
+      if (err) {
+          return res.redirect('/login'); // Если токен недействителен, перенаправляем пользователя на страницу входа
+      }
+      next();
+  });
+}
+
+module.exports = { authenticateToken, validateParamsAndToken };

@@ -1,13 +1,26 @@
-function checkRole(requiredRoles = []) {
-    return (req, res, next) => {
-      // Проверяем, имеет ли пользователь необходимые роли
-      if (requiredRoles.length > 0 && !requiredRoles.some(role => req.user.role === role)) {
-        return res.status(403).json({ Message: 'Forbidden: Недостаточно прав' });
+const jwt = require('jsonwebtoken');
+const jwtSecretKey = process.env.JWT_SECRET_KEY || 'default-secret-key';
+
+function isAdmin(req, res, next) {
+    const token = req.cookies.token;
+    
+    if (!token) {
+      return res.status(401).json({ message: 'Не авторизован: Требуется токен авторизации' });
+    }
+  
+    jwt.verify(token, jwtSecretKey, (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ message: 'Доступ запрещен: Неверный токен или время его действия истекло' });
       }
-  
-      next();
-    };
-  }
-  
-  module.exports = { checkRole };
-  
+      
+      if (decoded.role === 'administrador') { 
+        req.user = decoded;
+        next();
+      } else {
+        return res.status(403).json({ message: 'Доступ запрещен: Только администраторы имеют доступ' });
+      }
+    });
+}
+
+
+module.exports = { isAdmin };

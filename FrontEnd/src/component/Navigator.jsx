@@ -5,6 +5,7 @@ import axios from 'axios';
 export default function Nav() {
   const [auth, setAuth] = useState(false);
   const [userProfile, setUserProfile] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -200,7 +201,6 @@ export default function Nav() {
 
                       <div className="dropdown-divider"></div>
 
-                      <Link to="/admin-page" className="dropdown-item text-danger"> AdminPage </Link>
                       <Link to="/faq" className="dropdown-item"> Apoio </Link>
 
                       <div className="dropdown-divider"></div>
@@ -217,7 +217,7 @@ export default function Nav() {
                     <div>
                       <Link to="/sign-in" className="navbar-dropdown-account-wrapper">
                         <div className="avatar avatar-sm avatar-circle">
-                          <img className="avatar-img" src="../assets/img/160x160/img1.jpg" alt="Image Description" />
+                          <img className="avatar-img" src="../assets/avatar.png" alt="Image Description" />
                         </div>
                       </Link>
                     </div>

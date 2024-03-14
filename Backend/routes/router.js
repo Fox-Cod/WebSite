@@ -13,7 +13,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Токен & Проверка авторизаций
-const { authenticateToken } = require('../middleware/authMiddleware');
+const { authenticateToken, validateParamsAndToken } = require('../middleware/authMiddleware');
+const { isAdmin } = require('../middleware/roleMiddleware')
+
 
 const dataController = require('../controllers/DataController');
 const profileController = require('../controllers/ProfileController');
@@ -38,7 +40,6 @@ router.get('/view-teams/:teamId', teamController.getTeamAndMembers)
 router.post('/create-team', authenticateToken, teamController.createTeam)
 router.post('/add-member-to-team/:teamId', teamController.addMemberToTeam)
 router.post('/add-activity-team/:teamId', authenticateToken, teamController.postActivityTeam)
-//                              POST & GET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!😀😀😀
 
 // Другое
 router.get('/view-data', dataController.getSchoolAndGroupData)
@@ -47,11 +48,17 @@ router.post('/send-email', emailController.sendEmail);
 router.get('/token-validation/:token', authController.tokenValidation)
 router.post('/reset-password/:token', authController.resetPassword)
 
+// Проверка ролей
+router.get('/check-user-role', isAdmin, (req, res) => {
+  res.json({ message: 'Пользователь является администратором', user: req.user });
+});
+
+router.get('/validation', validateParamsAndToken)
 
 // router.post('/add-tool', dataController.postTools)
 router.post('/add-tool', upload.single('icone'), dataController.postTools);
 router.get('/view-tools', dataController.getTools)
-router.get('/view-users', dataController.getProfileUsers)
+router.get('/view-users', isAdmin, dataController.getProfileUsers)
 
 // Активности
 router.get('/activity', activityController.getAllActivity)

@@ -5,8 +5,7 @@ const Professor = require('../models/Professor');
 const jwtSecretKey = process.env.JWT_SECRET_KEY || 'default-secret-key';
 
 async function login(req, res) {
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ Message: 'Bad Request: Необходимы email и password' });
@@ -20,16 +19,12 @@ async function login(req, res) {
       const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
       if (passwordMatch) {
-        const { id_professor, email } = professor;
-        let role = 'utilizador';
-      
-        if (email === 'mrzerox228@gmail.com') {
-          role = 'administrador';
-        }
+        const { id_professor, role } = professor;
 
         const token = jwt.sign({ id_professor, role }, jwtSecretKey, { expiresIn: '7day' });
 
-        res.cookie('token', token); // Добавление токен в куки
+        // Сохранение токена в куки
+        res.cookie('token', token, { httpOnly: true, expiresIn: 604800000 }); // 604800000 миллисекунд = 7 дней
         return res.json({ Status: 'Success', id_professor, role });
       } else {
         return res.status(401).json({ Message: 'Unauthorized: Неверные учетные данные' });
@@ -43,18 +38,14 @@ async function login(req, res) {
   }
 }
 
+
 async function registration(req, res) {
   try {
     const { name, email, password, group, escola } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    let role = 'utilizador';
-
-    // Проверяем, является ли пользователь администратором по электронной почте
-    if (email === 'admin@gmail.com') {
-      role = 'administrador';
-    }
+    const role = 'utilizador';
 
     const newProfessor = await Professor.create({
       nome_professor: name,
@@ -121,6 +112,8 @@ async function resetPassword(req, res) {
     res.status(500).json({ message: 'Произошла ошибка при сбросе пароля' });
   }
 };
+
+
 
 
 module.exports = { login, registration, tokenValidation, resetPassword };

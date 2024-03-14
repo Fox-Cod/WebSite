@@ -16,8 +16,8 @@ export default function Index() {
           <div className="row justify-content-center">
             <div className="col-sm-8 text-center">
               <div className="text-overlay mt-10">
-                <h2 className="text-body mb-4 lead display-3">TeamTeach</h2>
-                <p className="lead display-5 text-body">
+                <h2 className="text-white mb-4 lead display-3">TeamTeach</h2>
+                <p className="lead display-5 text-white">
                 Mergulhe num mundo de conhecimentos no nosso sítio Web, que inclui materiais educativos para melhorar a sua experiência em vários domínios
                 </p>
                 <Link to="/form" className="btn btn-primary btn-lg rounded-pill">

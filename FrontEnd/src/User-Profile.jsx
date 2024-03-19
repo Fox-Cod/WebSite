@@ -239,7 +239,7 @@ export default function UserProfile() {
                               <div className="step-content-wrapper">
                                 <span className="step-icon step-icon-pseudo step-icon-soft-dark"></span>
                                 <div className="step-content">
-                                  <Link className="text-dark" to={`/view-activity/${d.id_professor}`}>{d.titulo}</Link>
+                                  <Link className="text-dark" to={`/view-activity/${d.id}`}>{d.titulo}</Link>
                                   <p className="fs-5 mb-1"> {d.descricao}<br />
                                     <span className="badge bg-soft-primary text-primary rounded-pill"><span className="legend-indicator bg-primary"></span>{d.disciplinas.nome_disciplina}</span>
                                     <span className="badge bg-soft-primary text-success rounded-pill"><span className="legend-indicator bg-success"></span>{d.nivel_ensino.nome_ensino}</span>

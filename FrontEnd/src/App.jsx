@@ -25,34 +25,23 @@ import FAQs from "./FAQs";
 
 
 const App = () => {
-  // const [isAdmin, setIsAdmin] = useState(false);
-  // const [isAuth, setIsAuth] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState('');
 
-  // useEffect(() => {
-  //   const fetchUserRole = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:8081/api/check-user-role', { withCredentials: true });
-  //       setIsAdmin(response.data);
-  //     } catch (err) {
-  //       console.error('Ошибка при получении роли пользователя:', err);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8081/api/user-info', { withCredentials: true });
+        setIsAuthenticated(true);
+        setUserRole(response.data.role);
+      } catch (error) {
+        setIsAuthenticated(false);
+        setUserRole('');
+      }
+    };
 
-  //   fetchUserRole();
-  // }, []);
-
-  // useEffect(() => {
-  //   const fetchUserRole = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:8081/api/validation', { withCredentials: true });
-  //       setIsAuth(response.data);
-  //     } catch (err) {
-  //       console.error('Ошибка при получении роли пользователя:', err);
-  //     }
-  //   };
-
-  //   fetchUserRole();
-  // }, []);
+    fetchUserData();
+  }, []);
 
   return (
     <Router>
@@ -74,7 +63,9 @@ const App = () => {
         <Route path="/password-reset-email" element={<PasswordResetEmail />} />
         <Route path="/token-validation" element={<TokenValidation />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        {/* <Route path="/admin-page" element={isAdmin ? <AdminPage /> : <Navigate to="/" />} /> */}
+
+        {isAuthenticated && userRole === 'administrador' ? ( <Route path="/admin-page" element={<AdminPage />} /> ) : ( <Route path="/admin-page" element={<Navigate to="/" />} /> )}
+        
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         

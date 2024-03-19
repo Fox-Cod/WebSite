@@ -165,14 +165,14 @@ export default function Index() {
                             <div className="row">
                                 <div className="col-lg-6">
                                     <div className="form-group">
-                                        <label for="name">Nome</label>
+                                        <label htmlFor="name">Nome</label>
                                         <input name="name" id="name" type="text" className="form-control"
                                             placeholder="O seu nome..."/>
                                     </div>
                                 </div>
                                 <div className="col-lg-6">
                                     <div className="form-group">
-                                        <label for="email">E-mail</label>
+                                        <label htmlFor="email">E-mail</label>
                                         <input name="email" id="email" type="email" className="form-control"
                                             placeholder="O seu e-mail..."/>
                                     </div>
@@ -181,7 +181,7 @@ export default function Index() {
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div className="form-group">
-                                        <label for="comments">Mensagem</label>
+                                        <label htmlFor="comments">Mensagem</label>
                                         <textarea name="comments" id="comments" rows="4" className="form-control"
                                             placeholder="A sua mensagem..."></textarea>
                                     </div>

@@ -13,8 +13,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Токен & Проверка авторизаций
-const { authenticateToken, validateParamsAndToken } = require('../middleware/authMiddleware');
-const { isAdmin } = require('../middleware/roleMiddleware')
+const { authenticateToken } = require('../middleware/authMiddleware');
 
 
 const dataController = require('../controllers/DataController');
@@ -48,17 +47,28 @@ router.post('/send-email', emailController.sendEmail);
 router.get('/token-validation/:token', authController.tokenValidation)
 router.post('/reset-password/:token', authController.resetPassword)
 
-// Проверка ролей
-router.get('/check-user-role', isAdmin, (req, res) => {
-  res.json({ message: 'Пользователь является администратором', user: req.user });
-});
-
-router.get('/validation', validateParamsAndToken)
 
 // router.post('/add-tool', dataController.postTools)
 router.post('/add-tool', upload.single('icone'), dataController.postTools);
 router.get('/view-tools', dataController.getTools)
-router.get('/view-users', isAdmin, dataController.getProfileUsers)
+
+
+router.get('/view-users', authenticateToken, dataController.getProfileUsers, (req, res) => {
+  if (req.user.role === 'administrador') {
+    res.json({ message: 'Добро пожаловать на страницу администратора!' });
+  } else {
+    res.status(403).json({ message: 'Доступ запрещен: Только администраторы имеют доступ' });
+  }
+});
+
+router.get('/user-info', authenticateToken, (req, res) => {
+  const user = req.user;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Не удалось получить информацию о пользователе' });
+  }
+  res.json({ id: user.id, role: user.role });
+});
 
 // Активности
 router.get('/activity', activityController.getAllActivity)

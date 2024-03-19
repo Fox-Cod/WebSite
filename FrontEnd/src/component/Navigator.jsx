@@ -5,16 +5,14 @@ import axios from 'axios';
 export default function Nav() {
   const [auth, setAuth] = useState(false);
   const [userProfile, setUserProfile] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Функция для определения, является ли текущий путь главной страницей
   const isHomePage = () => {
     return location.pathname === '/';
   };
 
-  // Обработчик выхода из системы
+
   const handleLogout = async (e) => {
     e.preventDefault();
 
@@ -30,23 +28,24 @@ export default function Nav() {
     }
   }
 
-  // Получение данных о пользователе
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/api/profile', { withCredentials: true });
-      setUserProfile(response.data.profile);
-      setAuth(true);
-    } catch (err) {
-      setAuth(false);
-    }
-  }
-
-  // Загрузка данных о пользователе при монтировании компонента
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [profileResponse, roleResponse] = await Promise.all([
+          axios.get('http://localhost:8081/api/profile', { withCredentials: true }),
+        ]);
+  
+        setUserProfile(profileResponse.data.profile);
+        setAuth(true)
+      } catch (err) {
+        setAuth(false)
+        console.log(err)
+      }
+    };
+  
     fetchData();
   }, []);
 
-  // Обработчик прокрутки страницы
   const handleScroll = () => {
     const scrollTop = window.pageYOffset;
     const navbar = document.getElementById('navbar');
@@ -137,7 +136,7 @@ export default function Nav() {
                                         <label className="form-check-label" htmlFor="notificationCheck1"></label>
                                         <span className="form-check-stretched-bg"></span>
                                       </div>                           
-                                      <img className="avatar avatar-sm avatar-circle" src="./assets/img/160x160/img3.jpg" alt="Descrição da Imagem" />
+                                      {/* <img className="avatar avatar-sm avatar-circle" src="./assets/img/160x160/img3.jpg" alt="Descrição da Imagem" /> */}
                                     </div>
 
                                     <div className="col ms-n2">
@@ -199,6 +198,8 @@ export default function Nav() {
                       <Link to="/user-profile-settings" className="dropdown-item"> Definições </Link>
                       <Link to="/team-list" className="dropdown-item"> Equipa </Link>
 
+                      {userProfile.role == "administrador" ? <Link to="/admin-page" className="dropdown-item text-primary"> adminPage </Link> : ""}
+                      
                       <div className="dropdown-divider"></div>
 
                       <Link to="/faq" className="dropdown-item"> Apoio </Link>
@@ -217,7 +218,7 @@ export default function Nav() {
                     <div>
                       <Link to="/sign-in" className="navbar-dropdown-account-wrapper">
                         <div className="avatar avatar-sm avatar-circle">
-                          <img className="avatar-img" src="../assets/avatar.png" alt="Image Description" />
+                          <img className="avatar-img" src="../assets/default-avatar-profile-icon.jpg" alt="Image Description" />
                         </div>
                       </Link>
                     </div>

@@ -211,10 +211,11 @@ export default function SignUp() {
                     <span className="invalid-feedback">{formErrors.escola}</span>
                   </div>
 
-                  <p className="text-center">Já tem uma conta?? <Link className="link" to="/sign-in">Clique aqui</Link></p>
+                  <p className="text-center">Já tem uma conta? <Link className="link" to="/sign-in">Clique aqui</Link></p>
                   <div className="d-grid">
                     <button type="submit" className="btn btn-primary btn-lg">Sign in</button>
                   </div>
+                  <p className="text-center mt-2">Está a faltar alguma coisa? <Link className="link" to="#">Diga-nos</Link></p>
                 </form>
               </div>
             </div>

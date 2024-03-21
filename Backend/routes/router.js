@@ -47,13 +47,9 @@ router.get('/token-validation/:token', authController.tokenValidation)
 router.post('/reset-password/:token', authController.resetPassword)
 
 
-
 router.post('/upload', upload.single('file'), dataController.postResourcesFiles)
 router.get('/files', dataController.getResourcesFiles)
 router.get('/files/:filename', dataController.downloadResourcesFiles);
-
-
-
 
 router.post('/add-tool', upload.single('icone'), dataController.postTools);
 router.get('/view-tools', dataController.getTools)

@@ -99,7 +99,7 @@ export default function Team() {
                             <div className="col-sm mb-0 mb-sm-0">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb breadcrumb-no-gutter pt-3">
-                                        <li className="breadcrumb-item"><a className="breadcrumb-link">Equipa</a></li>
+                                        <li className="breadcrumb-item"><Link to={`/team/${teamData.id_equipa}`}>Equipa - {teamData.id_equipa}</Link></li>
                                     </ol>
                                 </nav>
 

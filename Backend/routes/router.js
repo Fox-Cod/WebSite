@@ -15,7 +15,6 @@ const upload = multer({ storage: storage });
 // Токен & Проверка авторизаций
 const { authenticateToken } = require('../middleware/authMiddleware');
 
-
 const dataController = require('../controllers/DataController');
 const profileController = require('../controllers/ProfileController');
 const activityController = require('../controllers/ActivityController');
@@ -48,10 +47,16 @@ router.get('/token-validation/:token', authController.tokenValidation)
 router.post('/reset-password/:token', authController.resetPassword)
 
 
-// router.post('/add-tool', dataController.postTools)
+
+router.post('/upload', upload.single('file'), dataController.postResourcesFiles)
+router.get('/files', dataController.getResourcesFiles)
+router.get('/files/:filename', dataController.downloadResourcesFiles);
+
+
+
+
 router.post('/add-tool', upload.single('icone'), dataController.postTools);
 router.get('/view-tools', dataController.getTools)
-
 
 router.get('/view-users', authenticateToken, dataController.getProfileUsers, (req, res) => {
   if (req.user.role === 'administrador') {

@@ -1,8 +1,31 @@
-import React from 'react'
-import { NavForm } from './component/Other';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { NavForm, AddAndSearchResources } from './component/Other';
 import { Link } from "react-router-dom";
 
 export default function Resources() {
+  const [files, setFiles] = useState([]);
+
+  useEffect(() => {
+    // Получаем список файлов при загрузке компонента
+    const fetchFiles = async () => {
+      try {
+        const response = await axios.get('http://localhost:8081/api/files');
+        setFiles(response.data);
+      } catch (error) {
+        console.error('Error fetching files: ', error);
+      }
+    };
+
+    fetchFiles();
+  }, []);
+
+  const getIconPath = fileType => {
+    const fileExtension = fileType.split('/')[1];
+    return `/assets/svg/brands/${fileExtension}.svg`;
+  };
+
+  
   return (
     <div>
         <div>
@@ -16,36 +39,35 @@ export default function Resources() {
                 </ol>
               </nav>             
           </div>
-          <Link className="btn btn-primary" to="" data-toggle="modal">
-            <i className="bi-building"></i> Add Resources
-          </Link>
+          <AddAndSearchResources />
 
           {/* Recursos */}
+      {files.map(file => (
           <div className="my-3 p-3 bg-body rounded shadow-sm">
-            <h6 className="border-bottom pb-2 mb-0">Recursos</h6>
             <div className="d-flex text-body-secondary pt-3">
-              <img src="../assets/img/160x160/img1.jpg" alt="User Avatar" className="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" />
+              <img src="../assets/img/160x160/img1.jpg" alt="User Avatar" className="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" />            
               <div className="pb-3 mb-0 small lh-sm border-bottom w-100">
                 <div className="d-flex justify-content-between">
-                  <h5 className="mb-1"><Link to="/"> Bob Dean</Link></h5>
+                  <h5 className="mb-1"><Link to="/">🐐</Link></h5>
                 </div>
 
                 <div className="content">
                     <ul className="list-group">
                     {/* Item */}
-                    <li className="list-group-item">
+                    
+                    <li key={file.id} className="list-group-item">
                         <div className="row align-items-center">
                         <div className="col-auto">
-                            <img className="avatar avatar-xs avatar-4x3" src="/" alt="Image Description" />
+                            <img className="avatar avatar-xs avatar-4x3" src="/" alt="Img" />
                         </div>
             
                         <div className="col">
                             <h5 className="mb-0">
-                            <a className="text-dark" href="#">Termos do contrato WordPress</a>
+                            <Link to={`http://localhost:8081/api/files/${file.filename}`} download>{file.filename}</Link>
                             </h5>
                             <ul className="list-inline list-separator small text-body">
-                            <li className="list-inline-item">Atualizado há 50 minutos</li>
-                            <li className="list-inline-item">25kb</li>
+                            <li className="list-inline-item">Data de publicação: {file.publishDate}</li>
+                            <li className="list-inline-item">Tamanho do ficheiro: {file.fileSize} KB</li>
                             </ul>
                         </div>
                         {/* End Col */}
@@ -87,16 +109,13 @@ export default function Resources() {
                         </div>
                         </div>
                     </li>
+                   
                     </ul>
                 </div>
-
-                <br />
               </div>
             </div>
-            <small className="d-block text-end mt-3">
-              <Link to="/form/activity">Ver todos</Link>
-            </small>
           </div>
+          ))}
           </main>
           </div>
     </div>

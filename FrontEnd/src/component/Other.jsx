@@ -321,7 +321,7 @@ export const NavForm = () => {
   )
 }
 
-export const AddSearchAndAdd = () => {
+export const AddAndSearchActivity = () => {
   const [data, setData] = useState({});
   const [formErrors, setFormErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -507,7 +507,7 @@ export const AddSearchAndAdd = () => {
 
             <div className="dropdown">
               <button type="button" className="btn btn-white btn-sm w-100" data-bs-toggle="modal" data-bs-target="#addActivity">
-                <i className="bi-plus me-1"></i> Novo atividade
+                <i className="bi-plus me-1"></i> Novos atividades
                 <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
               </button>
             </div>
@@ -679,6 +679,104 @@ export const AddSearchAndAdd = () => {
               </div>
 
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export const AddAndSearchResources = () => {
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      await axios.post('http://localhost:8081/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      alert('File uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading file: ', error);
+      alert('Error uploading file');
+    }
+  };
+
+
+  return (
+    <div>
+      <div className="card">
+        <div className="card-header card-header-content-md-between">
+          <div className="mb-2 mb-md-0">
+
+            <form>
+              <div className="input-group input-group-merge input-group-flush">
+                <div className="input-group-prepend input-group-text">
+                  <i className="bi-search"></i>
+                </div>
+                <input
+                  id="datatableSearch"
+                  type="search"
+                  className="form-control"
+                  placeholder="Procurar"
+                  aria-label="Procurar"
+                />
+              </div>
+            </form>
+
+          </div>
+
+          <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
+            <div className="dropdown">
+              <button type="button" className="btn btn-white btn-sm w-100" data-bs-toggle="modal" data-bs-target="#addActivity">
+                <i className="bi-plus me-1"></i> Novos recursos
+                <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div className="modal fade" id="addActivity" tabIndex="-1" role="dialog" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div className="modal-content">
+            <div className="modal-close">
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+              <div className="modal-body">
+                
+              <h2>Upload File</h2>
+      <form onSubmit={handleSubmit}>
+        <input type="file" onChange={handleFileChange} />
+        <button type="submit">Upload</button>
+      </form>
+
+              </div>
+
+              {/* <div className="modal-footer gap-3">
+                <button
+                  type="button"
+                  id="discardFormt"
+                  className="btn btn-white"
+                  data-bs-dismiss="modal"
+                >
+                  Descartar
+                </button>
+                <button type="button" id="processEvent" className="btn btn-primary" onClick={handleSubmit}>
+                  Criar atividade
+                </button>
+              </div> */}
           </div>
         </div>
       </div>

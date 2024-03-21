@@ -52,7 +52,7 @@ export default function UserProfile() {
                 <span className="avatar-status avatar-status-success"></span>
               </div>
               <h2 className='link-danger'>ViewProfile</h2>
-              <h1 className="page-header-title">{userProfile.nome_professor} <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></h1>
+              <h1 className="page-header-title">{userProfile?.nome_professor} <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></h1>
               <ul className="list-inline list-px-2">
                 <li className="list-inline-item">
                   <i className="bi-geo-alt me-1"></i>

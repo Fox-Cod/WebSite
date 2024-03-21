@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavForm, AddSearchAndAdd } from './component/Other';
+import { NavForm, AddAndSearchActivity } from './component/Other';
 import { Link } from "react-router-dom";
 import axios from 'axios';
 
@@ -52,7 +52,7 @@ export default function Activity() {
             </ol>
           </nav>
         </div>
-        <AddSearchAndAdd />
+        <AddAndSearchActivity />
 
         {/* Display posts */}
         {currentPosts.map((d) => (

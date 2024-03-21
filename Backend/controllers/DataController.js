@@ -5,6 +5,14 @@ const Ensino = require('../models/Ensino');
 const Disciplina = require('../models/Disciplina');
 const Ferramentos = require('../models/Ferramentos');
 const Professor = require('../models/Professor');
+const Recursos = require('../models/Recursos');
+
+const fs = require('fs');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+const mimeTypes = require('mime-types');
+const sharp = require('sharp');
+
 
 async function getSchoolAndGroupData(req, res) {
   try {
@@ -80,6 +88,88 @@ async function getProfileUsers(req, res) {
 };
 
 
-module.exports = { getSchoolAndGroupData, getYearsLessonAndTeachingData, postTools, getTools, getProfileUsers };
+
+async function postResourcesFiles(req, res) {
+  try {
+    if (!req.file) {
+      return res.status(400).send({ message: 'No file uploaded' });
+    }
+
+    const { originalname, path: tempPath, size } = req.file;
+
+    // Генерируем уникальное имя файла
+    const newFileName = originalname;
+
+    // Путь для сохранения файла
+    const uploadPath = path.resolve(__dirname, `../uploads/${newFileName}`);
+
+    // Перемещаем файл в папку uploads с оригинальным именем
+    fs.renameSync(tempPath, uploadPath);
+
+    // Определяем расширение файла
+    const fileExtension = path.extname(originalname);
+
+    // Сохраняем информацию о файле в базе данных
+    const uploadedFile = await Recursos.create({
+      filename: newFileName,
+      path: uploadPath,
+      fileSize: size, // Размер файла
+      fileType: mimeTypes.lookup(fileExtension), // MIME-тип файла
+      publishDate: new Date(), // Дата публикации файла
+    });
+
+    res.status(200).send({ message: 'File uploaded successfully', file: uploadedFile });
+  } catch (error) {
+    console.error('Error uploading file: ', error);
+    res.status(500).send({ message: 'Error uploading file' });
+  }
+}
+
+async function getResourcesFiles(req, res) {
+  try {
+    const files = await Recursos.findAll();
+
+    // Динамически определить абсолютный путь к иконке файла на основе расширения файла
+    files.forEach(file => {
+      const fileExtension = path.extname(file.fileType);
+      file.iconPath = path.join(__dirname, `../FrontEnd/public/assets/svg/brands/${fileExtension.substring(1)}.svg`); // Абсолютный путь к иконке файла на сервере
+    });
+
+    res.status(200).send(files);
+  } catch (error) {
+    console.error('Error fetching files: ', error);
+    res.status(500).send({ message: 'Error fetching files' });
+  }
+};
+
+async function downloadResourcesFiles(req, res) {
+  try {
+    const filename = req.params.filename;
+    const filePath = path.resolve(__dirname, `../uploads/${filename}`);
+
+    // Проверяем, существует ли файл
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).send({ message: 'File not found' });
+    }
+
+    // Определяем MIME-тип файла
+    const fileMime = mimeTypes.lookup(filePath);
+
+    // Устанавливаем заголовки для скачивания файла
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Type', fileMime);
+
+    // Отправляем файл клиенту
+    res.sendFile(filePath);
+  } catch (error) {
+    console.error('Error downloading file: ', error);
+    res.status(500).send({ message: 'Error downloading file' });
+  }
+};
+
+
+
+
+module.exports = { getSchoolAndGroupData, getYearsLessonAndTeachingData, postTools, getTools, getProfileUsers, postResourcesFiles, getResourcesFiles, downloadResourcesFiles };
 
 

@@ -4,12 +4,14 @@ const Equipa = require('./Equipa');
 const Professor = require('./Professor');
 
 const Equipa_Atividades = sequelize.define('Equipa_Atividades', {
-  id_equipa: { type: DataTypes.INTEGER, allowNull: false, autoIncrement: true, primaryKey: true },
+  id: { type: DataTypes.INTEGER, allowNull: false, autoIncrement: true, primaryKey: true },
+  id_equipa: { type: DataTypes.INTEGER } ,
   id_professor: { type: DataTypes.INTEGER },
-  descricao: DataTypes.TEXT,
-  filedata: DataTypes.BLOB('long'),
-  file_size: DataTypes.INTEGER,
-  filename: DataTypes.STRING,
+  descricao: { type: DataTypes.TEXT },
+  filename: { type: DataTypes.STRING },
+  path: { type: DataTypes.STRING },
+  fileType: { type: DataTypes.STRING },
+  fileSize: { type: DataTypes.BIGINT },
   data_criacao: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
 }, { tableName: 'equipa_atividades', timestamps: false });
 

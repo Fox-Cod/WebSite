@@ -43,7 +43,7 @@ router.get('/view-team-list', authenticateToken, teamController.showTeams)
 router.get('/view-teams/:teamId', teamController.getTeamAndMembers)
 router.post('/create-team', authenticateToken, teamController.createTeam)
 router.post('/add-member-to-team/:teamId', teamController.addMemberToTeam)
-router.post('/add-activity-team/:teamId', authenticateToken, teamController.postActivityTeam)
+router.post('/add-activity-team/:teamId', upload.single('file'), authenticateToken, teamController.addActivityTeam)
 
 // Другое
 router.get('/view-data', dataController.getSchoolAndGroupData)

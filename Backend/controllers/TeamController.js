@@ -120,45 +120,52 @@ async function addMemberToTeam(req, res) {
 
 
 
-async function postActivityTeam(req, res) {
+async function addActivityTeam(req, res) {
   try {
     const { id_professor } = req.user;
-    const { descricao } = req.body;
     const teamId = req.params.teamId;
 
-    // Добавленная проверка наличия файла
-    if (!req.file) {
-      return res.status(433).json({ message: 'Файл не найден' });
+    let newFileName = null;
+    let uploadPath = null;
+    let size = null;
+    let fileExtension = null;
+
+    // Проверяем, был ли загружен файл
+    if (req.file) {
+      const { originalname, path: tempPath } = req.file;
+
+      // Генерируем уникальное имя файла
+      newFileName = originalname;
+
+      // Путь для сохранения файла
+      uploadPath = path.resolve(__dirname, `../uploads/${newFileName}`);
+
+      // Перемещаем файл в папку uploads с оригинальным именем
+      fs.renameSync(tempPath, uploadPath);
+
+      // Определяем расширение файла
+      fileExtension = path.extname(originalname);
+
+      // Устанавливаем размер файла
+      size = req.file.size;
     }
 
-    // Получаем бинарные данные из загруженного файла
-    const fileData = req.file.buffer;
-    const fileSize = req.file.size;
-    const fileName = req.file.originalname;
-
-    // Создаем запись в таблице Equipa_Atividades
-    const equipaAtividade = await Equipa_Atividades.create({
-      id_professor: id_professor,
-      descricao: descricao,
+    // Сохраняем информацию о файле в базе данных
+    const newActivity = await Equipa_Atividades.create({
       id_equipa: teamId,
-      filedata: fileData,
-      file_size: fileSize,
-      filename: fileName,
+      id_professor,
+      descricao: req.body.descricao,
+      filename: newFileName,
+      path: uploadPath,
+      fileSize: size,
+      fileType: fileExtension,
+      data_criacao: new Date(),
     });
 
-    // Отправляем успешный ответ
-    res.status(201).json({ message: 'Atividade da equipa criada com sucesso', equipaAtividade });
+    res.status(200).json({ success: true, message: 'Данные успешно сохранены', data: newActivity });
   } catch (error) {
-    console.error('Error in addActivityTeam:', error);
-
-    // Обработка конкретных ошибок
-    if (error.name === 'SequelizeValidationError') {
-      // Ошибка валидации Sequelize
-      res.status(400).json({ message: 'Ошибка валидации данных', error: error.errors });
-    } else {
-      // Прочие ошибки
-      res.status(500).json({ message: 'Ошибка сервера', error: error.message });
-    }
+    console.error('Ошибка при сохранении данных: ', error);
+    res.status(500).json({ success: false, message: 'Ошибка при сохранении данных' });
   }
 }
 
@@ -166,4 +173,5 @@ async function postActivityTeam(req, res) {
 
 
 
-module.exports = { showTeams, getTeamAndMembers, createTeam, addMemberToTeam, postActivityTeam };
+
+module.exports = { showTeams, getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam };

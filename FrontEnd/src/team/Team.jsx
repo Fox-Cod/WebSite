@@ -18,7 +18,7 @@ export default function Team() {
     const { teamId } = useParams();
     console.log('Team ID:', teamId);
 
-    
+
     const fetchData = async () => {
         try {
             const response = await axios.get(`http://localhost:8081/api/view-teams/${(teamId)}`);
@@ -88,7 +88,6 @@ export default function Team() {
         }
     }
 
-    
 
     return (
         <div>
@@ -107,7 +106,7 @@ export default function Team() {
                             </div>
                             <div className="col-lg-auto">
                                 <div class="input-group">
-                                    
+
                                     <a class="btn btn-primary btn-icon rounded-circle" href="javascript:;" data-bs-toggle="modal" data-bs-target="#shareWithPeopleModal">
                                         <i class="bi-share-fill"></i>
                                     </a>
@@ -161,55 +160,55 @@ export default function Team() {
                             <div className="card-body">
                                 {teamActivity.length > 0 ? (
                                     teamActivity.map((activity) => (
-                                    <ul className="step" key={activity.professores.id_professor}>
+                                        <ul className="step" key={activity.professores.id_professor}>
 
-                                        {/* <li className="step-item">
+                                            {/* <li className="step-item">
                                             <div className="step-content-wrapper">
                                                 <small className="step-divider">{formatTimeDifference(activity.data_criacao)}</small>
                                             </div>
                                         </li> */}
 
-                                        <li className="step-item">
-                                            <div className="step-content-wrapper">
-                                                <div className="step-avatar">                                           
-                                                    <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={activity.professores.nome_professor}>
-                                                        <span className="avatar-initials">{activity.professores.nome_professor.charAt(0).toUpperCase()}</span>
-                                                    </span>
-                                                </div>
-                                                <div className="step-content">
-                                                    <Link className="d-flex align-items-center me-2" to={`/view-profile/${activity.professores.id_professor}`}><h5 className="mb-1">{activity.professores.nome_professor}</h5></Link>
-                                                    <p className="fs-5 mb-1">{activity.descricao} </p>
-                                                    {activity.filedata ? (
-                                                        <ul className="list-group list-group-sm">
-                                                            <li className="list-group-item list-group-item-light">
-                                                                <div className="row gx-1">
-                                                                    <div className="col-sm-4">
-                                                                        <div className="d-flex">
-                                                                            <div className="flex-shrink-0">
-                                                                                <img className="avatar avatar-xs" src="../assets/svg/brands/excel-icon.svg" alt="Image Description" />
-                                                                            </div>
-                                                                            <div className="flex-grow-1 text-truncate ms-2">
-                                                                                <Link to={`data:application/octet-stream;base64,${activity.filedata}`} download={activity.filename}>
-                                                                                    <span className="d-block fs-6 text-dark text-truncate">{activity.filename}</span>
-                                                                                    <span className="d-block small text-muted">12kb</span>
-                                                                                </Link>
+                                            <li className="step-item">
+                                                <div className="step-content-wrapper">
+                                                    <div className="step-avatar">
+                                                        <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={activity.professores.nome_professor}>
+                                                            <span className="avatar-initials">{activity.professores.nome_professor.charAt(0).toUpperCase()}</span>
+                                                        </span>
+                                                    </div>
+                                                    <div className="step-content">
+                                                        <Link className="d-flex align-items-center me-2" to={`/view-profile/${activity.professores.id_professor}`}><h5 className="mb-1">{activity.professores.nome_professor}</h5></Link>
+                                                        <p className="fs-5 mb-1" width="32" height="32"><div dangerouslySetInnerHTML={{ __html: activity.descricao }} /></p>
+                                                        {activity.filedata ? (
+                                                            <ul className="list-group list-group-sm">
+                                                                <li className="list-group-item list-group-item-light">
+                                                                    <div className="row gx-1">
+                                                                        <div className="col-sm-4">
+                                                                            <div className="d-flex">
+                                                                                <div className="flex-shrink-0">
+                                                                                    <img className="avatar avatar-xs" src="../assets/svg/brands/excel-icon.svg" alt="Image Description" />
+                                                                                </div>
+                                                                                <div className="flex-grow-1 text-truncate ms-2">
+                                                                                    <Link to={`data:application/octet-stream;base64,${activity.filedata}`} download={activity.filename}>
+                                                                                        <span className="d-block fs-6 text-dark text-truncate">{activity.filename}</span>
+                                                                                        <span className="d-block small text-muted">12kb</span>
+                                                                                    </Link>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    ) : null}
+                                                                </li>
+                                                            </ul>
+                                                        ) : null}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                ))
+                                            </li>
+                                        </ul>
+                                    ))
                                 ) : (
-                                  <div className="text-center">
-                                    <img className='mb-5' src="../assets/svg/illustrations/oc-growing.svg" alt="Img NoData" style={{ height: '20rem' }} />
-                                    <h5>Não tens nada.</h5>
-                                  </div>
+                                    <div className="text-center">
+                                        <img className='mb-5' src="../assets/svg/illustrations/oc-growing.svg" alt="Img NoData" style={{ height: '20rem' }} />
+                                        <h5>Não tens nada.</h5>
+                                    </div>
                                 )}
                             </div>
                         </div>

@@ -712,7 +712,7 @@ export const AddAndSearchResources = () => {
   const fileContent = file ? (
     <div className="selected-file">
       <div className="file-info">
-        <img src="../assets/svg/components/placeholder-img-format.svg" alt="File Icon" className="file-icon" width="58" height="58"/>
+        <img src="../assets/svg/components/placeholder-img-format.svg" alt="File Icon" className="file-icon" width="58" height="58" />
         <div className="file-details">
           <p>{file.name}</p>
           <p>{formatBytes(file.size)}</p>
@@ -816,30 +816,45 @@ export const AddAndSearchResources = () => {
 
 export const AddActivityTeam = () => {
   const { teamId } = useParams();
-  const [formData, setFormData] = useState({
-    descricao: "",
-    icone: null,
-  });
+  const [file, setFile] = useState(null);
+  const [descricao, setDescricao] = useState('');
 
-  const handleChange = (e) => {
-    const { id, value, type } = e.target;
+  useEffect(() => {
+    const handleFileChange = (event) => {
+      const file = event.target.files[0];
+      setFile(file);
+    };
 
-    if (type === "file") {
-      const file = e.target.files[0];
-      setFormData((prevData) => ({ ...prevData, [id]: file }));
-    } else {
-      setFormData((prevData) => ({ ...prevData, [id]: value }));
+    const quill = document.querySelector('.js-quill .ql-editor');
+    const input = quill.querySelector('input[type=file]');
+    if (input) {
+      input.addEventListener('change', handleFileChange);
     }
-  };
 
-  const handleSubmit = async (e) => {
+    return () => {
+      if (input) {
+        input.removeEventListener('change', handleFileChange);
+      }
+    };
+  }, []);
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      const formData = new FormData();
+      formData.append('descricao', descricao);
+      formData.append('id_equipa', teamId);
+      if (file) {
+        formData.append('file', file);
+      }
+
       const response = await axios.post(
         `http://localhost:8081/api/add-activity-team/${teamId}`,
-        formDataToSend
+        formData,
+        { withCredentials: true }
       );
+
       console.log(response.data);
       console.log(response);
     } catch (error) {
@@ -847,30 +862,45 @@ export const AddActivityTeam = () => {
     }
   };
 
+  const handleQuillChange = (content) => {
+    setDescricao(content);
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setFile(file);
+  };
+
   return (
     <div>
       <div className="col mb-4">
         <div className="card">
           <div className="card-body">
-            <form>
+            <form onSubmit={handleFormSubmit}>
               <input type="hidden" id="autor" name="autor" value="" />
               <div className="modal-body">
-                <label
-                  htmlFor="eventTitleLabel"
-                  className="visually-hidden form-label"
-                >
-                  {" "}
-                  Comentário{" "}
-                </label>
                 <div className="row">
                   <div className="col">
-                    <div className='quill-custom '>
+                    <div className='quill-custom'>
                       <div className="js-quill">
                         <ReactQuill
-                          className="form-control form-control-title h-100"
-                          theme="snow"
+                          value={descricao}
+                          onChange={handleQuillChange}
                           placeholder="Descricao..."
+                          modules={{
+                            toolbar: {
+                              container: [
+                                ['bold', 'italic', 'underline', 'strike'],
+                                [{ list: 'ordered' }, { list: 'bullet' }],
+                                ['link'
+                                // 'image'
+                              ],
+                              ],
+                            },
+                          }}
+                          formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'html']}
                         />
+                        <input type="file" onChange={handleFileChange} />
                       </div>
                     </div>
                   </div>
@@ -887,7 +917,8 @@ export const AddActivityTeam = () => {
       </div>
     </div>
   );
-}
+};
+
 
 export const AddTeam = () => {
   const [customDiscipline, setCustomDiscipline] = useState('');

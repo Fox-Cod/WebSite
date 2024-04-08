@@ -5,6 +5,7 @@ import axios from "axios";
 
 export default function Form() {
   const [data, setData] = useState([]);
+  const [files, setFiles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(8);
 
@@ -17,8 +18,19 @@ export default function Form() {
     }
   };
 
+  const fetchFiles = async () => {
+    try {
+      const response = await axios.get('http://localhost:8081/api/files');
+      setFiles(response.data);
+    } catch (error) {
+      console.error('Error fetching files: ', error);
+    }
+  };
+
+
   useEffect(() => {
     fetchData();
+    fetchFiles();
   }, []);
 
   function formatDate(rawDate) {
@@ -32,6 +44,14 @@ export default function Form() {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = data.slice(indexOfFirstPost, indexOfLastPost);
+
+  const formatBytes = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
 
   return (
     <div>
@@ -54,9 +74,9 @@ export default function Form() {
         {currentPosts.slice(0, 3).map((d, i) => (
           <div className="my-3 p-3 bg-body rounded shadow-sm" key={i}>
             <div className="d-flex text-body-secondary">
-            <div className="avatar avatar-sm avatar-circle me-2" width="32" height="32">
+              <div className="avatar avatar-sm avatar-circle me-2" width="32" height="32">
                 <span className="avatar-soft-dark" title={d.professores.nome_professor}>
-                    <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{d.professores.nome_professor.charAt(0).toUpperCase()}</span>
+                  <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{d.professores.nome_professor.charAt(0).toUpperCase()}</span>
                 </span>
               </div>
               <div className="pb-3 mb-0 small lh-sm border-bottom w-100">
@@ -106,121 +126,69 @@ export default function Form() {
                 <h6 className="text-secondary">{formatDate(d.data_criacao)}</h6>
               </div>
               <div className='d-block text-end'>
-              <Link to={`/view-activity/${d.id}`}>Mais</Link>            
+                <Link to={`/view-activity/${d.id}`}>Mais</Link>
               </div>
             </div>
           </div>
         ))}
 
-        {/* Recursos */}
-        <div className="my-3 p-3 bg-body rounded shadow-sm">
-          <h6 className="border-bottom pb-2 mb-0">Recursos</h6>
+        {files.slice(0, 3).map((file) => (
+          <div className="my-3 p-3 bg-body rounded shadow-sm">
             <div className="d-flex text-body-secondary pt-3">
               <div className="avatar avatar-sm avatar-circle me-2" width="32" height="32">
-                <span className="avatar-soft-dark" title="JS">
-                    <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{"B".charAt(0).toUpperCase()}</span>
+                <span className="avatar-soft-dark" title={file.professores.nome_professor}>
+                  <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{file.professores.nome_professor.charAt(0).toUpperCase()}</span>
                 </span>
               </div>
-            <div className="pb-3 mb-0 small lh-sm border-bottom w-100">
-              <div className="d-flex justify-content-between">
-                <h5 className="mb-1">
-                  <Link to="/"> Bob Dean</Link>
-                </h5>
-              </div>
+              <div className="pb-3 mb-0 small lh-sm border-bottom w-100">
 
-              <div className="content">
-                <ul className="list-group">
-                  {/* Item */}
-                  <li className="list-group-item">
-                    <div className="row align-items-center">
-                      <div className="col-auto">
-                        <img
-                          className="avatar avatar-xs avatar-4x3"
-                          src="/"
-                          alt="Imgasd"
-                        />
-                      </div>
+                <div className="content">
+                  <ul className="list-group">
+                    <h5 className="mb-1"><Link to={`/view-profile/${file.professores.id_professor}`}>{file.professores.nome_professor}</Link></h5>
+                    <h6>{file.title}</h6>
+                    <li key={file.id} className="list-group-item">
+                      <div className="row align-items-center">
+                        <div className="col-auto">
+                          <img className="avatar avatar-xs avatar-4x3" src="../assets/svg/components/placeholder-img-format.svg" alt="Img" />
+                        </div>
 
-                      <div className="col">
-                        <h5 className="mb-0">
-                          <a className="text-dark" href="#">
-                            Termos do contrato WordPress
-                          </a>
-                        </h5>
-                        <ul className="list-inline list-separator small text-body">
-                          <li className="list-inline-item">
-                            Atualizado há 50 minutos
-                          </li>
-                          <li className="list-inline-item">25kb</li>
-                        </ul>
-                      </div>
-                      {/* End Col */}
+                        <div className="col">
+                          <h5 className="mb-0">
+                            <Link to={`http://localhost:8081/api/files/${file.filename}`} download>{file.filename}</Link>
+                          </h5>
+                          <ul className="list-inline list-separator small text-body">
+                            <li className="list-inline-item">Data de publicação: {formatDate(file.publishDate)}</li>
+                            <li className="list-inline-item">Tamanho do ficheiro: {formatBytes(file.fileSize)}</li>
+                          </ul>
+                        </div>
 
-                      <div className="col-auto">
-                        {/* Dropdown */}
-                        <div className="dropdown">
-                          <button
-                            type="button"
-                            className="btn btn-white btn-sm"
-                            id="filesListDropdown1"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                            <span className="d-none d-sm-inline-block me-1">
-                              Mais
-                            </span>
-                            <i className="bi-chevron-down"></i>
-                          </button>
+                        <div className="col-auto">
+                          <div className="dropdown">
+                            <button type="button" className="btn btn-white btn-sm" id="filesListDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
+                              <span className="d-none d-sm-inline-block me-1">Mais</span>
+                              <i className="bi-chevron-down"></i>
+                            </button>
 
-                          <div
-                            className="dropdown-menu dropdown-menu-end"
-                            aria-labelledby="filesListDropdown1"
-                            style={{ minWidth: "13rem" }}
-                          >
-                            <span className="dropdown-header">Definições</span>
-
-                            <a className="dropdown-item" href="#">
-                              <i className="bi-share dropdown-item-icon"></i>{" "}
-                              Partilhar ficheiro
-                            </a>
-                            <a className="dropdown-item" href="#">
-                              <i className="bi-folder-plus dropdown-item-icon"></i>{" "}
-                              Mover para
-                            </a>
-                            <a className="dropdown-item" href="#">
-                              <i className="bi-pencil dropdown-item-icon"></i>{" "}
-                              Mudar o nome
-                            </a>
-                            <a className="dropdown-item" href="#">
-                              <i className="bi-download dropdown-item-icon"></i>{" "}
-                              Descarregar
-                            </a>
-
-                            <div className="dropdown-divider"></div>
-
-                            <a className="dropdown-item" href="#">
-                              <i className="bi-chat-left-dots dropdown-item-icon"></i>{" "}
-                              Relatório
-                            </a>
-                            <a className="dropdown-item" href="#">
-                              <i className="bi-trash dropdown-item-icon"></i>{" "}
-                              Eliminar
-                            </a>
+                            <div className="dropdown-menu dropdown-menu-end" aria-labelledby="filesListDropdown1" style={{ minWidth: '13rem' }}>
+                              <span className="dropdown-header">Definições</span>
+                              <a className="dropdown-item" href="#">
+                                <i className="bi-download dropdown-item-icon"></i> Descarregar
+                              </a>
+                              <div className="dropdown-divider"></div>
+                              <a className="dropdown-item" href="#">
+                                <i className="bi-trash dropdown-item-icon"></i> Eliminar
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </li>
-                </ul>
+                    </li>
+                  </ul>
+                </div>
               </div>
-
-              <br />
             </div>
           </div>
-          <small className="d-block text-end mt-3">
-            <Link to="/form/activity">Ver todos</Link>
-          </small>
-        </div>
+        ))}
       </main>
     </div>
   );

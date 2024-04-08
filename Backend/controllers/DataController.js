@@ -90,6 +90,9 @@ async function getProfileUsers(req, res) {
 
 
 async function postResourcesFiles(req, res) {
+  const { id_professor } = req.user;
+  const { title } = req.body;
+
   try {
     if (!req.file) {
       return res.status(400).send({ message: 'No file uploaded' });
@@ -111,6 +114,8 @@ async function postResourcesFiles(req, res) {
 
     // Сохраняем информацию о файле в базе данных
     const uploadedFile = await Recursos.create({
+      title: title,
+      id_professor: id_professor,
       filename: newFileName,
       path: uploadPath,
       fileSize: size, // Размер файла
@@ -127,7 +132,11 @@ async function postResourcesFiles(req, res) {
 
 async function getResourcesFiles(req, res) {
   try {
-    const files = await Recursos.findAll();
+    const files = await Recursos.findAll({
+      include: [
+        { model: Professor, as: 'professores', attributes: ['id_professor', 'nome_professor'] },
+      ]
+    });;
 
     // Динамически определить абсолютный путь к иконке файла на основе расширения файла
     files.forEach(file => {

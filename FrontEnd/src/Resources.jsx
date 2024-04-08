@@ -25,6 +25,22 @@ export default function Resources() {
     return `/assets/svg/brands/${fileExtension}.svg`;
   };
 
+  function formatDate(rawDate) {
+    const dataRegistro = new Date(rawDate);
+    const day = dataRegistro.getDate();
+    const month = dataRegistro.toLocaleString('default', { month: 'long' });
+    const year = dataRegistro.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
+
+  const formatBytes = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
   
   return (
     <div>
@@ -42,23 +58,24 @@ export default function Resources() {
           <AddAndSearchResources />
 
           {/* Recursos */}
-      {files.map(file => (
+      {files.map((file) => (
           <div className="my-3 p-3 bg-body rounded shadow-sm">
-            <div className="d-flex text-body-secondary pt-3">
-              <img src="../assets/img/160x160/img1.jpg" alt="User Avatar" className="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" />            
+            <div className="d-flex text-body-secondary pt-3">         
+              <div className="avatar avatar-sm avatar-circle me-2" width="32" height="32">
+                <span className="avatar-soft-dark" title={file.professores.nome_professor}>
+                    <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{file.professores.nome_professor.charAt(0).toUpperCase()}</span>
+                </span>
+              </div>
               <div className="pb-3 mb-0 small lh-sm border-bottom w-100">
-                <div className="d-flex justify-content-between">
-                  <h5 className="mb-1"><Link to="/">🐐</Link></h5>
-                </div>
 
                 <div className="content">
                     <ul className="list-group">
-                    {/* Item */}
-                    
+                    <h5 className="mb-1"><Link to={`/view-profile/${file.professores.id_professor}`}>{file.professores.nome_professor}</Link></h5>
+                    <h6>{file.title}</h6>
                     <li key={file.id} className="list-group-item">
                         <div className="row align-items-center">
                         <div className="col-auto">
-                            <img className="avatar avatar-xs avatar-4x3" src="/" alt="Img" />
+                            <img className="avatar avatar-xs avatar-4x3" src="../assets/svg/components/placeholder-img-format.svg" alt="Img" />
                         </div>
             
                         <div className="col">
@@ -66,8 +83,8 @@ export default function Resources() {
                             <Link to={`http://localhost:8081/api/files/${file.filename}`} download>{file.filename}</Link>
                             </h5>
                             <ul className="list-inline list-separator small text-body">
-                            <li className="list-inline-item">Data de publicação: {file.publishDate}</li>
-                            <li className="list-inline-item">Tamanho do ficheiro: {file.fileSize} KB</li>
+                            <li className="list-inline-item">Data de publicação: {formatDate(file.publishDate)}</li>
+                            <li className="list-inline-item">Tamanho do ficheiro: {formatBytes(file.fileSize)}</li>
                             </ul>
                         </div>
                         {/* End Col */}
@@ -84,23 +101,11 @@ export default function Resources() {
                                 <span className="dropdown-header">Definições</span>
             
                                 <a className="dropdown-item" href="#">
-                                <i className="bi-share dropdown-item-icon"></i> Partilhar ficheiro
-                                </a>
-                                <a className="dropdown-item" href="#">
-                                <i className="bi-folder-plus dropdown-item-icon"></i> Mover para
-                                </a>
-                                <a className="dropdown-item" href="#">
-                                <i className="bi-pencil dropdown-item-icon"></i> Mudar o nome
-                                </a>
-                                <a className="dropdown-item" href="#">
                                 <i className="bi-download dropdown-item-icon"></i> Descarregar
                                 </a>
             
                                 <div className="dropdown-divider"></div>
             
-                                <a className="dropdown-item" href="#">
-                                <i className="bi-chat-left-dots dropdown-item-icon"></i> Relatório
-                                </a>
                                 <a className="dropdown-item" href="#">
                                 <i className="bi-trash dropdown-item-icon"></i> Eliminar
                                 </a>

@@ -26,14 +26,20 @@ const emailController = require('../controllers/EmailController');
 router.post('/login', authController.login);
 router.post('/registration', authController.registration)
 
-// Профиль
+// Профиль пользувателя 'Profile'
 router.get('/profile', authenticateToken, profileController.getProfileUser);
-router.get('/view-profile/:userId', profileController.getProfileOtherUser);
 router.get('/view-activity-user', authenticateToken, profileController.getUserActivity)
+router.get('/view-resources-user', authenticateToken, profileController.getUserResources)
 router.post('/update-profile', authenticateToken, profileController.updateProfile)
 
-// Команда
+// Просмотр профиля другого пользувателя
+router.get('/view-profile/:userId', profileController.getProfileOtherUser);
+
+
+// Команды пользувателя 'View other user profile'
 router.get('/view-team-list', authenticateToken, teamController.showTeams)
+
+// Команда 'Team'
 router.get('/view-teams/:teamId', teamController.getTeamAndMembers)
 router.post('/create-team', authenticateToken, teamController.createTeam)
 router.post('/add-member-to-team/:teamId', teamController.addMemberToTeam)
@@ -46,28 +52,24 @@ router.post('/send-email', emailController.sendEmail);
 router.get('/token-validation/:token', authController.tokenValidation)
 router.post('/reset-password/:token', authController.resetPassword)
 
-
-router.post('/upload', upload.single('file'), dataController.postResourcesFiles)
+// Робота с файлами 'Resources'
+router.post('/upload', upload.single('file'), authenticateToken, dataController.postResourcesFiles)
 router.get('/files', dataController.getResourcesFiles)
 router.get('/files/:filename', dataController.downloadResourcesFiles);
 
+// Инстурменты 'Tools'
 router.post('/add-tool', upload.single('icone'), dataController.postTools);
 router.get('/view-tools', dataController.getTools)
 
+// Проверка ролей
 router.get('/view-users', authenticateToken, dataController.getProfileUsers, (req, res) => {
-  if (req.user.role === 'administrador') {
-    res.json({ message: 'Добро пожаловать на страницу администратора!' });
-  } else {
-    res.status(403).json({ message: 'Доступ запрещен: Только администраторы имеют доступ' });
-  }
+  if (req.user.role === 'administrador') return res.json({ message: 'Добро пожаловать на страницу администратора!' });
+    return res.status(403).json({ message: 'Доступ запрещен: Только администраторы имеют доступ' });
 });
 
 router.get('/user-info', authenticateToken, (req, res) => {
   const user = req.user;
-
-  if (!user) {
-    return res.status(401).json({ message: 'Не удалось получить информацию о пользователе' });
-  }
+  if (!user) return res.status(401).json({ message: 'Не удалось получить информацию о пользователе' });
   res.json({ id: user.id, role: user.role });
 });
 

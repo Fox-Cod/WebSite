@@ -6,7 +6,6 @@ export default function UserProfile() {
   const [userProfile, setUserProfile] = useState(null); // изменено
   const [error, setError] = useState(null);
   const { userId } = useParams();
-  console.log(userId)
 
   const fetchData = async () => {
     try {
@@ -29,11 +28,27 @@ export default function UserProfile() {
     fetchData();
   }, [userId]);
 
-  // if (error) {
-  //   return <div>Error: {error.message}</div>; // отображение ошибки
-  // } else if (!userProfile) {
-  //   return <div>Loading...</div>; // отображение загрузки
-  // }
+  function formatDate(rawDate) {
+    const dataRegistro = new Date(rawDate);
+    const day = dataRegistro.getDate();
+    const month = dataRegistro.toLocaleString('default', { month: 'long' });
+    const year = dataRegistro.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
+
+  const formatBytes = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  if (error) {
+    return <div>Error: {error.message}</div>; // отображение ошибки
+  } else if (!userProfile) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -56,17 +71,17 @@ export default function UserProfile() {
               <ul className="list-inline list-px-2">
                 <li className="list-inline-item">
                   <i className="bi-geo-alt me-1"></i>
-                  <span>{"N.Escola"}</span>
+                  <span>{userProfile?.nome_escola}</span>
                 </li>
 
                 <li className="list-inline-item">
                   <i className="bi-building me-1"></i>
-                  <span>{"N.Grupo"}</span>
+                  <span>{userProfile?.nome_grupo}</span>
                 </li>
 
                 <li className="list-inline-item">
                   <i className="bi-calendar-week me-1"></i>
-                  <span>{"Data"}</span>
+                  <span>{formatDate(userProfile?.data_registro)}</span>
                 </li>
               </ul>
             </div>
@@ -87,21 +102,6 @@ export default function UserProfile() {
 
                 <li className="nav-item ms-auto">
                   <div className="d-flex gap-2">
-                    <div className="form-check form-check-switch">
-                      <input className="form-check-input" type="checkbox" value="" id="connectCheckbox"/>
-                      <label className="form-check-label btn btn-sm" htmlFor="connectCheckbox">
-                        <Link to="#">
-                        <span className="form-check-default">
-                          <i className="bi-person-plus-fill"></i> Subscrever
-                        </span>
-                        </Link>
-                        <span className="form-check-active">
-                          <i className="bi-check-lg me-2"></i> Está subscrito
-                        </span>
-                      </label>
-                    </div>
-
-
                     <div className="dropdown nav-scroller-dropdown">
                       <button type="button" className="btn btn-white btn-icon btn-sm" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i className="bi-three-dots-vertical"></i>
@@ -238,11 +238,11 @@ export default function UserProfile() {
                         </li>          
                       </ul>
                     </div>
-                    <div className="card-footer">
+                    {/* <div className="card-footer">
                       <Link className="link link-collapse" data-bs-toggle="collapse" to="/form" role="button" aria-expanded="false" aria-controls="collapseActivitySection">
                         <span className="link-collapse-default">Ver mais</span>
                       </Link>
-                    </div>
+                    </div> */}
                   </div>
                 </div>       
               </div>

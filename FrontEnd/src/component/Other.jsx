@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { Link, useParams } from 'react-router-dom';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -688,22 +689,54 @@ export const AddAndSearchActivity = () => {
 
 export const AddAndSearchResources = () => {
   const [file, setFile] = useState(null);
+  const [title, setTitle] = useState('');
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const onDrop = useCallback(acceptedFiles => {
+    setFile(acceptedFiles[0]);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  const handleDeleteFile = () => { setFile(null) };
+
+  const handleTitleChange = (e) => { setTitle(e.target.value) };
+
+  const formatBytes = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
+
+  const fileContent = file ? (
+    <div className="selected-file">
+      <div className="file-info">
+        <img src="../assets/svg/components/placeholder-img-format.svg" alt="File Icon" className="file-icon" width="58" height="58"/>
+        <div className="file-details">
+          <p>{file.name}</p>
+          <p>{formatBytes(file.size)}</p>
+        </div>
+      </div>
+      <button type="button" className="btn btn-danger" onClick={handleDeleteFile}>Delete</button>
+    </div>
+  ) : (
+    <p>Drag 'n' drop some files here, or click to select files</p>
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!file) {
+      alert('Please select a file');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('title', title);
 
     try {
-      await axios.post('http://localhost:8081/api/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      await axios.post('http://localhost:8081/api/upload', formData, { withCredentials: true });
       alert('File uploaded successfully');
     } catch (error) {
       console.error('Error uploading file: ', error);
@@ -711,13 +744,11 @@ export const AddAndSearchResources = () => {
     }
   };
 
-
   return (
     <div>
       <div className="card">
         <div className="card-header card-header-content-md-between">
           <div className="mb-2 mb-md-0">
-
             <form>
               <div className="input-group input-group-merge input-group-flush">
                 <div className="input-group-prepend input-group-text">
@@ -732,9 +763,7 @@ export const AddAndSearchResources = () => {
                 />
               </div>
             </form>
-
           </div>
-
           <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <div className="dropdown">
               <button type="button" className="btn btn-white btn-sm w-100" data-bs-toggle="modal" data-bs-target="#addActivity">
@@ -742,29 +771,31 @@ export const AddAndSearchResources = () => {
                 <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
               </button>
             </div>
-
           </div>
         </div>
       </div>
-
       <div className="modal fade" id="addActivity" tabIndex="-1" role="dialog" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-close">
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
+            <form onSubmit={handleSubmit}>
               <div className="modal-body">
-                
-              <h2>Upload File</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="file" onChange={handleFileChange} />
-        <button type="submit">Upload</button>
-      </form>
-
+                <label htmlFor="eventTitleLabel" className="visually-hidden form-label">Titulo</label>
+                <textarea
+                  id="title"
+                  className='form-control form-control-title'
+                  placeholder="Add title"
+                  value={title}
+                  onChange={handleTitleChange}
+                ></textarea>
+                <div {...getRootProps()} style={dropzoneStyles}>
+                  <input {...getInputProps()} />
+                  {fileContent}
+                </div>
               </div>
-
-              {/* <div className="modal-footer gap-3">
+              <div className="modal-footer gap-3">
                 <button
                   type="button"
                   id="discardFormt"
@@ -773,16 +804,15 @@ export const AddAndSearchResources = () => {
                 >
                   Descartar
                 </button>
-                <button type="button" id="processEvent" className="btn btn-primary" onClick={handleSubmit}>
-                  Criar atividade
-                </button>
-              </div> */}
+                <button type="submit" className="btn btn-primary"> Adicionar ficheiro </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export const AddActivityTeam = () => {
   const { teamId } = useParams();
@@ -1050,3 +1080,11 @@ export const AddTeam = () => {
     </div>
   )
 }
+
+const dropzoneStyles = {
+  border: '2px dashed #cccccc',
+  borderRadius: '4px',
+  padding: '90px',
+  textAlign: 'center',
+  cursor: 'pointer',
+};

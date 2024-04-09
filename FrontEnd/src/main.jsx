@@ -6,7 +6,7 @@ import "./component/Navbar.module.css";
 const app = ReactDOM.createRoot(document.getElementById('root'));
 
 app.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <App />
-  </React.StrictMode>
+  // </React.StrictMode>
 );

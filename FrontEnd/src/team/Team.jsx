@@ -16,8 +16,6 @@ export default function Team() {
     });
 
     const { teamId } = useParams();
-    console.log('Team ID:', teamId);
-
 
     const fetchData = async () => {
         try {
@@ -65,6 +63,22 @@ export default function Team() {
             ...prevData,
             [name]: value,
         }));
+    };
+
+    function formatDate(rawDate) {
+        const dataRegistro = new Date(rawDate);
+        const day = dataRegistro.getDate();
+        const month = dataRegistro.toLocaleString('default', { month: 'long' });
+        const year = dataRegistro.getFullYear();
+        return `${day} ${month} ${year}`;
+    }
+
+    const formatBytes = (bytes) => {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
 
     if (loading) {
@@ -161,13 +175,6 @@ export default function Team() {
                                 {teamActivity.length > 0 ? (
                                     teamActivity.map((activity) => (
                                         <ul className="step" key={activity.professores.id_professor}>
-
-                                            {/* <li className="step-item">
-                                            <div className="step-content-wrapper">
-                                                <small className="step-divider">{formatTimeDifference(activity.data_criacao)}</small>
-                                            </div>
-                                        </li> */}
-
                                             <li className="step-item">
                                                 <div className="step-content-wrapper">
                                                     <div className="step-avatar">
@@ -175,31 +182,34 @@ export default function Team() {
                                                             <span className="avatar-initials">{activity.professores.nome_professor.charAt(0).toUpperCase()}</span>
                                                         </span>
                                                     </div>
+
                                                     <div className="step-content">
                                                         <Link className="d-flex align-items-center me-2" to={`/view-profile/${activity.professores.id_professor}`}><h5 className="mb-1">{activity.professores.nome_professor}</h5></Link>
                                                         <p className="fs-5 mb-1" width="32" height="32"><div dangerouslySetInnerHTML={{ __html: activity.descricao }} /></p>
-                                                        {activity.filedata ? (
+                                                        {activity.filename ? (
                                                             <ul className="list-group list-group-sm">
                                                                 <li className="list-group-item list-group-item-light">
                                                                     <div className="row gx-1">
+
                                                                         <div className="col-sm-4">
                                                                             <div className="d-flex">
                                                                                 <div className="flex-shrink-0">
                                                                                     <img className="avatar avatar-xs" src="../assets/svg/brands/excel-icon.svg" alt="Image Description" />
                                                                                 </div>
                                                                                 <div className="flex-grow-1 text-truncate ms-2">
-                                                                                    <Link to={`data:application/octet-stream;base64,${activity.filedata}`} download={activity.filename}>
-                                                                                        <span className="d-block fs-6 text-dark text-truncate">{activity.filename}</span>
-                                                                                        <span className="d-block small text-muted">12kb</span>
+                                                                                    <Link to={`http://localhost:8081/api/files/${activity.filename}`} download>{activity.filename}
+                                                                                        <span className="d-block small text-muted">{formatBytes(activity.fileSize)}</span>
                                                                                     </Link>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+                                                                        
                                                                     </div>
                                                                 </li>
                                                             </ul>
                                                         ) : null}
                                                     </div>
+                                                        <span className="d-block fs-6 text-dark text-truncate">{formatDate(activity.data_criacao)}</span>
                                                 </div>
                                             </li>
                                         </ul>

@@ -131,8 +131,8 @@ async function addActivityTeam(req, res) {
     let fileExtension = null;
 
     // Проверяем, был ли загружен файл
-    if (req.file) {
-      const { originalname, path: tempPath } = req.file;
+    if (req.files) {
+      const { originalname, path: tempPath } = req.files;
 
       // Генерируем уникальное имя файла
       newFileName = originalname;

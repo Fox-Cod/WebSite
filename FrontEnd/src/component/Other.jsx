@@ -816,27 +816,24 @@ export const AddAndSearchResources = () => {
 
 export const AddActivityTeam = () => {
   const { teamId } = useParams();
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
   const [descricao, setDescricao] = useState('');
 
-  useEffect(() => {
-    const handleFileChange = (event) => {
-      const file = event.target.files[0];
-      setFile(file);
-    };
+  const addFileField = () => {
+    setFiles([...files, null]);
+  };
 
-    const quill = document.querySelector('.js-quill .ql-editor');
-    const input = quill.querySelector('input[type=file]');
-    if (input) {
-      input.addEventListener('change', handleFileChange);
-    }
+  const deleteFileField = (index) => {
+    const updatedFiles = [...files];
+    updatedFiles.splice(index, 1);
+    setFiles(updatedFiles);
+  };
 
-    return () => {
-      if (input) {
-        input.removeEventListener('change', handleFileChange);
-      }
-    };
-  }, []);
+  const handleFileChange = (event, index) => {
+    const newFiles = [...files];
+    newFiles[index] = event.target.files[0];
+    setFiles(newFiles);
+  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -845,9 +842,11 @@ export const AddActivityTeam = () => {
       const formData = new FormData();
       formData.append('descricao', descricao);
       formData.append('id_equipa', teamId);
-      if (file) {
-        formData.append('file', file);
-      }
+      files.forEach((files, index) => {
+        if (files) {
+          formData.append(`files${index}`, files);
+        }
+      });
 
       const response = await axios.post(
         `http://localhost:8081/api/add-activity-team/${teamId}`,
@@ -864,11 +863,6 @@ export const AddActivityTeam = () => {
 
   const handleQuillChange = (content) => {
     setDescricao(content);
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setFile(file);
   };
 
   return (
@@ -892,15 +886,12 @@ export const AddActivityTeam = () => {
                               container: [
                                 ['bold', 'italic', 'underline', 'strike'],
                                 [{ list: 'ordered' }, { list: 'bullet' }],
-                                ['link'
-                                // 'image'
-                              ],
+                                ['link', 'image'],
                               ],
                             },
                           }}
-                          formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'html']}
+                          formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image', 'html']}
                         />
-                        <input type="file" onChange={handleFileChange} />
                       </div>
                     </div>
                   </div>
@@ -909,6 +900,31 @@ export const AddActivityTeam = () => {
                       <i className="bi bi-airplane"></i>
                     </button>
                   </div>
+
+                  {files.map((_, index) => (
+                    <div key={index} className="input-group-add-field">
+                      <div className="input-group input-group-sm-vertical align-items-center">
+                        <div className="input-group-append">
+                          <div className="tom-select-custom tom-select-custom-end">
+                            <input
+                              className="js-input-mask form-control"
+                              type="file"
+                              onChange={(e) => handleFileChange(e, index)}
+                            />
+                          </div>
+                        </div>
+                        <button onClick={() => deleteFileField(index)} className="js-delete-field btn btn-danger btn-icon">
+                          <i className="bi bi-x-lg"></i>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div id="addPhoneFieldContainer"></div>
+
+                  <button type="button" onClick={addFileField} className="js-create-field btn btn-primary">
+                    <i className="bi bi-plus"></i> Add file
+                  </button>
                 </div>
               </div>
             </form>
@@ -918,7 +934,6 @@ export const AddActivityTeam = () => {
     </div>
   );
 };
-
 
 export const AddTeam = () => {
   const [customDiscipline, setCustomDiscipline] = useState('');

@@ -102,13 +102,14 @@ export default function UserProfile() {
                 </div>
               </div>
               <div className="text-center mb-5">
-
+    
                 <div className="avatar avatar-xxl avatar-circle profile-cover-avatar">
                   <span className="bd-placeholder rounded avatar-initials">{userProfile?.nome_professor?.charAt(0).toUpperCase()}</span>
                   <span className="avatar-status avatar-status-success"></span>
                 </div>
 
                 <h1 className="page-header-title">
+                {/* <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i> */}
                   {userProfile.nome_professor}
                 </h1>
                 <ul className="list-inline list-px-2">
@@ -139,26 +140,11 @@ export default function UserProfile() {
                     <Link className="nav-link" to="/team-list">Equipa</Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/friends">Amigos</Link>
+                    <Link className="nav-link disabled" to="/friends">Amigos</Link>
                   </li>
 
                   <li className="nav-item ms-auto">
                     <div className="d-flex gap-2">
-                      {/* <div className="form-check form-check-switch">
-                      <input className="form-check-input" type="checkbox" value="" id="connectCheckbox"/>
-                      <label className="form-check-label btn btn-sm" htmlFor="connectCheckbox">
-                        <Link to="/user-profile-settings">
-                        <span className="form-check-default">
-                          <i className="bi bi-gear"></i> Editar perfil
-                        </span>
-                        </Link>
-                        <span className="form-check-active">
-                          <i className="bi-check-lg me-2"></i> Ligado
-                        </span>
-                      </label>
-                    </div> */}
-
-
                       <div className="dropdown nav-scroller-dropdown">
                         <button type="button" className="btn btn-white btn-icon btn-sm" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                           <i className="bi-three-dots-vertical"></i>
@@ -322,7 +308,7 @@ export default function UserProfile() {
 
 
 
-                  <div className="row mt-4">
+                  {/* <div className="row mt-4">
                     <div className="col-sm-6 mb-3 mb-sm-0">
                       <div className="card h-100">
                         <div className="card-header">
@@ -359,7 +345,6 @@ export default function UserProfile() {
                                 </div>
                               </div>
                             </li>
-                            {/* Additional list items */}
                           </ul>
                         </div>
                         <Link className="card-footer text-center" to="/user-profile/friends">
@@ -388,7 +373,6 @@ export default function UserProfile() {
                                 </div>
                               </a>
                             </li>
-                            {/* Additional list items */}
                           </ul>
                         </div>
                         <Link className="card-footer text-center" to="/team">
@@ -396,7 +380,7 @@ export default function UserProfile() {
                         </Link>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

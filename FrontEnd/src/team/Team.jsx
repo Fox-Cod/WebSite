@@ -117,6 +117,8 @@ export default function Team() {
                                 </nav>
 
                                 <h1 className="page-header-title">#{teamData.nome_equipa}</h1>
+                                <button className='btn' onClick={() => window.location.reload()}>Reload</button>
+
                             </div>
                             <div className="col-lg-auto">
                                 <div class="input-group">
@@ -299,50 +301,6 @@ export default function Team() {
                                         </div>
                                     </li>
                                 ))}
-                                {/* {teamMembers.map((member) => (
-                                    <li key={member.id}>
-                                        <div className="d-flex">
-                                        <div className="flex-shrink-0">
-                                            <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={member.professores.nome_professor}>
-                                            <span className="avatar-initials">{member.professores.nome_professor.charAt(0).toUpperCase()}</span>
-                                            </span>
-                                        </div>
-
-                                        <div className="flex-grow-1 ms-3">
-                                            <div className="row align-items-center">
-                                            <div className="col-sm">
-                                                <h5 className="text-body mb-0">{member.professores.nome_professor}</h5>
-                                                <span className="d-block fs-6">{member.professores.email_professor}</span>
-                                            </div>
-
-                                            <div className="col-sm-auto">
-                                                {isAdmin && member.id !== currentUser.id && member.nivel_de_acesso !== 'Administrator' ? (
-                                                <div className="tom-select-custom tom-select-custom-sm-end">
-                                                    <select
-                                                    className="js-select form-select form-select-borderless tom-select-custom-form-select-invite-user tom-select-form-select-ps-0"
-                                                    autoComplete="off"
-                                                    data-hs-tom-select-options='{
-                                                        "searchInDropdown": false,
-                                                        "hideSearch": true,
-                                                        "dropdownWidth": "11rem"
-                                                    }'
-                                                    value={member.nivel_de_acesso}
-                                                    onChange={(e) => handleAccessChange(member.id, e.target.value)}
-                                                    >
-                                                    <option value="Guest" selected={member.nivel_de_acesso === 'Guest'}>Convidado</option>
-                                                    <option value="Administrator" selected={member.nivel_de_acesso === 'Administrator'}>Administrator</option>
-                                                    <option value="remove" data-option-template='<div className="text-danger">Remover</div>'>Remover</option>
-                                                    </select>
-                                                </div>
-                                                ) : (
-                                                <span>{member.nivel_de_acesso}</span>
-                                                )}
-                                            </div>
-                                            </div>
-                                        </div>
-                                        </div>
-                                    </li>
-                                    ))} */}
                             </ul>
                             {/* <label className="row form-check form-switch" htmlFor="addTeamPreferencesNewProjectSwitch1">
                                 <span className="col-8 col-sm-9 ms-0">

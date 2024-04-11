@@ -18,7 +18,9 @@ async function login(req, res) {
       return res.status(401).json({ Message: 'Unauthorized: Неверные учетные данные' });
     }
 
-    const passwordMatch = await bcrypt.compare(password, professor.password_professor);
+    const passwordMatch = await bcrypt.compareSync(password, professor.password_professor);
+
+    console.log("USERPASSHASH: ", professor.password_professor, "\nUSERPASSWORD: ", passwordMatch, "\nLITTLEPASS: ", password)
 
     if (!passwordMatch) {
       return res.status(401).json({ Message: 'Unauthorized: Неверные учетные данные' });
@@ -37,11 +39,12 @@ async function login(req, res) {
 
 
 
+
 async function registration(req, res) {
   try {
     const { name, email, password, group, escola } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hashSync(password, 10);
 
     const newProfessor = await Professor.create({
       nome_professor: name,

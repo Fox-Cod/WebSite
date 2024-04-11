@@ -57,7 +57,7 @@ function formatDate(rawDate) {
                   <span className="avatar-status avatar-status-success"></span>
                 </div>
 
-              <h1 className="page-header-title">{userProfile.nome_professor} <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></h1>
+              <h1 className="page-header-title">{userProfile.nome_professor}</h1>
               <ul className="list-inline list-px-2">
                 <li className="list-inline-item">
                   <i className="bi-geo-alt me-1"></i>
@@ -87,7 +87,7 @@ function formatDate(rawDate) {
                   <Link className="nav-link active" to="/team-list">Equipa</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/friends">Amigos</Link>
+                  <Link className="nav-link disabled" to="/friends">Amigos</Link>
                 </li>
 
                 <li className="nav-item ms-auto">
@@ -152,7 +152,7 @@ function formatDate(rawDate) {
                                     <div className="row align-items-center mb-2">
                                         <div className="col-9">
                                             <h4 className="mb-1">
-                                              <Link to={`/team/${team.equipa.id_equipa}`}>#{team.equipa.nome_equipa}</Link>
+                                              <Link to={`/${team.equipa.id_equipa}`}>#{team.equipa.nome_equipa}</Link>
                                             </h4>
                                         </div>
                                         <div className="col-3 text-end">

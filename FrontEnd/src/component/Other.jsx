@@ -718,16 +718,16 @@ export const AddAndSearchResources = () => {
           <p>{formatBytes(file.size)}</p>
         </div>
       </div>
-      <button type="button" className="btn btn-danger" onClick={handleDeleteFile}>Delete</button>
+      <button type="button" className="btn btn-danger" onClick={handleDeleteFile}>Eliminar</button>
     </div>
   ) : (
-    <p>Drag 'n' drop some files here, or click to select files</p>
+    <p>Arraste e largue alguns ficheiros aqui, ou clique para selecionar ficheiros</p>
   );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
-      alert('Please select a file');
+      alert('Seleccione um ficheiro');
       return;
     }
 
@@ -735,11 +735,13 @@ export const AddAndSearchResources = () => {
     formData.append('file', file);
     formData.append('title', title);
 
+    console.log(file)
+
     try {
       await axios.post('http://localhost:8081/api/upload', formData, { withCredentials: true });
-      alert('File uploaded successfully');
+      alert('Ficheiro carregado com sucesso');
     } catch (error) {
-      console.error('Error uploading file: ', error);
+      console.error('Erro ao carregar o ficheiro: ', error);
       alert('Error uploading file');
     }
   };
@@ -786,7 +788,7 @@ export const AddAndSearchResources = () => {
                 <textarea
                   id="title"
                   className='form-control form-control-title'
-                  placeholder="Add title"
+                  placeholder="Adicionar um título"
                   value={title}
                   onChange={handleTitleChange}
                 ></textarea>
@@ -816,50 +818,37 @@ export const AddAndSearchResources = () => {
 
 export const AddActivityTeam = () => {
   const { teamId } = useParams();
-  const [files, setFiles] = useState([]);
+  const [file, setFile] = useState(null);
   const [descricao, setDescricao] = useState('');
 
-  const addFileField = () => {
-    setFiles([...files, null]);
-  };
-
-  const deleteFileField = (index) => {
-    const updatedFiles = [...files];
-    updatedFiles.splice(index, 1);
-    setFiles(updatedFiles);
-  };
-
-  const handleFileChange = (event, index) => {
-    const newFiles = [...files];
-    newFiles[index] = event.target.files[0];
-    setFiles(newFiles);
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const formData = new FormData();
-      formData.append('descricao', descricao);
-      formData.append('id_equipa', teamId);
-      files.forEach((files, index) => {
-        if (files) {
-          formData.append(`files${index}`, files);
+        if (!descricao && !file) {
+            console.error('Необходимо заполнить хотя бы одно из полей (комментарий или файл)');
+            return;
         }
-      });
 
-      const response = await axios.post(
-        `http://localhost:8081/api/add-activity-team/${teamId}`,
-        formData,
-        { withCredentials: true }
-      );
+        const formData = new FormData();
+        formData.append('descricao', descricao);
+        formData.append('id_equipa', teamId);
+        formData.append('file', file);
 
-      console.log(response.data);
-      console.log(response);
+        const response = await axios.post(
+            `http://localhost:8081/api/add-activity-team/${teamId}`,
+            formData,
+            { withCredentials: true }
+        );
+
+        console.log(response.data);
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
-  };
+};
 
   const handleQuillChange = (content) => {
     setDescricao(content);
@@ -890,7 +879,7 @@ export const AddActivityTeam = () => {
                               ],
                             },
                           }}
-                          formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image', 'html']}
+                          formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image']}
                         />
                       </div>
                     </div>
@@ -900,31 +889,23 @@ export const AddActivityTeam = () => {
                       <i className="bi bi-airplane"></i>
                     </button>
                   </div>
-
-                  {files.map((_, index) => (
-                    <div key={index} className="input-group-add-field">
+                  
+                    <div className="input-group-add-field">
+                      Não necessariamente.
                       <div className="input-group input-group-sm-vertical align-items-center">
                         <div className="input-group-append">
                           <div className="tom-select-custom tom-select-custom-end">
+                            
                             <input
                               className="js-input-mask form-control"
                               type="file"
-                              onChange={(e) => handleFileChange(e, index)}
+                              onChange={handleFileChange}
                             />
                           </div>
                         </div>
-                        <button onClick={() => deleteFileField(index)} className="js-delete-field btn btn-danger btn-icon">
-                          <i className="bi bi-x-lg"></i>
-                        </button>
                       </div>
                     </div>
-                  ))}
 
-                  <div id="addPhoneFieldContainer"></div>
-
-                  <button type="button" onClick={addFileField} className="js-create-field btn btn-primary">
-                    <i className="bi bi-plus"></i> Add file
-                  </button>
                 </div>
               </div>
             </form>

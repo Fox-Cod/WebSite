@@ -57,7 +57,7 @@ const App = () => {
         <Route path="/view-activity/:activityId" element={<ViewActivity />} />
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
         <Route path="/team-list" element={<TeamList />} />
-        <Route path="/team/:teamId" element={<Team />} />
+        <Route path="/:teamId" element={<Team />} />
         <Route path="/friends" element={<Friends />} />
         <Route path="/user-profile-settings" element={<UserProfileSettings />} />
         <Route path="/password-reset-email" element={<PasswordResetEmail />} />

@@ -2,6 +2,8 @@ const Professor = require('../models/Professor');
 const Equipa = require('../models/Equipa');
 const Equipa_Atividades = require('../models/Equipa_Atividades');
 const RelacaoEquipaUtilizador = require('../models/Relacao_Equipa_Utilizador');
+const path = require('path');
+const fs = require('fs');
 
 async function showTeams(req, res) {
   const { id_professor } = req.user;
@@ -121,18 +123,17 @@ async function addMemberToTeam(req, res) {
 
 
 async function addActivityTeam(req, res) {
-  try {
-    const { id_professor } = req.user;
-    const teamId = req.params.teamId;
+  const { id_professor } = req.user;
+  const teamId = req.params.teamId;
 
+  try {
     let newFileName = null;
     let uploadPath = null;
-    let size = null;
-    let fileExtension = null;
+    let fileSize = null;
+    let fileType = null;
 
-    // Проверяем, был ли загружен файл
-    if (req.files) {
-      const { originalname, path: tempPath } = req.files;
+    if (req.file) {
+      const { originalname, path: tempPath, size } = req.file;
 
       // Генерируем уникальное имя файла
       newFileName = originalname;
@@ -144,21 +145,20 @@ async function addActivityTeam(req, res) {
       fs.renameSync(tempPath, uploadPath);
 
       // Определяем расширение файла
-      fileExtension = path.extname(originalname);
+      const fileExtension = path.extname(originalname);
 
-      // Устанавливаем размер файла
-      size = req.file.size;
+      fileSize = size;
+      fileType = fileExtension;
     }
 
-    // Сохраняем информацию о файле в базе данных
     const newActivity = await Equipa_Atividades.create({
       id_equipa: teamId,
       id_professor,
       descricao: req.body.descricao,
       filename: newFileName,
       path: uploadPath,
-      fileSize: size,
-      fileType: fileExtension,
+      fileSize,
+      fileType,
       data_criacao: new Date(),
     });
 
@@ -169,9 +169,27 @@ async function addActivityTeam(req, res) {
   }
 }
 
+async function editTeamAcitivty(req, res) {
+  const activityId = req.params.activityId;
+
+  try {
+    const activity = await Atividades.findByPk(activityId);
+    if (!activity) return res.status(404).json({ message: 'Activity not found' });
+
+    await activity.update(req.body);
+
+    res.status(200).json(activity);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 
 
 
 
-module.exports = { showTeams, getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam };
+
+
+
+module.exports = { showTeams, getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam, editTeamAcitivty };

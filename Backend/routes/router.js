@@ -10,7 +10,11 @@ const storage = multer.diskStorage({
       cb(null, file.fieldname + '-' + Date.now())
     }
   });
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+
+});
+
 
 // Токен & Проверка авторизаций
 const { authenticateToken } = require('../middleware/authMiddleware');

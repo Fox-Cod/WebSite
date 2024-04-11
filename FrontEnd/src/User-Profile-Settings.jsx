@@ -123,7 +123,7 @@ export default function UserProfileSettings() {
                   <span className="avatar-status avatar-status-success"></span>
                 </div>
 
-                <h1 className="page-header-title">{userProfile.nome_professor} <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></h1>
+                <h1 className="page-header-title">{userProfile.nome_professor}</h1>
               </div>
 
 

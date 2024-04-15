@@ -117,26 +117,26 @@ async function getProfileOtherUser(req, res) {
 }
 
 // ###
-async function getViewUserActivity(req, res) {
-  const { id_professor } = req.user;
+// async function getViewUserActivity(req, res) {
+//   const { id_professor } = req.user;
 
-  try {
-    const userActivity = await Atividades.findAll({
-      where: { id_professor },
-      include: [
-        { model: Professor, as: 'professores', attributes: ['nome_professor'] },
-        { model: Disciplina, as: 'disciplinas', attributes: ['nome_disciplina'] },
-        { model: Ano, as: 'anos', attributes: ['ano'] },
-        { model: Ensino, as: 'nivel_ensino', attributes: ['nome_ensino'] }
-      ]
-    });
+//   try {
+//     const userActivity = await Atividades.findAll({
+//       where: { id_professor },
+//       include: [
+//         { model: Professor, as: 'professores', attributes: ['nome_professor'] },
+//         { model: Disciplina, as: 'disciplinas', attributes: ['nome_disciplina'] },
+//         { model: Ano, as: 'anos', attributes: ['ano'] },
+//         { model: Ensino, as: 'nivel_ensino', attributes: ['nome_ensino'] }
+//       ]
+//     });
 
-    res.json({ Status: 'Success', activity: userActivity });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-  }
-}
+//     res.json({ Status: 'Success', activity: userActivity });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send('Internal Server Error');
+//   }
+// }
 
 
 

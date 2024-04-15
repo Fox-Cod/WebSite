@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { Op } = require('sequelize');
 const Professor = require('../models/Professor');
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY || 'default-secret-key';
@@ -67,7 +68,7 @@ async function registration(req, res) {
 async function tokenValidation(req, res) {
   try {
     const token = req.params.token;
-    const user = await Professor.findOne({ where: { resetToken: token, resetTokenExpires: { [Op.gt]: Date.now() } } });
+    const user = await Professor.findOne({ where: { resetToken: token } });
 
     if (!user) {
       return res.status(400).json({ message: 'Ссылка для сброса пароля недействительна или истекла' });
@@ -90,7 +91,7 @@ async function resetPassword(req, res) {
       return res.status(400).json({ message: 'Пароли не совпадают' });
     }
 
-    const user = await Professor.findOne({ where: { resetToken: token, resetTokenExpires: { [Op.gt]: Date.now() } } });
+    const user = await Professor.findOne({ where: { resetToken: token } });
 
     if (!user) {
       return res.status(400).json({ message: 'Пользователь не найден' });
@@ -101,6 +102,7 @@ async function resetPassword(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     user.password_professor = hashedPassword;
+    user.resetToken = null; // Устанавливаем resetToken в null
     await user.save();
 
     console.log('Пароль пользователя успешно изменен');
@@ -110,6 +112,7 @@ async function resetPassword(req, res) {
     res.status(500).json({ message: 'Произошла ошибка при сбросе пароля' });
   }
 };
+
 
 
 

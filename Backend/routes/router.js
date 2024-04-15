@@ -52,6 +52,7 @@ router.post('/add-activity-team/:teamId', upload.single('file'), authenticateTok
 // Другое
 router.get('/view-data', dataController.getSchoolAndGroupData)
 router.get('/view-data-activity', dataController.getYearsLessonAndTeachingData)
+router.post('/feedback', emailController.feedBack);
 router.post('/send-email', emailController.sendEmail);
 router.get('/token-validation/:token', authController.tokenValidation)
 router.post('/reset-password/:token', authController.resetPassword)

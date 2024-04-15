@@ -1107,6 +1107,44 @@ export const AddTeam = () => {
     </div>
   )
 }
+// export const MessageEditor = ({ activityId, currentMessage, currentFile, onSave }) => {
+//   const [message, setMessage] = useState(currentMessage || ''); // Используем текущее сообщение, если оно есть
+//   const [file, setFile] = useState(currentFile); // Используем текущий файл, если он есть
+//   const [isEditorOpen, setIsEditorOpen] = useState(false);
+
+//   const handleSave = () => {
+//     onSave(activityId, message, file);
+//     setMessage('');
+//     setFile(null);
+//     setIsEditorOpen(false);
+//   };
+
+//   const toggleEditor = () => {
+//     setIsEditorOpen(!isEditorOpen);
+//   };
+
+//   return (
+//     <div>
+//       <i className="bi bi-pencil" onClick={toggleEditor}></i>
+//       {isEditorOpen && (
+//         <div>
+//           {/* Показываем текущее сообщение в редакторе */}
+//           <textarea value={message} onChange={(e) => setMessage(e.target.value)} />
+//           {/* Показываем текущий файл, если он есть */}
+//           {file && (
+//             <div>
+//               <img src={`http://localhost:8081/api/files/${file}`} alt="Current File" />
+//               {/* Добавьте кнопку для удаления файла, если это необходимо */}
+//             </div>
+//           )}
+//           {/* Кнопка для сохранения изменений */}
+//           <button onClick={handleSave}>Сохранить изменения</button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
 
 const dropzoneStyles = {
   border: '2px dashed #cccccc',

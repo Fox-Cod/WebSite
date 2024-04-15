@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
 import axios from 'axios';
 
 
@@ -102,14 +103,14 @@ export default function UserProfile() {
                 </div>
               </div>
               <div className="text-center mb-5">
-    
+
                 <div className="avatar avatar-xxl avatar-circle profile-cover-avatar">
                   <span className="bd-placeholder rounded avatar-initials">{userProfile?.nome_professor?.charAt(0).toUpperCase()}</span>
                   <span className="avatar-status avatar-status-success"></span>
                 </div>
 
                 <h1 className="page-header-title">
-                {/* <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i> */}
+                  {/* <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i> */}
                   {userProfile.nome_professor}
                 </h1>
                 <ul className="list-inline list-px-2">
@@ -162,7 +163,7 @@ export default function UserProfile() {
                           <span className="dropdown-header">Feedback</span>
 
                           <a className="dropdown-item" href="#">
-                            <i className="bi-flag dropdown-item-icon"></i> Relatório
+                            <i className="bi-flag dropdown-item-icon"></i> <Link className='link' to="/#contact-section">Relatório</Link>
                           </a>
                         </div>
                       </div>
@@ -265,37 +266,37 @@ export default function UserProfile() {
                             <h5>Não tens nada.</h5><Link className='link' to="/form/activity"> Queres acrescentar alguma coisa? </Link>
                           </div>
                         )}
-                      {dataResources.map((d, i) => (
-                        <ul className="step step-icon-xs mb-0" key={i}>
-                          <li className="step-item">
-                            <div className="step-content-wrapper">
-                              <span className="step-icon step-icon-pseudo step-icon-soft-dark"></span>
+                        {dataResources.map((d, i) => (
+                          <ul className="step step-icon-xs mb-0" key={i}>
+                            <li className="step-item">
+                              <div className="step-content-wrapper">
+                                <span className="step-icon step-icon-pseudo step-icon-soft-dark"></span>
 
-                              <div className="step-content">
-                                <ul className="list-group">
-                                  <h6>{d.title}</h6>
-                                  <li className="list-group-item list-group-item-light">
-                                    <div className="row gx-1">
-                                      <div className="col-sm-4">
-                                        <div className="d-flex">
-                                          <span className="flex-shrink-0">
-                                            <img className="avatar avatar-xs" src="../assets/svg/brands/excel-icon.svg" alt="Image Description" />
-                                          </span>
-                                          <div className="flex-grow-1 text-truncate ms-2">
-                                            <span className="d-block fs-6 text-dark text-truncate"><Link className="text-dark" to="/resources">{d.filename}</Link></span>
-                                            <span className="d-block small text-muted">{formatBytes(d.fileSize)}</span>
+                                <div className="step-content">
+                                  <ul className="list-group">
+                                    <h6>{d.title}</h6>
+                                    <li className="list-group-item list-group-item-light">
+                                      <div className="row gx-1">
+                                        <div className="col-sm-4">
+                                          <div className="d-flex">
+                                            <span className="flex-shrink-0">
+                                              <img className="avatar avatar-xs" src="../assets/svg/components/placeholder-img-format.svg" alt="Image Description" />
+                                            </span>
+                                            <div className="flex-grow-1 text-truncate ms-2">
+                                              <span className="d-block fs-6 text-dark text-truncate"><Link className="text-dark" to="/resources">{d.filename}</Link></span>
+                                              <span className="d-block small text-muted">{formatBytes(d.fileSize)}</span>
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  </li>
-                                </ul>
-                                <span className="text-muted small text-uppercase">{formatDate(d.publishDate)}</span>
-                              </div>
+                                    </li>
+                                  </ul>
+                                  <span className="text-muted small text-uppercase">{formatDate(d.publishDate)}</span>
+                                </div>
 
-                            </div>
-                          </li>
-                        </ul>
+                              </div>
+                            </li>
+                          </ul>
                         ))}
                       </div>
                       <div className="card-footer">

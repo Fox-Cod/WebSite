@@ -13,8 +13,7 @@ const sendEmail = async (req, res) => {
   if (!user) return res.status(404).send('Пользователь с таким email не найден');
   
   const resetToken = uuidv4();
-  const resetTokenExpires = new Date(Date.now() + 3600000); // Срок действия токена 1 час
-  await user.update({ resetToken, resetTokenExpires });
+  await user.update({ resetToken });
   
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -49,4 +48,38 @@ const sendEmail = async (req, res) => {
   });
 };
 
-module.exports = { sendEmail };
+const feedBack = async (req, res) => {
+  const { name, email, message } = req.body;
+  // const user = await Professor.findOne({ where: { email_professor: email } });
+  // if (!user) return res.status(404).send('Пользователь с таким email не найден');
+  
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      type: 'OAuth2',
+      user: process.env.EMAIL_USER,
+      clientId: process.env.EMAIL_CLIENT_ID,
+      clientSecret: process.env.EMAIL_CLIENT_SECRET,
+      refreshToken: process.env.EMAIL_REFRESH_TOKEN,
+    },
+  });
+  console.log(email)
+  const mailOptions = {
+    from: email,
+    to: process.env.EMAIL_USER,
+    subject: 'FeedBack: ' + name,
+    text: message + "\n\nAutor: " + email,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log('Ошибка отправки письма:', error);
+      res.status(500).send('Ошибка отправки письма');
+    } else {
+      console.log('Письмо успешно отправлено:', info.response);
+      res.send('Письмо успешно отправлено');
+    }
+  });
+};
+
+module.exports = { sendEmail, feedBack };

@@ -76,14 +76,12 @@ export default function PasswordResetEmail() {
                       onChange={(e) => setValues({ ...values, email: e.target.value })}
                     />
                     <span className="invalid-feedback">{formErrors.email}</span>
+                    {statusTrue && <span className='text-success'>{statusTrue}</span>}
                   </div>
 
-                  {statusTrue && <p className='text-success'>{statusTrue}</p>}
                   <div className="d-grid">
                     <button type="submit" className="btn btn-primary btn-lg">Confirmar</button>
                   </div>
-                  <Link to="/token-validation">ResetCode</Link><br />
-                  <Link to="/reset-password">ResetPassword</Link>
                 </form>
               </div>
             </div>

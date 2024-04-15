@@ -5,6 +5,7 @@ import axios from "axios";
 
 export default function Tools() {
   const [toolsData, setToolsData] = useState([]);
+  const [userProfile, setUserProfile] = useState({});
   const [formData, setFormData] = useState({
     titulo: '',
     link: '',
@@ -65,8 +66,22 @@ export default function Tools() {
     }
   }
 
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get('http://localhost:8081/api/profile', { withCredentials: true });
+      if (response.data.Status === 'Success') {
+        setUserProfile(response.data.profile);
+      } else {
+        console.log(response.data.Message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    fetchUserProfile();
   }, []);
 
 
@@ -132,8 +147,8 @@ export default function Tools() {
                       id="datatableSearch"
                       type="search"
                       className="form-control"
-                      placeholder="Pesquisar usuários"
-                      aria-label="Pesquisar usuários"
+                      placeholder="Procurar"
+                      aria-label="Procurar"
                     />
                   </div>
                 </form>
@@ -155,15 +170,21 @@ export default function Tools() {
                 </div>
 
                 <div className="dropdown">
+                  
+                  {userProfile.role == "administrador" ?
+
                   <button
                     type="button"
                     className="btn btn-white btn-sm w-100"
                     data-bs-toggle="modal"
                     data-bs-target="#addTools"
                   >
-                    <i className="bi-plus-circle"></i> Add Ferramentos{" "}
+                     <i className="bi-plus-circle"> Ferramentos </i>  
                     <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
                   </button>
+
+                  : ""}
+
                 </div>
               </div>
             </div>

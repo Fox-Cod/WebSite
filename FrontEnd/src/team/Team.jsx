@@ -117,7 +117,6 @@ export default function Team() {
                                 </nav>
 
                                 <h1 className="page-header-title">#{teamData.nome_equipa}</h1>
-                                <button className='btn' onClick={() => window.location.reload()}>Reload</button>
 
                             </div>
                             <div className="col-lg-auto">

@@ -14,7 +14,6 @@ const Professor = sequelize.define('Professor', {
   id_grupo: { type: DataTypes.INTEGER, references: { model: Grupo, key: 'id_grupo' } },
   role: { type: DataTypes.STRING, defaultValue: 'utilizador' },
   resetToken: DataTypes.STRING,
-  resetTokenExpires: DataTypes.DATE,
 }, { tableName: 'professores', timestamps: false });
 
 

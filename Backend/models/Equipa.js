@@ -9,6 +9,7 @@ const Equipa = sequelize.define('Equipa', {
   nome_equipa: { type: DataTypes.STRING(255), allowNull: false },
   descricao_equipa: { type: DataTypes.STRING(255), defaultValue: null },
   industria: { type: DataTypes.STRING(255), allowNull: false },
+  CreateDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 }, { tableName: 'equipa', timestamps: false });
 
 Equipa.belongsTo(Professor, { foreignKey: 'id_professor', targetKey: 'id_professor' });

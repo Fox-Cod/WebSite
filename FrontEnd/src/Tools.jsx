@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { NavForm } from './component/Other';
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -116,7 +115,38 @@ export default function Tools() {
   return (
     <div>
       <div>
-        <NavForm />
+      <header id="header" className="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column">
+        <div className="container">
+          <nav className="js-mega-menu flex-grow-1">
+            <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
+
+              <ul className="nav nav-tabs align-items-center">
+                <li className='nav-item'>
+                  <Link className="nav-link " to="/form" data-placement="left">
+                    <i className="bi bi-house dropdown-item-icon"></i> Inicio
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link className="nav-link " to="/activity" data-placement="left">
+                    <i className="bi bi-activity dropdown-item-icon"></i> Atividades
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link className="nav-link " to="/resources" data-placement="left">
+                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> Recursos
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link className="nav-link active" to="/tools" data-placement="left">
+                    <i className="bi bi-tools dropdown-item-icon"></i>Ferramentos
+                  </Link>
+                </li>
+              </ul>
+
+            </div>
+          </nav>
+        </div>
+      </header>
         <main className="container p-3">
           <div className="my-2 p-3 bg-body rounded shadow-sm">
             <nav aria-label="breadcrumb">

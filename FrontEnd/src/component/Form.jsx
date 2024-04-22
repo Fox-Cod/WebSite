@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { NavForm } from './Other';
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -55,7 +54,38 @@ export default function Form() {
 
   return (
     <div>
-      <NavForm />
+      <header id="header" className="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column">
+        <div className="container">
+          <nav className="js-mega-menu flex-grow-1">
+            <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
+
+              <ul className="nav nav-tabs align-items-center">
+                <li className='nav-item'>
+                  <Link className="nav-link active" to="/form" data-placement="left">
+                    <i className="bi bi-house dropdown-item-icon"></i> Inicio
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link className="nav-link " to="/activity" data-placement="left">
+                    <i className="bi bi-activity dropdown-item-icon"></i> Atividades
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link className="nav-link " to="/resources" data-placement="left">
+                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> Recursos
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link className="nav-link " to="/tools" data-placement="left">
+                    <i className="bi bi-tools dropdown-item-icon"></i>Ferramentos
+                  </Link>
+                </li>
+              </ul>
+
+            </div>
+          </nav>
+        </div>
+      </header>
       <main className="container">
         <div className="my-2 p-3 bg-body rounded shadow-sm">
           <nav aria-label="breadcrumb">
@@ -66,11 +96,6 @@ export default function Form() {
             </ol>
           </nav>
         </div>
-
-        <div className="my-3 p-3 bg-body rounded shadow-sm">
-          <h6 className="border-bottom pb-2 mb-0">Atividades - Novo!</h6>
-        </div>
-
         {currentPosts.slice(0, 3).map((d, i) => (
           <div className="my-3 p-3 bg-body rounded shadow-sm" key={i}>
             <div className="d-flex text-body-secondary">

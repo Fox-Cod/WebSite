@@ -94,7 +94,7 @@ export default function SignUp() {
   return (
     <div>
       <main id="content" role="main" className="main">
-        <div className="container py-5 py-sm-7">
+        <div className="container py-5 py-sm-7 ">
           <div className="mx-auto" style={{ maxWidth: '30rem' }}>
             <div className="card card-lg mb-5">
               <div className="card-body">

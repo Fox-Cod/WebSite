@@ -43,7 +43,7 @@ async function getTeamAndMembers(req, res) {
     const [teamMembers, teamActivity] = await Promise.all([
       RelacaoEquipaUtilizador.findAll({
         where: { id_equipa: teamId },
-        include: [{ model: Professor, as: 'professores', attributes: ['id_professor', 'nome_professor'] }]
+        include: [{ model: Professor, as: 'professores', attributes: ['id_professor', 'nome_professor', 'email_professor'] }]
       }),
       Equipa_Atividades.findAll({
         where: { id_equipa: teamId },
@@ -75,6 +75,7 @@ async function createTeam(req, res) {
       nome_equipa: teamName,
       descricao_equipa: teamDescription,
       industria: selectedOption === 'Outros' ? customDiscipline : selectedOption,
+      CreateDate: new Date(),
     });
 
     const relacaoEquipaUtilizador = await RelacaoEquipaUtilizador.create({

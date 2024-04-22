@@ -291,23 +291,23 @@ export const NavForm = () => {
           <nav className="js-mega-menu flex-grow-1">
             <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
 
-              <ul className="navbar-nav">
-                <li>
-                  <Link className="nav-link " to="/form" data-placement="left">
+              <ul className="nav nav-tabs align-items-center">
+                <li className='nav-item'>
+                  <Link className="nav-link active" to="/form" data-placement="left">
                     <i className="bi bi-house dropdown-item-icon"></i> Inicio
                   </Link>
                 </li>
-                <li>
+                <li className='nav-item'>
                   <Link className="nav-link " to="/activity" data-placement="left">
                     <i className="bi bi-activity dropdown-item-icon"></i> Atividades
                   </Link>
                 </li>
-                <li>
+                <li className='nav-item'>
                   <Link className="nav-link " to="/resources" data-placement="left">
                     <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> Recursos
                   </Link>
                 </li>
-                <li>
+                <li className='nav-item'>
                   <Link className="nav-link " to="/tools" data-placement="left">
                     <i className="bi bi-tools dropdown-item-icon"></i>Ferramentos
                   </Link>
@@ -568,6 +568,7 @@ export const AddAndSearchActivity = () => {
                   </div>
 
                   <div className="col-sm">
+                    Presentação
                     <input
                       type="text"
                       className={`form-control ${formErrors.presentacao ? 'is-invalid' : ''}`}
@@ -579,9 +580,7 @@ export const AddAndSearchActivity = () => {
                     <span className="invalid-feedback">{formErrors.presentacao}</span>
                   </div>
                   <div className="col-sm">
-                    <label htmlFor="eventLocationLabel" className="visually-hidden form-label">
-                      Add Planificacao
-                    </label>
+                    Planificação
                     <input
                       type="text"
                       className={`form-control ${formErrors.planificacao ? 'is-invalid' : ''}`}
@@ -604,23 +603,22 @@ export const AddAndSearchActivity = () => {
                   </div>
 
                   <div className="col-sm">
-                    <div className="tom-select-custom">
-                      <select
-                        className="js-select form-select"
-                        autoComplete="off"
-                        id="id_disciplina"
-                        value={formData.id_disciplina}
-                        onChange={handleChange}
-                      >
-                        <option>Qualquer</option>
-                        {data.disciplinas && data.disciplinas.map((disciplina) => (
-                          <option key={disciplina.id_disciplina} value={disciplina.id_disciplina}>{disciplina.nome_disciplina}</option>
-                        ))}
-                      </select>
-                    </div>
+                    Ano
+                    <select
+                      className="js-select form-select"
+                      autoComplete="off"
+                      id="id_ano"
+                      value={formData.id_ano}
+                      onChange={handleChange}
+                    >
+                      {data.anos && data.anos.map((ano) => (
+                        <option key={ano.id_ano} value={ano.id_ano}>{ano.ano}</option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="col-sm">
+                    Ensino
                     <div className="tom-select-custom">
                       <select
                         className="js-select form-select"
@@ -643,22 +641,26 @@ export const AddAndSearchActivity = () => {
                   <div className="col-sm-3 mb-2 mb-sm-0">
                     <div className="d-flex align-items-center mt-2">
                       <i className="bi-text-left nav-icon"></i>
-                      <div className="flex-grow-1">Ano de estudo</div>
+                      <div className="flex-grow-1">Objeto</div>
                     </div>
                   </div>
 
                   <div className="col-sm">
-                    <select
-                      className="js-select form-select"
-                      autoComplete="off"
-                      id="id_ano"
-                      value={formData.id_ano}
-                      onChange={handleChange}
-                    >
-                      {data.anos && data.anos.map((ano) => (
-                        <option key={ano.id_ano} value={ano.id_ano}>{ano.ano}</option>
-                      ))}
-                    </select>
+                    Disciplina
+                    <div className="tom-select-custom">
+                      <select
+                        className="js-select form-select"
+                        autoComplete="off"
+                        id="id_disciplina"
+                        value={formData.id_disciplina}
+                        onChange={handleChange}
+                      >
+                        <option>Qualquer</option>
+                        {data.disciplinas && data.disciplinas.map((disciplina) => (
+                          <option key={disciplina.id_disciplina} value={disciplina.id_disciplina}>{disciplina.nome_disciplina}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
 
@@ -788,7 +790,7 @@ export const AddAndSearchResources = () => {
                 <textarea
                   id="title"
                   className='form-control form-control-title'
-                  placeholder="Adicionar um título"
+                  placeholder="Título (Não necessariamente)"
                   value={title}
                   onChange={handleTitleChange}
                 ></textarea>

@@ -3,18 +3,25 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function UserProfile() {
-  const [userProfile, setUserProfile] = useState(null); // изменено
-  const [error, setError] = useState(null);
+  const [profile, setProfile] = useState({});
+  const [activity, setActivity] = useState([]);
   const { userId } = useParams();
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8081/api/view-profile/${userId}`);
-      setUserProfile(response.data.profile); // установка профиля в состояние
-    } catch (err) {
-      setError(err); // установка ошибки в состояние
+  
+  useEffect(() => {
+    async function fetchProfileAndActivity() {
+      try {
+        const response = await axios.get(`http://localhost:8081/api/user-profile-and-activity/${userId}`);
+        setProfile(response.data.profile);
+        setActivity(response.data.activity);
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+      }
     }
-  }
+
+    fetchProfileAndActivity();
+  }, [userId]);
+  console.log("Activity:", activity);
+
 
   function formatDate(rawDate) {
     const dataRegistro = new Date(rawDate);
@@ -23,10 +30,6 @@ export default function UserProfile() {
     const year = dataRegistro.getFullYear();
     return `${day} ${month} ${year}`;
   }
-
-  useEffect(() => {
-    fetchData();
-  }, [userId]);
 
   function formatDate(rawDate) {
     const dataRegistro = new Date(rawDate);
@@ -44,12 +47,6 @@ export default function UserProfile() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  if (error) {
-    return <div>Error: {error.message}</div>; // отображение ошибки
-  } else if (!userProfile) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div>
       <main id="content" role="main" className="main">
@@ -63,25 +60,25 @@ export default function UserProfile() {
               </div>
               <div className="text-center mb-5">
                 <div className="avatar avatar-xxl avatar-circle profile-cover-avatar">
-                  <span className="bd-placeholder rounded avatar-initials">{userProfile?.nome_professor?.charAt(0).toUpperCase()}</span>
+                  <span className="bd-placeholder rounded avatar-initials">{profile?.nome_professor?.charAt(0).toUpperCase()}</span>
                   <span className="avatar-status avatar-status-success"></span>
                 </div>
                 <h2 className='link-danger'>ViewProfile</h2>
-                <h1 className="page-header-title">{userProfile?.nome_professor} <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></h1>
+                <h1 className="page-header-title">{profile?.nome_professor} <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></h1>
                 <ul className="list-inline list-px-2">
                   <li className="list-inline-item">
                     <i className="bi-geo-alt me-1"></i>
-                    <span>{userProfile?.nome_escola}</span>
+                    <span>{profile?.nome_escola}</span>
                   </li>
 
                   <li className="list-inline-item">
                     <i className="bi-building me-1"></i>
-                    <span>{userProfile?.nome_grupo}</span>
+                    <span>{profile?.nome_grupo}</span>
                   </li>
 
                   <li className="list-inline-item">
                     <i className="bi-calendar-week me-1"></i>
-                    <span>{formatDate(userProfile?.data_registro)}</span>
+                    <span>{formatDate(profile?.data_registro)}</span>
                   </li>
                 </ul>
               </div>
@@ -165,7 +162,24 @@ export default function UserProfile() {
                       <div className="card-header card-header-content-between">
                         <h4 className="card-header-title">Atividade(s)</h4>
                       </div>
-
+                      {/* <ul className="step step-icon-xs mb-0">
+                            {activity.map((d, i) => (
+                              <li className="step-item" key={i}>
+                                <div className="step-content-wrapper">
+                                  <span className="step-icon step-icon-pseudo step-icon-soft-dark"></span>
+                                  <div className="step-content">
+                                    <Link className="text-dark" to={`/view-activity/${d.id}`}>{d.titulo}</Link>
+                                    <p className="fs-5 mb-1"> {d.descricao}<br />
+                                      <span className="badge bg-soft-primary text-primary rounded-pill"><span className="legend-indicator bg-primary"></span>{d.disciplinas.nome_disciplina} </span>
+                                      <span className="badge bg-soft-primary text-success rounded-pill"><span className="legend-indicator bg-success"></span>{d.nivel_ensino.nome_ensino} </span>
+                                      <span className="badge bg-soft-primary text-warning rounded-pill"><span className="legend-indicator bg-warning"></span>{d.anos.ano} </span>
+                                    </p>
+                                    <span className="text-muted small text-uppercase">{formatDate(d.data_criacao)}</span>
+                                  </div>
+                                </div>
+                              </li>
+                            ))}
+                          </ul> */}
                       <div className="card-body card-body-height" style={{ height: '30rem' }}>
                         <ul className="step step-icon-xs mb-0">
                           <li className="step-item">

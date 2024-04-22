@@ -5,8 +5,6 @@ import { EditTextActivity, NavForm } from './Other';
 
 export default function ViewActivity() {
   const [data, setOneActivityData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(8);
   const { activityId } = useParams();
 
   const fetchData = async () => {

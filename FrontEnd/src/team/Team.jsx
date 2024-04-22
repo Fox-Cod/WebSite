@@ -56,6 +56,7 @@ export default function Team() {
         }
     };
 
+    console.log(teamData)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -118,28 +119,29 @@ export default function Team() {
 
                                 <h1 className="page-header-title">#{teamData.nome_equipa}</h1>
 
-                            </div>
-                            <div className="col-lg-auto">
-                                <div class="input-group">
+                                <p>{teamData.descricao_equipa}</p>
 
-                                    <a class="btn btn-primary btn-icon rounded-circle" href="javascript:;" data-bs-toggle="modal" data-bs-target="#shareWithPeopleModal">
-                                        <i class="bi-share-fill"></i>
-                                    </a>
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <span className="card-subtitle pb-3">Indústria: <a className="badge bg-soft-primary text-primary p-2" href="#">{teamData.industria}</a></span>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <span className="card-subtitle pb-3">Indústria: <a className="badge bg-soft-primary text-primary p-2" href="#">{teamData.industria}</a></span>
+                        <h6>Data de Criacao: {formatDate(teamData.CreateDate)}</h6>
+                    </div>
                 </div>
                 <div className="row mt-4 mb-4">
                     <div className="col-lg-4">
                         <div id="accountSidebarNav"></div>
 
                         <div className="js-sticky-block card mb-3 mb-lg-5">
-                            <div className="card-header">
-                                <h4 className="card-header-title">Membros</h4>
+                            <div className="card-header d-flex justify-content-between align-items-center">
+                                <h4 className="card-header-title mb-0">Membros</h4>
+                                <div className="col-lg-auto">
+                                    <div className="input-group">
+                                        <button type="button" className="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#shareWithPeopleModal"><i class="bi bi-plus"></i>Add user</button>
+                                    </div>
+                                </div>
                             </div>
-
 
                             <div className="card-body">
                                 <ul className="list-unstyled list-py-2 text-dark mb-0">
@@ -168,7 +170,7 @@ export default function Team() {
 
                     <div className="col-sm-8">
                         <AddActivityTeam />
-                        <div className="card h-100">
+                        <div className="card h-30">
                             <div className="card-header">
                                 <h4 className="card-header-title">Atividades</h4>
                             </div>
@@ -198,19 +200,22 @@ export default function Team() {
                                                                                     <img className="avatar avatar-xs" src="../assets/svg/brands/excel-icon.svg" alt="Image Description" />
                                                                                 </div>
                                                                                 <div className="flex-grow-1 text-truncate ms-2">
-                                                                                    <Link to={`http://localhost:8081/api/files/${activity.filename}`} download>{activity.filename}
+                                                                                    <span>{activity.filename}
                                                                                         <span className="d-block small text-muted">{formatBytes(activity.fileSize)}</span>
-                                                                                    </Link>
+                                                                                        {/* <span><Link to="#">Ver </Link></span> */}
+
+                                                                                        <span><Link to={`http://localhost:8081/api/files/${activity.filename}`} download> Download</Link></span>
+                                                                                    </span>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        
+
                                                                     </div>
                                                                 </li>
                                                             </ul>
                                                         ) : null}
                                                     </div>
-                                                        <span className="d-block fs-6 text-dark text-truncate">{formatDate(activity.data_criacao)}</span>
+                                                    <span className="d-block fs-6 text-dark text-truncate">{formatDate(activity.data_criacao)}</span>
                                                 </div>
                                             </li>
                                         </ul>
@@ -228,41 +233,35 @@ export default function Team() {
             </main>
 
             <div className="modal fade" id="shareWithPeopleModal" tabIndex="-1" aria-labelledby="shareWithPeopleModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: '700px', width: '90%' }}>
                     <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="shareWithPeopleModalLabel">Convidar usuários</h5>
+                        <div className="modal-header ">
+                            <h5>Partilhar ideias de especialistas</h5> 
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                         </div>
 
                         <div className="modal-body">
+                            <h5>Adicionar novos membros ao seu projeto</h5>
+                            <p>As pessoas convidadas serão adicionadas à sua organização.</p>
                             <div className="mb-4">
                                 <div className="input-group mb-2 mb-sm-0">
-                                    <input
-                                        className="form-control"
-                                        type="text"
-                                        name="nome_professor"
-                                        value={inviteFormData.nome_professor}
-                                        onChange={handleInputChange}
-                                        placeholder="Procurar por nome ou e-mails"
-                                    />
+                                    <input className="form-control" type="text" name="nome_professor" value={inviteFormData.nome_professor} onChange={handleInputChange} placeholder="Procurar por nome ou e-mails" />
 
                                     <div className="input-group-append input-group-append-last-sm-down-none">
                                         <div className="tom-select-custom tom-select-custom-end">
-                                            <select className="js-select form-select tom-select-custom-form-select-invite-user"
-                                                name="nivel_de_acesso"
-                                                value={inviteFormData.nivel_de_acesso}
-                                                onChange={handleInputChange}
-                                            >
+                                            <select className="js-select form-select tom-select-custom-form-select-invite-user" name="nivel_de_acesso" value={inviteFormData.nivel_de_acesso}  onChange={handleInputChange} >
                                                 <option value="Guest">Convidado</option>
                                                 <option value="Administrator">Administrator</option>
                                             </select>
                                         </div>
-
                                         <button className="btn btn-primary d-none d-sm-inline-block" onClick={inviteUser}>Convidar</button>
                                     </div>
                                 </div>
                             </div>
+
+                            <h5>Membros que fazem parte de {teamData.nome_equipa}</h5>
+                            <p>Este equipa é público e pode ser acedido por qualquer utilizador.</p>
+                            
                             <ul className="list-unstyled list-py-2">
                                 {teamMembers.map((member) => (
                                     <li key={member.id}>
@@ -282,10 +281,9 @@ export default function Team() {
 
                                                     <div className="col-sm-auto">
                                                         <div className="tom-select-custom tom-select-custom-sm-end">
-                                                            <select className="js-select form-select form-select-borderless tom-select-custom-form-select-invite-user tom-select-form-select-ps-0" autoComplete="off" data-hs-tom-select-options='{
-                                                                    "searchInDropdown": false,
-                                                                    "hideSearch": true,
-                                                                    "dropdownWidth": "11rem"
+                                                            <select className="js-select form-select" id="privacyNewProjectLabel" data-hs-tom-select-options='{
+                                                                "searchInDropdown": false,
+                                                                "hideSearch": true
                                                                 }'>
                                                                 {member.nivel_de_acesso == 'Administrator' && <option value="Administrator" selected>Administrator</option>}
                                                                 {member.nivel_de_acesso == 'Guest' && <option value="Guest" selected>Guest</option>}
@@ -294,14 +292,14 @@ export default function Team() {
                                                                 <option value="remove" data-option-template='<div className="text-danger">Remover</div>'>Remover</option>
                                                             </select>
                                                         </div>
-                                                    </div>
+                                                    </div>                                            
                                                 </div>
                                             </div>
                                         </div>
                                     </li>
                                 ))}
                             </ul>
-                            {/* <label className="row form-check form-switch" htmlFor="addTeamPreferencesNewProjectSwitch1">
+                            <label className="row form-check form-switch" htmlFor="addTeamPreferencesNewProjectSwitch1">
                                 <span className="col-8 col-sm-9 ms-0">
                                     <i className="bi-bell text-primary me-2"></i>
                                     <span className="text-dark">Informar todos os membros do projeto</span>
@@ -309,7 +307,7 @@ export default function Team() {
                                 <span className="col-4 col-sm-3 text-end">
                                     <input type="checkbox" className="form-check-input" id="addTeamPreferencesNewProjectSwitch1" defaultChecked />
                                 </span>
-                            </label> */}
+                            </label>
                         </div>
 
                         <div className="modal-footer">

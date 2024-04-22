@@ -94,9 +94,11 @@ async function updateProfile(req, res) {
 
 // View other users with their activities and files
 
-async function getProfileOtherUser(req, res) {
+async function getProfileAndActivity(req, res) {
   const userId = req.params.userId;
+
   try {
+    // Получаем профиль другого пользователя
     const professor = await Professor.findByPk(userId, {
       include: [
         { model: Escola, as: 'escola', attributes: ['id_escola', 'nome_escola'] },
@@ -104,43 +106,36 @@ async function getProfileOtherUser(req, res) {
       ]
     });
 
+    // Если пользователь не найден, возвращаем 404
     if (!professor) return res.status(404).json({ message: 'Пользователь не найден' });
 
-    const { escola, grupo, ...profile } = professor.toJSON();
-    const { nome_escola } = escola, { cod_grupo, nome_grupo } = grupo;
+    // Получаем активность пользователя
+    const userActivity = await Atividades.findAll({
+      where: { userId },
+      include: [
+        { model: Disciplina, as: 'disciplinas', attributes: ['nome_disciplina'] },
+        { model: Ano, as: 'anos', attributes: ['ano'] },
+        { model: Ensino, as: 'nivel_ensino', attributes: ['nome_ensino'] }
+      ]
+    });
 
-    res.json({ status: 'Success', profile: { ...profile, nome_escola, cod_grupo, nome_grupo } });
+
+    const { escola, grupo, ...profile } = professor.toJSON();
+    const nome_escola = escola ? escola.nome_escola : null; 
+    const { cod_grupo, nome_grupo } = grupo ? grupo : {};
+
+    // Отправляем профиль и активность вместе в ответе
+    res.json({ status: 'Success', profile: { ...profile, nome_escola, cod_grupo, nome_grupo }, activity: userActivity });
   } catch (error) {
     console.error('Ошибка при запросе к базе данных:', error);
     res.status(500).json({ message: 'Внутренняя ошибка сервера' });
   }
 }
 
-// ###
-// async function getViewUserActivity(req, res) {
-//   const { id_professor } = req.user;
-
-//   try {
-//     const userActivity = await Atividades.findAll({
-//       where: { id_professor },
-//       include: [
-//         { model: Professor, as: 'professores', attributes: ['nome_professor'] },
-//         { model: Disciplina, as: 'disciplinas', attributes: ['nome_disciplina'] },
-//         { model: Ano, as: 'anos', attributes: ['ano'] },
-//         { model: Ensino, as: 'nivel_ensino', attributes: ['nome_ensino'] }
-//       ]
-//     });
-
-//     res.json({ Status: 'Success', activity: userActivity });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send('Internal Server Error');
-//   }
-// }
 
 
 
 
-module.exports = { getProfileUser, getProfileOtherUser, getUserActivity, getUserResources, updateProfile };
+module.exports = { getProfileUser, getUserActivity, getUserResources, updateProfile, getProfileAndActivity };
 
 

@@ -71,24 +71,6 @@ async function getTools(req, res) {
   }
 };
 
-async function getProfileUsers(req, res) {
-  try {
-    const users = await Professor.findAll({
-      include: [
-        { model: Escola, as: 'escola', attributes: ['id_escola', 'nome_escola'] },
-        { model: Grupo, as: 'grupo', attributes: ['id_grupo', 'cod_grupo', 'nome_grupo'] }
-      ]
-    });
-
-    res.status(200).json(users);
-  } catch (error) {
-    console.error('Ошибка при получении данных:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
-
-
-
 async function postResourcesFiles(req, res) {
   const { id_professor } = req.user;
   const { title } = req.body;
@@ -176,9 +158,33 @@ async function downloadResourcesFiles(req, res) {
   }
 };
 
+async function getData(req, res) {
+  try {
+    const [professors, anos, escolas, grupos, ensinos, disciplinas] = await Promise.all([
+      Professor.findAll({
+        include: [
+          { model: Escola, as: 'escola', attributes: ['id_escola', 'nome_escola'] },
+          { model: Grupo, as: 'grupo', attributes: ['id_grupo', 'cod_grupo', 'nome_grupo'] }
+        ]
+      }),
+      Ano.findAll(),
+      Escola.findAll(),
+      Grupo.findAll(),
+      Ensino.findAll(),
+      Disciplina.findAll()
+    ]);
+
+    return res.json({ professors, anos, escolas, grupos, ensinos, disciplinas, status: true });
+  } catch (error) {
+    console.error('Ошибка при запросе к базе данных:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
 
 
 
-module.exports = { getSchoolAndGroupData, getYearsLessonAndTeachingData, postTools, getTools, getProfileUsers, postResourcesFiles, getResourcesFiles, downloadResourcesFiles };
+
+
+module.exports = { getSchoolAndGroupData, getYearsLessonAndTeachingData, postTools, getTools, postResourcesFiles, getResourcesFiles, downloadResourcesFiles, getData };
 
 

@@ -194,20 +194,20 @@ export default function Nav() {
                       </div>
 
 
-                      <Link to="/user-profile" className="dropdown-item"> Profil </Link>
-                      <Link to="/user-profile-settings" className="dropdown-item"> Definições </Link>
-                      <Link to="/team-list" className="dropdown-item"> Equipa </Link>
+                      <Link to="/user-profile" className="dropdown-item"><i class="bi bi-person"></i> Profil </Link>
+                      <Link to="/user-profile-settings" className="dropdown-item"><i class="bi bi-gear"></i> Configurações </Link>
+                      <Link to="/team-list" className="dropdown-item"><i class="bi bi-people"></i> Equipa </Link>
 
-                      {userProfile.role == "administrador" ? <Link to="/admin-page" className="dropdown-item text-primary"> adminPage </Link> : ""}
+                      {userProfile.role == "administrador" ? <Link to="/admin-page" className="dropdown-item text-primary"><i class="bi bi-person-gear"></i> AdminPage </Link> : ""}
                       
                       <div className="dropdown-divider"></div>
 
-                      <Link to="/faq" className="dropdown-item"> Apoio </Link>
+                      <Link to="/faq" className="dropdown-item"><i class="bi bi-question-circle"></i> Apoio </Link>
 
                       <div className="dropdown-divider"></div>
 
                       <button className="dropdown-item" onClick={handleLogout}>
-                        <span className='text-danger'>Sign out</span>
+                        <span className='text-danger'><i class="bi bi-box-arrow-right"></i> Sign out</span>
                       </button>
 
                     </div>

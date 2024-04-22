@@ -37,7 +37,7 @@ router.get('/view-resources-user', authenticateToken, profileController.getUserR
 router.post('/update-profile', authenticateToken, profileController.updateProfile)
 
 // Просмотр профиля другого пользувателя
-router.get('/view-profile/:userId', profileController.getProfileOtherUser);
+router.get('/user-profile-and-activity/:userId', profileController.getProfileAndActivity);
 
 
 // Команды пользувателя 'View other user profile'
@@ -67,7 +67,7 @@ router.post('/add-tool', upload.single('icone'), dataController.postTools);
 router.get('/view-tools', dataController.getTools)
 
 // Проверка ролей
-router.get('/view-users', authenticateToken, dataController.getProfileUsers, (req, res) => {
+router.get('/getData', authenticateToken, dataController.getData, (req, res) => {
   if (req.user.role === 'administrador') return res.json({ message: 'Добро пожаловать на страницу администратора!' });
     return res.status(403).json({ message: 'Доступ запрещен: Только администраторы имеют доступ' });
 });

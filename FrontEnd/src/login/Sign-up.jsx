@@ -11,7 +11,7 @@ export default function SignUp() {
     password: '',
     confirmPassword: '',
     group: '',
-    escola: '',
+    school: '',
   });
 
   const navigate = useNavigate();
@@ -39,8 +39,8 @@ export default function SignUp() {
       errors.group = 'Seleccione um grupo válido.';
     }
 
-    if (!userData.escola) {
-      errors.escola = 'Selecionar uma escola válida.';
+    if (!userData.school) {
+      errors.school = 'Selecionar uma escola válida.';
     }
 
     setFormErrors(errors);
@@ -48,14 +48,14 @@ export default function SignUp() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const {id, value } = e.target;
 
-    const selectedGroup = schoolAndGroupData.grupos.find((grupo) => grupo.nome_grupo === value);
+    const selectedGroup = schoolAndGroupData.groups.find((groups) => groups.nameGroup === value);
 
     setUserData((prevData) => ({
       ...prevData,
-      [name]: value,
-      id_grupo: selectedGroup ? selectedGroup.cod_grupo : null,
+      [id]: value,
+      idGroup: selectedGroup ? selectedGroup.codGroup : null,
     }));
   };
 
@@ -77,11 +77,7 @@ export default function SignUp() {
   const fetchViewData = async () => {
     try {
       const response = await axios.get('http://localhost:8081/api/view-data');
-      if (response.data.Status === 'Success') {
         setSchoolAndGroupData(response.data.data);
-      } else {
-        console.error(response.data.Message);
-      }
     } catch (error) {
       console.error('Error fetching view data:', error);
     }
@@ -113,7 +109,6 @@ export default function SignUp() {
                       type="text"
                       className={`form-control ${formErrors.name ? 'is-invalid' : ''}`}
                       id="name"
-                      name="name"
                       placeholder="Tiago Lopes"
                       value={userData.name}
                       onChange={handleChange}
@@ -129,7 +124,6 @@ export default function SignUp() {
                       type="text"
                       className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
                       id="email"
-                      name="email"
                       placeholder="example@example.com"
                       value={userData.email}
                       onChange={handleChange}
@@ -145,7 +139,6 @@ export default function SignUp() {
                       type="password"
                       className={`form-control ${formErrors.password ? 'is-invalid' : ''}`}
                       id="password"
-                      name="password"
                       placeholder="Password"
                       value={userData.password}
                       onChange={handleChange}
@@ -161,7 +154,6 @@ export default function SignUp() {
                       type="password"
                       className={`form-control ${formErrors.confirmPassword ? 'is-invalid' : ''}`}
                       id="confirmPassword"
-                      name="confirmPassword"
                       placeholder="Confirmar a password"
                       value={userData.confirmPassword}
                       onChange={handleChange}
@@ -176,14 +168,13 @@ export default function SignUp() {
                     <select
                       className={`form-control ${formErrors.group ? 'is-invalid' : ''}`}
                       id="group"
-                      name="group"
                       value={userData.group}
                       onChange={handleChange}
                     >
                       <option value="">Qualquer</option>
-                      {schoolAndGroupData.grupos && schoolAndGroupData.grupos.map((grupo, index) => (
-                        <option key={index} value={grupo.id_grupo}>
-                          {grupo.cod_grupo} {grupo.nome_grupo}
+                      {schoolAndGroupData.groups && schoolAndGroupData.groups.map((groups, index) => (
+                        <option key={index} value={groups.idGroup}>
+                          {groups.codGroup} {groups.nameGroup}
                         </option>
                       ))}
                     </select>
@@ -195,27 +186,26 @@ export default function SignUp() {
                       Escola
                     </label>
                     <select
-                      className={`form-control ${formErrors.escola ? 'is-invalid' : ''}`}
-                      id="escola"
-                      name="escola"
-                      value={userData.escola}
+                      className={`form-control ${formErrors.school ? 'is-invalid' : ''}`}
+                      id="school"
+                      value={userData.school}
                       onChange={handleChange}
                     >
                       <option value="">Qualquer</option>
-                      {schoolAndGroupData.escolas && schoolAndGroupData.escolas.map((escola, index) => (
-                        <option key={index} value={escola.id_escola}>
-                          {escola.nome_escola}
+                      {schoolAndGroupData.schools && schoolAndGroupData.schools.map((schools, index) => (
+                        <option key={index} value={schools.idSchool}>
+                          {schools.nameSchool}
                         </option>
                       ))}
                     </select>
-                    <span className="invalid-feedback">{formErrors.escola}</span>
+                    <span className="invalid-feedback">{formErrors.school}</span>
                   </div>
 
                   <p className="text-center">Já tem uma conta? <Link className="link" to="/sign-in">Clique aqui</Link></p>
                   <div className="d-grid">
                     <button type="submit" className="btn btn-primary btn-lg">Sign in</button>
                   </div>
-                  <p className="text-center mt-2">Está a faltar alguma coisa? <Link className="link" to="#">Diga-nos</Link></p>
+                  <p className="text-center mt-2">Está a faltar alguma coisa? <Link className="link" to="/">Diga-nos</Link></p>
                 </form>
               </div>
             </div>

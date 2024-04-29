@@ -44,7 +44,7 @@ router.get('/user-profile-and-activity/:userId', profileController.getProfileAnd
 router.get('/view-team-list', authenticateToken, teamController.showTeams)
 
 // Команда 'Team'
-router.get('/view-teams/:teamId', teamController.getTeamAndMembers)
+router.get('/view-teams/:teamId', authenticateToken, teamController.getTeamAndMembers)
 router.post('/create-team', authenticateToken, teamController.createTeam)
 router.post('/add-member-to-team/:teamId', teamController.addMemberToTeam)
 router.post('/add-activity-team/:teamId', upload.single('file'), authenticateToken, teamController.addActivityTeam)

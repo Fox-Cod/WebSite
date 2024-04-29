@@ -90,30 +90,30 @@ export default function Activity() {
           <div className="my-3 p-3 bg-body rounded shadow-sm">
             <div className="d-flex text-body-secondary">
               <div className="avatar avatar-sm avatar-circle me-2" width="32" height="32">
-                <span className="avatar-soft-dark" title={d.professores.nome_professor}>
-                  <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{d.professores.nome_professor.charAt(0).toUpperCase()}</span>
+                <span className="avatar-soft-dark" title={d.users.name}>
+                  <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{d.users.name.charAt(0).toUpperCase()}</span>
                 </span>
               </div>
               <div className="pb-3 mb-0 small lh-sm border-bottom w-100">
                 <div className="d-flex justify-content-between">
-                  <h5 className="mb-1"><Link to={`/view-profile/${d.professores.id_professor}`}>{d.professores.nome_professor}</Link></h5>
+                  <h5 className="mb-1"><Link to={`/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link></h5>
                 </div>
                 <div className="d-flex justify-content-between">
-                  <strong className="text-gray-dark">{d.titulo}</strong>
+                  <strong className="text-gray-dark">{d.title}</strong>
                 </div>
                 <div className="d-flex justify-content-between">
                   <span className="text-gray-dark">
-                    {d.descricao.length > 200 ? `${d.descricao.substring(0, 200)}...` : d.descricao}
+                    {d.description.length > 200 ? `${d.description.substring(0, 200)}...` : d.description}
                   </span>
                 </div>
-                <span className="badge bg-soft-primary text-primary rounded-pill me-1" title='Disciplina'><span className="legend-indicator bg-primary"></span>{d.disciplinas.nome_disciplina}</span>
-                <span className="badge bg-soft-primary text-success rounded-pill me-1" title='Ensino'><span className="legend-indicator bg-success"></span>{d.nivel_ensino.nome_ensino}</span>
-                <span className="badge bg-soft-primary text-warning rounded-pill" title='Ano'><span className="legend-indicator bg-warning"></span>{d.anos.ano}</span>
+                <span className="badge bg-soft-primary text-primary rounded-pill me-1" title='Disciplina'><span className="legend-indicator bg-primary"></span>{d.subjects.nameSubject}</span>
+                <span className="badge bg-soft-primary text-success rounded-pill me-1" title='Ensino'><span className="legend-indicator bg-success"></span>{d.educations.nameEducation}</span>
+                <span className="badge bg-soft-primary text-warning rounded-pill" title='Ano'><span className="legend-indicator bg-warning"></span>{d.years.year}</span>
               </div>
             </div>
             <div className="d-flex justify-content-between mt-1">
               <div className='d-block'>
-                <h6 className="text-secondary">{formatDate(d.data_criacao)}</h6>
+                <h6 className="text-secondary">{formatDate(d.publishDate)}</h6>
               </div>
               <div className='d-block text-end'>
                 <Link to={`/view-activity/${d.id}`}>Mais</Link>

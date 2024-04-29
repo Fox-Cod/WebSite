@@ -9,7 +9,7 @@ function authenticateToken(req, res, next) {
       return res.status(401).json({ message: 'Не авторизован: Требуется токен авторизации' });
     }
 
-    jwt.verify(token, jwtSecretKey, (err, user) => {
+    jwt.verify(token, jwtSecretKey, (err, userToken) => {
       if (err) {
         if (err.name === 'JsonWebTokenError') {
           return res.status(402).json({ message: 'Ошибка: Неверный формат токена' });
@@ -20,8 +20,8 @@ function authenticateToken(req, res, next) {
         }
       }
 
-      req.user = user;
-      console.log("ID Пользователя: ", req.user);
+      req.userToken = userToken;
+      console.log("ID Пользователя: ", req.userToken);
       next();
     });
   } catch (error) {

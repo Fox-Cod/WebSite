@@ -2,33 +2,38 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { AddActivityTeam } from '../component/Other';
 import { useParams, Link } from 'react-router-dom';
-import moment from 'moment';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function Team() {
+    const [currentUser, setCurrentUser] = useState(null);
     const [teamData, setTeamData] = useState(null);
     const [teamActivity, setTeamActivity] = useState(null);
     const [teamMembers, setTeamMembers] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [inviteFormData, setInviteFormData] = useState({
-        nome_professor: "",
-        nivel_de_acesso: "" || "Guest",
+        email: "",
+        access: "" || "Convidado",
     });
 
     const { teamId } = useParams();
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://localhost:8081/api/view-teams/${(teamId)}`);
+            const response = await axios.get(`http://localhost:8081/api/view-teams/${(teamId)}`, { withCredentials: true });
             setTeamData(response.data.team);
             setTeamMembers(response.data.teamMembers);
             setTeamActivity(response.data.teamActivity);
+            setCurrentUser(response.data.idTeacher);
             setLoading(false);
         } catch (error) {
             setError(error.message);
             setLoading(false);
         }
     };
+
+    console.log(teamData)
 
     useEffect(() => {
         fetchData();
@@ -37,8 +42,8 @@ export default function Team() {
     const inviteUser = async () => {
         console.log(inviteFormData)
         try {
-            const response = await axios.post(`http://localhost:8081/api/add-member-to-team/${(teamId)}`, {
-                id_equipa: teamId,
+            const response = await axios.post(`http://localhost:8081/api/add-member-to-team/${(teamId)}`, { withCredentials: true }, {
+                idTeam: teamId,
                 ...inviteFormData,
             });
             location.reload();
@@ -48,21 +53,59 @@ export default function Team() {
             setTeamData(updatedTeam);
 
             setInviteFormData({
-                nome_professor: "",
-                nivel_de_acesso: "guest",
+                email: "",
+                access: "Convidado",
             });
         } catch (error) {
             console.error('Ошибка при отправке приглашения:', error.message);
         }
     };
+    const [editModes, setEditModes] = useState({});
+    const [editedText, setEditedText] = useState('');
 
-    console.log(teamData)
+    const handleEdit = (index, activity) => {
+        // Close edit mode for all other posts
+        const newEditModes = {};
+        Object.keys(editModes).forEach((key) => {
+            newEditModes[key] = false;
+        });
+
+        // Open edit mode for the selected post
+        newEditModes[index] = true;
+        setEditModes(newEditModes);
+        setEditedText(activity.descriptionActivityTeam);
+    };
+
+
+    const handleSave = async (index) => {
+        try {
+
+            const response = await axios.post(`http://localhost:8081/api/lll/${teamId, index}`)
+            console.log(response)
+
+            setEditModes(prevState => ({
+                ...prevState,
+                [index]: false
+            }));
+
+        } catch (error) {
+            console.error('Error saving data:', error);
+        }
+    };
+
+    const handleCancel = (index) => {
+        setEditModes(prevState => ({
+            ...prevState,
+            [index]: false
+        }));
+    };
+
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const { id, value } = e.target;
         setInviteFormData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [id]: value,
         }));
     };
 
@@ -90,18 +133,6 @@ export default function Team() {
     if (error) {
         return <p>Ошибка: {error}</p>;
     }
-    function formatTimeDifference(creationTime) {
-        const creationMoment = moment(creationTime);
-
-        const today = moment();
-        const isSameYear = creationMoment.isSame(today, 'year');
-
-        if (isSameYear) {
-            return creationMoment.format('Do MMMM HH:mm');
-        } else {
-            return creationMoment.format('Do MMMM YYYY HH:mm');
-        }
-    }
 
 
     return (
@@ -113,19 +144,19 @@ export default function Team() {
                             <div className="col-sm mb-0 mb-sm-0">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb breadcrumb-no-gutter pt-3">
-                                        <li className="breadcrumb-item"><Link to={`/team/${teamData.id_equipa}`}>Equipa - {teamData.id_equipa}</Link></li>
+                                        <li className="breadcrumb-item"><Link to={`/team/${teamData.idTeam}`}>Equipa - {teamData.idTeam}</Link></li>
                                     </ol>
                                 </nav>
 
-                                <h1 className="page-header-title">#{teamData.nome_equipa}</h1>
+                                <h1 className="page-header-title">#{teamData.nameTeam}</h1>
 
-                                <p>{teamData.descricao_equipa}</p>
+                                <p>{teamData.descriptionTeam}</p>
 
                             </div>
                         </div>
                     </div>
                     <div className='d-flex justify-content-between align-items-center'>
-                        <span className="card-subtitle pb-3">Indústria: <a className="badge bg-soft-primary text-primary p-2" href="#">{teamData.industria}</a></span>
+                        <span className="card-subtitle pb-3">Indústria: <a className="badge bg-soft-primary text-primary p-2" href="#">{teamData.areasWork}</a></span>
                         <h6>Data de Criacao: {formatDate(teamData.CreateDate)}</h6>
                     </div>
                 </div>
@@ -146,17 +177,17 @@ export default function Team() {
                             <div className="card-body">
                                 <ul className="list-unstyled list-py-2 text-dark mb-0">
                                     {teamMembers.map((member) => (
-                                        <li key={member.professores.id_professor}>
+                                        <li key={member.users.idTeacher}>
                                             <div className="d-flex align-items-center">
-                                                <Link className="d-flex align-items-center me-2" to={`/view-profile/${member.professores.id_professor}`}>
+                                                <Link className="d-flex align-items-center me-2" to={`/view-profile/${member.users.idTeacher}`}>
                                                     <div className="flex-shrink-0">
-                                                        <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={member.professores.nome_professor}>
-                                                            <span className="avatar-initials">{member.professores.nome_professor.charAt(0).toUpperCase()}</span>
+                                                        <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={member.users.name}>
+                                                            <span className="avatar-initials">{member.users.name.charAt(0).toUpperCase()}</span>
                                                         </span>
                                                     </div>
                                                     <div className="flex-grow-1 ms-3">
-                                                        <h5 className="text-hover-primary mb-0">{member.professores.nome_professor}</h5>
-                                                        <span className="fs-6 text-body">{member.nivel_de_acesso}</span>
+                                                        <h5 className="text-hover-primary mb-0">{member.users.name}</h5>
+                                                        <span className="fs-6 text-body">{member.access}</span>
                                                     </div>
                                                 </Link>
                                             </div>
@@ -176,20 +207,41 @@ export default function Team() {
                             </div>
                             <div className="card-body">
                                 {teamActivity.length > 0 ? (
-                                    teamActivity.map((activity) => (
-                                        <ul className="step" key={activity.professores.id_professor}>
+                                    teamActivity.map((activity, index) => (
+                                        <ul className="step" key={activity.users.idTeacher}>
                                             <li className="step-item">
                                                 <div className="step-content-wrapper">
                                                     <div className="step-avatar">
-                                                        <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={activity.professores.nome_professor}>
-                                                            <span className="avatar-initials">{activity.professores.nome_professor.charAt(0).toUpperCase()}</span>
+                                                        <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={activity.users.name}>
+                                                            <span className="avatar-initials">{activity.users.name.charAt(0).toUpperCase()}</span>
                                                         </span>
                                                     </div>
 
                                                     <div className="step-content">
-                                                        <Link className="d-flex align-items-center me-2" to={`/view-profile/${activity.professores.id_professor}`}><h5 className="mb-1">{activity.professores.nome_professor}</h5></Link>
-                                                        <p className="fs-5 mb-1" width="32" height="32"><div dangerouslySetInnerHTML={{ __html: activity.descricao }} /></p>
-                                                        {activity.filename ? (
+                                                        <Link className="d-flex align-items-center me-2" to={`/view-activity/${activity.users.idTeacher}`}><h5 className="mb-1">{activity.users.name}</h5></Link>
+                                                        {/* <p className="fs-5 mb-1" value={editedText} onChange={(e) => setEditedText(e.target.value)} width="32" height="32"><div dangerouslySetInnerHTML={{ __html: activity.descriptionActivityTeam }} /></p> */}
+                                                        {editModes[index] ? (
+                                                            <div className='quill-custom rounded'>
+                                                                <ReactQuill
+                                                                    value={editedText}
+                                                                    onChange={(e) => setEditedText(e.target.value)}
+                                                                    placeholder="Text..."
+                                                                    modules={{
+                                                                        toolbar: {
+                                                                            container: [
+                                                                                ['bold', 'italic', 'underline', 'strike'],
+                                                                                [{ list: 'ordered' }, { list: 'bullet' }],
+                                                                                ['link', 'image'],
+                                                                            ],
+                                                                        },
+                                                                    }}
+                                                                    formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image']}
+                                                                />
+                                                            </div>
+                                                        ) : (
+                                                            <p className="fs-5 mb-1" width="32" height="32"><div dangerouslySetInnerHTML={{ __html: activity.descriptionActivityTeam }} /></p>
+                                                        )}
+                                                        {activity.fileName ? (
                                                             <ul className="list-group list-group-sm">
                                                                 <li className="list-group-item list-group-item-light">
                                                                     <div className="row gx-1">
@@ -197,10 +249,10 @@ export default function Team() {
                                                                         <div className="col-sm-4">
                                                                             <div className="d-flex">
                                                                                 <div className="flex-shrink-0">
-                                                                                    <img className="avatar avatar-xs" src="../assets/svg/brands/excel-icon.svg" alt="Image Description" />
+                                                                                    <img className="avatar avatar-xs" src="../assets/svg/components/placeholder-img-format.svg" alt="Image Description" />
                                                                                 </div>
                                                                                 <div className="flex-grow-1 text-truncate ms-2">
-                                                                                    <span>{activity.filename}
+                                                                                    <span>{activity.fileName}
                                                                                         <span className="d-block small text-muted">{formatBytes(activity.fileSize)}</span>
                                                                                         {/* <span><Link to="#">Ver </Link></span> */}
 
@@ -214,9 +266,35 @@ export default function Team() {
                                                                 </li>
                                                             </ul>
                                                         ) : null}
+                                                        <span className="d-block fs-6 text-dark text-truncate">{formatDate(activity.CreateDate)}</span>
                                                     </div>
-                                                    <span className="d-block fs-6 text-dark text-truncate">{formatDate(activity.data_criacao)}</span>
+
+
+                                                    {currentUser === activity.idTeacher && !editModes[index] ? (
+                                                        <div className="btn-group">
+                                                            <div>
+                                                                <div style={{ display: 'inline-block', marginRight: '10px', cursor: 'pointer' }}>
+                                                                    <i className="bi bi-pencil" onClick={() => handleEdit(index, activity)}></i>
+                                                                </div>
+                                                                <div style={{ display: 'inline-block', cursor: 'pointer' }}>
+                                                                    <i className="bi bi-trash"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ) : null}
+
+
                                                 </div>
+                                                {editModes[index] ? (
+                                                    <div className="btn-group mt-2">
+                                                        <button className="btn btn-sm btn-success me-2" onClick={() => handleSave(index)}>
+                                                            Сохранить
+                                                        </button>
+                                                        <button className="btn btn-sm btn-secondary" onClick={() => handleCancel(index)}>
+                                                            Отмена
+                                                        </button>
+                                                    </div>
+                                                ) : null}
                                             </li>
                                         </ul>
                                     ))
@@ -226,6 +304,7 @@ export default function Team() {
                                         <h5>Não tens nada.</h5>
                                     </div>
                                 )}
+
                             </div>
                         </div>
                     </div>
@@ -233,10 +312,10 @@ export default function Team() {
             </main>
 
             <div className="modal fade" id="shareWithPeopleModal" tabIndex="-1" aria-labelledby="shareWithPeopleModalLabel" aria-hidden="true">
-            <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: '700px', width: '90%' }}>
+                <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: '700px', width: '90%' }}>
                     <div className="modal-content">
                         <div className="modal-header ">
-                            <h5>Partilhar ideias de especialistas</h5> 
+                            <h5>Partilhar ideias de especialistas</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                         </div>
 
@@ -245,13 +324,13 @@ export default function Team() {
                             <p>As pessoas convidadas serão adicionadas à sua organização.</p>
                             <div className="mb-4">
                                 <div className="input-group mb-2 mb-sm-0">
-                                    <input className="form-control" type="text" name="nome_professor" value={inviteFormData.nome_professor} onChange={handleInputChange} placeholder="Procurar por nome ou e-mails" />
+                                    <input className="form-control" type="email" id="email" value={inviteFormData.name} onChange={handleInputChange} placeholder="Procurar por e-mails" />
 
                                     <div className="input-group-append input-group-append-last-sm-down-none">
                                         <div className="tom-select-custom tom-select-custom-end">
-                                            <select className="js-select form-select tom-select-custom-form-select-invite-user" name="nivel_de_acesso" value={inviteFormData.nivel_de_acesso}  onChange={handleInputChange} >
+                                            <select className="js-select form-select tom-select-custom-form-select-invite-user" id="access" value={inviteFormData.access} onChange={handleInputChange} >
                                                 <option value="Guest">Convidado</option>
-                                                <option value="Administrator">Administrator</option>
+                                                <option value="Administrador">Administrador</option>
                                             </select>
                                         </div>
                                         <button className="btn btn-primary d-none d-sm-inline-block" onClick={inviteUser}>Convidar</button>
@@ -261,38 +340,43 @@ export default function Team() {
 
                             <h5>Membros que fazem parte de {teamData.nome_equipa}</h5>
                             <p>Este equipa é público e pode ser acedido por qualquer utilizador.</p>
-                            
+
                             <ul className="list-unstyled list-py-2">
                                 {teamMembers.map((member) => (
                                     <li key={member.id}>
                                         <div className="d-flex">
                                             <div className="flex-shrink-0">
-                                                <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={member.professores.nome_professor}>
-                                                    <span className="avatar-initials">{member.professores.nome_professor.charAt(0).toUpperCase()}</span>
+                                                <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={member.users.name}>
+                                                    <span className="avatar-initials">{member.users.name.charAt(0).toUpperCase()}</span>
                                                 </span>
                                             </div>
 
                                             <div className="flex-grow-1 ms-3">
                                                 <div className="row align-items-center">
                                                     <div className="col-sm">
-                                                        <h5 className="text-body mb-0">{member.professores.nome_professor}</h5>
-                                                        <span className="d-block fs-6">{member.professores.email_professor}</span>
+                                                        <h5 className="text-body mb-0">{member.users.name}</h5>
+                                                        <span className="d-block fs-6">{member.users.email}</span>
                                                     </div>
 
                                                     <div className="col-sm-auto">
                                                         <div className="tom-select-custom tom-select-custom-sm-end">
-                                                            <select className="js-select form-select" id="privacyNewProjectLabel" data-hs-tom-select-options='{
-                                                                "searchInDropdown": false,
-                                                                "hideSearch": true
-                                                                }'>
-                                                                {member.nivel_de_acesso == 'Administrator' && <option value="Administrator" selected>Administrator</option>}
-                                                                {member.nivel_de_acesso == 'Guest' && <option value="Guest" selected>Guest</option>}
-                                                                {member.nivel_de_acesso !== 'Administrator' && <option value="Administrator" >Administrator</option>}
+                                                            <select className="js-select form-select" id="privacyNewProjectLabel" >
+                                                                {member.access === 'Administrador' ? (
+                                                                    <option value="Administrador" selected disabled>Administrador</option>
+                                                                ) : (
+                                                                    <React.Fragment>
+                                                                        <option value="Administrador">Administrador</option>
+                                                                        <option value="Convidado" selected>Convidado</option>
+                                                                        <option value="remove">Remover</option>
+                                                                    </React.Fragment>
+                                                                )}
 
-                                                                <option value="remove" data-option-template='<div className="text-danger">Remover</div>'>Remover</option>
+
+
+
                                                             </select>
                                                         </div>
-                                                    </div>                                            
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

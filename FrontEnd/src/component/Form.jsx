@@ -100,26 +100,26 @@ export default function Form() {
           <div className="my-3 p-3 bg-body rounded shadow-sm" key={i}>
             <div className="d-flex text-body-secondary">
               <div className="avatar avatar-sm avatar-circle me-2" width="32" height="32">
-                <span className="avatar-soft-dark" title={d.professores.nome_professor}>
-                  <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{d.professores.nome_professor.charAt(0).toUpperCase()}</span>
+                <span className="avatar-soft-dark" title={d.users.name}>
+                  <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{d.users.name.charAt(0).toUpperCase()}</span>
                 </span>
               </div>
               <div className="pb-3 mb-0 small lh-sm border-bottom w-100">
                 <div className="d-flex justify-content-between">
                   <h5 className="mb-1">
-                    <Link to={`/view-profile/${d.professores.id_professor}`}>
-                      {d.professores.nome_professor}
+                    <Link to={`/view-profile/${d.users.idTeacher}`}>
+                      {d.users.name}
                     </Link>
                   </h5>
                 </div>
                 <div className="d-flex justify-content-between">
-                  <strong className="text-gray-dark">{d.titulo}</strong>
+                  <strong className="text-gray-dark">{d.title}</strong>
                 </div>
                 <div className="d-flex justify-content-between">
                   <span className="text-gray-dark">
-                    {d.descricao.length > 200
-                      ? `${d.descricao.substring(0, 200)}...`
-                      : d.descricao}
+                    {d.description.length > 200
+                      ? `${d.description.substring(0, 200)}...`
+                      : d.description}
                   </span>
                 </div>
                 <span
@@ -127,31 +127,31 @@ export default function Form() {
                   title="Disciplina"
                 >
                   <span className="legend-indicator bg-primary"></span>
-                  {d.disciplinas.nome_disciplina}
+                  {d.subjects.nameSubject}
                 </span>
                 <span
                   className="badge bg-soft-primary text-success rounded-pill me-1"
                   title="Ensino"
                 >
                   <span className="legend-indicator bg-success"></span>
-                  {d.nivel_ensino.nome_ensino}
+                  {d.educations.nameEducation}
                 </span>
                 <span
                   className="badge bg-soft-primary text-warning rounded-pill"
                   title="Ano"
                 >
                   <span className="legend-indicator bg-warning"></span>
-                  {d.anos.ano}
+                  {d.years.year}
                 </span>
                 <br />
               </div>
             </div>
             <div className="d-flex justify-content-between mt-1">
               <div className='d-block'>
-                <h6 className="text-secondary">{formatDate(d.data_criacao)}</h6>
+                <h6 className="text-secondary">{formatDate(d.publishDate)}</h6>
               </div>
               <div className='d-block text-end'>
-                <Link to={`/view-activity/${d.id}`}>Mais</Link>
+                <Link to={`/view-activity/${d.idActivity}`}>Mais</Link>
               </div>
             </div>
           </div>
@@ -161,15 +161,15 @@ export default function Form() {
           <div className="my-3 p-3 bg-body rounded shadow-sm">
             <div className="d-flex text-body-secondary pt-3">
               <div className="avatar avatar-sm avatar-circle me-2" width="32" height="32">
-                <span className="avatar-soft-dark" title={file.professores.nome_professor}>
-                  <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{file.professores.nome_professor.charAt(0).toUpperCase()}</span>
+                <span className="avatar-soft-dark" title={file.users.name}>
+                  <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{file.users.name.charAt(0).toUpperCase()}</span>
                 </span>
               </div>
               <div className="pb-3 mb-0 small lh-sm border-bottom w-100">
 
                 <div className="content">
                   <ul className="list-group">
-                    <h5 className="mb-1"><Link to={`/view-profile/${file.professores.id_professor}`}>{file.professores.nome_professor}</Link></h5>
+                    <h5 className="mb-1"><Link to={`/view-profile/${file.users.idTeacher}`}>{file.users.name}</Link></h5>
                     <h6>{file.title}</h6>
                     <li key={file.id} className="list-group-item">
                       <div className="row align-items-center">

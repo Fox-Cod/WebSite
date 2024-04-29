@@ -169,8 +169,8 @@ export default function Nav() {
                       data-bs-dropdown-animation
                     >
                       <div className="avatar avatar-sm avatar-circle">
-                        <span className="avatar-img avatar-soft-dark" title={userProfile.nome_professor}>
-                            <span className="avatar-initials">{userProfile?.nome_professor?.charAt(0).toUpperCase()}</span>
+                        <span className="avatar-img avatar-soft-dark" title={userProfile.name}>
+                            <span className="avatar-initials">{userProfile?.name?.charAt(0).toUpperCase()}</span>
                         </span>
                         <span className="avatar-status avatar-sm-status avatar-status-success"></span>
                       </div>
@@ -182,13 +182,13 @@ export default function Nav() {
                           <h6 className="text-muted">{userProfile.role}</h6>
                         <div className="d-flex align-items-center">
                           <div className="avatar avatar-sm avatar-circle">
-                            <span className="avatar-img avatar-soft-dark" title={userProfile.nome_professor}>
-                              <span className="avatar-initials">{userProfile?.nome_professor?.charAt(0).toUpperCase()}</span>
+                            <span className="avatar-img avatar-soft-dark" title={userProfile.name}>
+                              <span className="avatar-initials">{userProfile?.name?.charAt(0).toUpperCase()}</span>
                           </span>
                           </div>
                           <div className="flex-grow-1 ms-3">
-                            <h5 className="mb-0">{userProfile.nome_professor}</h5>
-                            <p className="mb-0">{userProfile.email_professor}</p>
+                            <h5 className="mb-0">{userProfile.name}</h5>
+                            <p className="mb-0">{userProfile.email}</p>
                           </div>
                         </div>
                       </div>

@@ -6,13 +6,12 @@ export default function Tools() {
   const [toolsData, setToolsData] = useState([]);
   const [userProfile, setUserProfile] = useState({});
   const [formData, setFormData] = useState({
-    titulo: '',
+    title: '',
     link: '',
-    sobre: '',
-    aplicacao: '' || "Redes sociais e plataformas de ligação em rede",
-    tipo: '' || "Apresentações e documentos",
-    estado: '' || "Sem dados",
-    icone: null,
+    about: '',
+    application: '' || "Redes sociais e plataformas de ligação em rede",
+    type: '' || "Apresentações e documentos",
+    state: '' || "Sem dados",
   });
 
   const handleChange = (e) => {
@@ -236,26 +235,25 @@ export default function Tools() {
                   <tr>
                     <td>
                       <Link className="d-flex align-items-center" to={tool.link}>
-                        {tool.iconeURL && <img src={tool.iconeURL} alt="Img" width="40" height="50" className="img-fluid" />}
                         <div className="ms-3">
-                          <span className="d-block h5 text-inherit mb-0"> {tool.titulo} </span>
+                          <span className="d-block h5 text-inherit mb-0"> {tool.title} </span>
                         </div>
                       </Link>
                     </td>
 
                     <td>
                       <span className="badge bg-soft-primary text-primary rounded-pill">
-                        <span className="legend-indicator bg-primary"></span> {tool.aplicacao} </span>  
+                        <span className="legend-indicator bg-primary"></span> {tool.application} </span>  
                     </td>
 
                     <td><span className="badge bg-soft-secondary text-secondary rounded-pill">
-                      <span className="legend-indicator bg-secondary"></span>{tool.tipo} </span>
+                      <span className="legend-indicator bg-secondary"></span>{tool.type} </span>
                     </td>
 
-                    <td>{getStatusBadge(tool.estado)}</td>
+                    <td>{getStatusBadge(tool.state)}</td>
 
-                    <td title={tool.sobre}>
-                      {tool.sobre.slice(0, 60)}{tool.sobre.length > 30 && '...'}
+                    <td title={tool.about}>
+                      {tool.about.slice(0, 60)}{tool.about.length > 30 && '...'}
                     </td>
                     
                     {/* <td>05 de junho</td> */}
@@ -277,10 +275,10 @@ export default function Tools() {
             <form onSubmit={handleSubmit}>
               <div className="modal-body">
                 <textarea
-                  id="titulo"
+                  id="title"
                   className="form-control form-control-title"
                   placeholder="Nome da ferramenta"
-                  value={formData.name}
+                  value={formData.title}
                   onChange={handleChange}
                 ></textarea>
 
@@ -313,10 +311,10 @@ export default function Tools() {
 
                   <div className="col-sm">
                     <textarea
-                      id="sobre"
+                      id="about"
                       className="form-control"
                       placeholder="Ferramenta de montagem"
-                      value={formData.sobre}
+                      value={formData.about}
                       onChange={handleChange}
                     ></textarea>
                   </div>
@@ -336,8 +334,8 @@ export default function Tools() {
                       <select
                         className="js-select form-select"
                         autoComplete="off"
-                        id="aplicacao"
-                        value={formData.aplicacao}
+                        id="application"
+                        value={formData.application}
                         onChange={handleChange}
                       >
                         <option>Redes sociais e plataformas de ligação em rede</option>
@@ -353,8 +351,8 @@ export default function Tools() {
                       <select
                         className="js-select form-select"
                         autoComplete="off"
-                        id="tipo"
-                        value={formData.tipo}
+                        id="type"
+                        value={formData.type}
                         onChange={handleChange}
                       >
                         <option>Apresentações e documentos</option>
@@ -372,8 +370,8 @@ export default function Tools() {
                       <select
                         className="js-select form-select"
                         autoComplete="off"
-                        id="estado"
-                        value={formData.estado}
+                        id="state"
+                        value={formData.state}
                         onChange={handleChange}
                       >
                         <option>Sem dados</option>

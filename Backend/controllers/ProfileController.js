@@ -1,31 +1,31 @@
-const Escola = require('../models/Escola');
-const Grupo = require('../models/Grupo');
-const Professor = require('../models/Professor');
-const Atividades = require('../models/Atividades'); 
-const Recursos = require('../models/Recursos'); 
-const Disciplina = require('../models/Disciplina'); 
-const Ano = require('../models/Ano'); 
-const Ensino = require('../models/Ensino');
+const Schools = require('../models/Schools');
+const Groups = require('../models/Groups');
+const Users = require('../models/Users');
+const Activitys = require('../models/Activitys'); 
+const Resources = require('../models/Resources'); 
+const Subjects = require('../models/Subjects'); 
+const Years = require('../models/Years'); 
+const Educations = require('../models/Educations');
 
 
 async function getProfileUser(req, res) {
-  const { id_professor } = req.user;
+  const { idTeacher } = req.userToken;
 
   try {
-    const professor = await Professor.findByPk(id_professor, {
-      attributes: { exclude: ['password_professor'] },
+    const teacher = await Users.findByPk(idTeacher, {
+      attributes: { exclude: ['password'] },
       include: [
-        { model: Escola, as: 'escola', attributes: ['id_escola', 'nome_escola'] },
-        { model: Grupo, as: 'grupo', attributes: ['id_grupo', 'cod_grupo', 'nome_grupo'] }
+        { model: Schools, as: 'schools', attributes: ['idSchool', 'nameSchool'] },
+        { model: Groups, as: 'groups', attributes: ['idGroup', 'codGroup', 'nameGroup'] }
       ]
     });
 
-    if (!professor) return res.status(404).json({ Message: 'Not Found: Пользователь не найден' });
+    if (!teacher) return res.status(404).json({ Message: 'Not Found: Пользователь не найден' });
 
-    const { escola, grupo, ...profile } = professor.toJSON();
-    const { nome_escola } = escola, { cod_grupo, nome_grupo } = grupo;
+    const { schools, groups, ...profile } = teacher.toJSON();
+    const { nameSchool } = schools, { codGroup, nameGroup } = groups;
 
-    res.json({ Status: 'Success', profile: { ...profile, nome_escola, cod_grupo, nome_grupo } });
+    res.json({ Status: 'Success', profile: { ...profile, nameSchool, codGroup, nameGroup } });
   } catch (error) {
     console.error('Ошибка при запросе к базе данных:', error);
     return res.status(500).json({ Message: 'Internal Server Error' });
@@ -35,16 +35,16 @@ async function getProfileUser(req, res) {
 
 
 async function getUserActivity(req, res) {
-  const { id_professor } = req.user;
+  const { idTeacher } = req.userToken;
 
   try {
-    const userActivity = await Atividades.findAll({
-      where: { id_professor },
+    const userActivity = await Activitys.findAll({
+      where: { idTeacher: idTeacher },
       include: [
-        { model: Professor, as: 'professores', attributes: ['nome_professor'] },
-        { model: Disciplina, as: 'disciplinas', attributes: ['nome_disciplina'] },
-        { model: Ano, as: 'anos', attributes: ['ano'] },
-        { model: Ensino, as: 'nivel_ensino', attributes: ['nome_ensino'] }
+        { model: Users, as: 'users', attributes: ['name'] },
+        { model: Subjects, as: 'subjects', attributes: ['nameSubject'] },
+        { model: Years, as: 'years', attributes: ['year'] },
+        { model: Educations, as: 'educations', attributes: ['nameEducation'] }
       ]
     });
 
@@ -56,13 +56,13 @@ async function getUserActivity(req, res) {
 }
 
 async function getUserResources(req, res) {
-  const { id_professor } = req.user;
+  const { idTeacher } = req.userToken;
 
   try {
-    const userResources = await Recursos.findAll({
-      where: { id_professor },
+    const userResources = await Resources.findAll({
+      where: { idTeacher },
       include: [
-        { model: Professor, as: 'professores', attributes: ['nome_professor'] },
+        { model: Users, as: 'users', attributes: ['name'] },
       ]
     });
 
@@ -76,14 +76,14 @@ async function getUserResources(req, res) {
 
 async function updateProfile(req, res) {
   try {
-    const { nome, group, escola } = req.body;
-    const { id_professor } = req.user;
+    const { name, group, school } = req.body;
+    const { idTeacher } = req.userToken;
 
-    const existingProfessor = await Professor.findByPk(id_professor);
+    const existingProfessor = await Users.findByPk(idTeacher);
 
     if (!existingProfessor) return res.status(404).json({ success: false, message: 'Профессор не найден' });
 
-    await existingProfessor.update({ nome_professor: nome, id_grupo: group, id_escola: escola });
+    await existingProfessor.update({ name, idGroup: group, idSchool: school });
 
     return res.status(200).json({ success: true, message: 'Профессор успешно обновлен', data: existingProfessor });
   } catch (error) {
@@ -99,33 +99,33 @@ async function getProfileAndActivity(req, res) {
 
   try {
     // Получаем профиль другого пользователя
-    const professor = await Professor.findByPk(userId, {
+    const teacher = await Users.findByPk(userId, {
       include: [
-        { model: Escola, as: 'escola', attributes: ['id_escola', 'nome_escola'] },
-        { model: Grupo, as: 'grupo', attributes: ['id_grupo', 'cod_grupo', 'nome_grupo'] }
+        { model: Schools, as: 'schools', attributes: ['idSchool', 'nameSchool'] },
+        { model: Groups, as: 'groups', attributes: ['idGroup', 'codGroup', 'nameGroup'] }
       ]
     });
 
     // Если пользователь не найден, возвращаем 404
-    if (!professor) return res.status(404).json({ message: 'Пользователь не найден' });
+    if (!teacher) return res.status(404).json({ message: 'Пользователь не найден' });
 
     // Получаем активность пользователя
-    const userActivity = await Atividades.findAll({
+    const userActivity = await Activitys.findAll({
       where: { userId },
       include: [
-        { model: Disciplina, as: 'disciplinas', attributes: ['nome_disciplina'] },
-        { model: Ano, as: 'anos', attributes: ['ano'] },
-        { model: Ensino, as: 'nivel_ensino', attributes: ['nome_ensino'] }
+        { model: Subjects, as: 'subjects', attributes: ['nameSubject'] },
+        { model: Years, as: 'years', attributes: ['year'] },
+        { model: Educations, as: 'educations', attributes: ['nameEducation'] }
       ]
     });
 
 
-    const { escola, grupo, ...profile } = professor.toJSON();
-    const nome_escola = escola ? escola.nome_escola : null; 
-    const { cod_grupo, nome_grupo } = grupo ? grupo : {};
+    const { schools, groups, ...profile } = teacher.toJSON();
+    const nameSchool = schools ? schools.nameSchool : null; 
+    const { codGroup, nameGroup } = groups ? groups : {};
 
     // Отправляем профиль и активность вместе в ответе
-    res.json({ status: 'Success', profile: { ...profile, nome_escola, cod_grupo, nome_grupo }, activity: userActivity });
+    res.json({ status: 'Success', profile: { ...profile, nameSchool, codGroup, nameGroup }, activity: userActivity });
   } catch (error) {
     console.error('Ошибка при запросе к базе данных:', error);
     res.status(500).json({ message: 'Внутренняя ошибка сервера' });

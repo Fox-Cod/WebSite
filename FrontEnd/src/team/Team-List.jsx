@@ -6,8 +6,6 @@ import axios from 'axios';
 export default function TeamList() {
   const [data, setData] = useState([]);
   const [userProfile, setUserProfile] = useState('');
-  const [error, setError] = useState(null);
-
 
   const fetchDataUserProfile = async () => {
     try {
@@ -53,25 +51,25 @@ export default function TeamList() {
               </div>
               <div className="text-center mb-5">
                 <div className="avatar avatar-xxl avatar-circle profile-cover-avatar">
-                  <span className="bd-placeholder rounded avatar-initials">{userProfile?.nome_professor?.charAt(0).toUpperCase()}</span>
+                  <span className="bd-placeholder rounded avatar-initials">{userProfile?.name?.charAt(0).toUpperCase()}</span>
                   <span className="avatar-status avatar-status-success"></span>
                 </div>
 
-                <h1 className="page-header-title">{userProfile.nome_professor}</h1>
+                <h1 className="page-header-title">{userProfile.name}</h1>
                 <ul className="list-inline list-px-2">
                   <li className="list-inline-item">
                     <i className="bi-geo-alt me-1"></i>
-                    <span>{userProfile.nome_escola}</span>
+                    <span>{userProfile.nameSchool}</span>
                   </li>
 
                   <li className="list-inline-item">
                     <i className="bi-building me-1"></i>
-                    <span>{userProfile.nome_grupo}</span>
+                    <span>{userProfile.nameGroup}</span>
                   </li>
 
                   <li className="list-inline-item">
                     <i className="bi-calendar-week me-1"></i>
-                    <span>{formatDate(userProfile.data_registro)}</span>
+                    <span>{formatDate(userProfile.createDate)}</span>
                   </li>
                 </ul>
               </div>
@@ -149,13 +147,13 @@ export default function TeamList() {
                 <div className="tab-pane fade show active" id="grid" role="tabpanel" aria-labelledby="grid-tab">
                   <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
                     {data.map(team => (
-                      <div className="col mb-3 mb-lg-5" key={team.equipa.id_equipa}>
+                      <div className="col mb-3 mb-lg-5" key={team.teams.idTeam}>
                         <div className="card h-100">
                           <div className="card-body pb-0">
                             <div className="row align-items-center mb-2">
                               <div className="col-9">
                                 <h4 className="mb-1">
-                                  <Link to={`/${team.equipa.id_equipa}`}>#{team.equipa.nome_equipa}</Link>
+                                  <Link to={`/${team.teams.idTeam}`}>#{team.teams.nameTeam}</Link>
                                 </h4>
                               </div>
                               <div className="col-3 text-end">
@@ -173,7 +171,7 @@ export default function TeamList() {
                                 </div>
                               </div>
                             </div>
-                            <p>{team.equipa.descricao_equipa}</p>
+                            <p>{team.teams.descriptionTeam}</p>
                           </div>
                           <div className="card-footer border-0 pt-0">
                             <div className="list-group list-group-flush list-group-no-gutters">
@@ -183,7 +181,7 @@ export default function TeamList() {
                                     <span className="card-subtitle">Indústria:</span>
                                   </div>
                                   <div className="col-auto">
-                                    <a className="badge bg-soft-primary text-primary p-2" href="#">{team.equipa.industria}</a>
+                                    <a className="badge bg-soft-primary text-primary p-2" href="#">{team.teams.areasWork}</a>
                                   </div>
                                 </div>
                               </div>
@@ -197,12 +195,12 @@ export default function TeamList() {
 
                 <div className="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
                   {data.map(team => (
-                    <div className="col mb-3" key={team.equipa.id_equipa}>
+                    <div className="col mb-3" key={team.teams.idTeam}>
                       <div className="card card-body">
                         <div className="row align-items-md-center">
                           <div className="col-9 col-md-4 col-lg-3 mb-2 mb-md-0">
-                            <h4><Link to={`/team/${team.equipa.id_equipa}`}>#{team.equipa.nome_equipa}</Link></h4>
-                            <a className="badge bg-soft-primary text-primary p-2" href="#">{team.equipa.industria}</a>
+                            <h4><Link to={`/team/${team.teams.idTeam}`}>#{team.teams.nameTeam}</Link></h4>
+                            <a className="badge bg-soft-primary text-primary p-2" href="#">{team.teams.areasWork}</a>
                           </div>
 
                           <div className="col-3 col-md-auto order-md-last text-end">
@@ -222,7 +220,7 @@ export default function TeamList() {
                           </div>
 
                           <div className="col-sm mb-2 mb-sm-0">
-                            <p>{team.equipa.descricao_equipa}</p>
+                            <p>{team.teams.descriptionTeam}</p>
                           </div>
                         </div>
                       </div>

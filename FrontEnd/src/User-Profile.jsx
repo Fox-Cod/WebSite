@@ -105,28 +105,28 @@ export default function UserProfile() {
               <div className="text-center mb-5">
 
                 <div className="avatar avatar-xxl avatar-circle profile-cover-avatar">
-                  <span className="bd-placeholder rounded avatar-initials">{userProfile?.nome_professor?.charAt(0).toUpperCase()}</span>
+                  <span className="bd-placeholder rounded avatar-initials">{userProfile?.name?.charAt(0).toUpperCase()}</span>
                   <span className="avatar-status avatar-status-success"></span>
                 </div>
 
                 <h1 className="page-header-title">
                   {/* <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i> */}
-                  {userProfile.nome_professor}
+                  {userProfile.name}
                 </h1>
                 <ul className="list-inline list-px-2">
                   <li className="list-inline-item">
                     <i className="bi-geo-alt me-1"></i>
-                    <span>{userProfile.nome_escola}</span>
+                    <span>{userProfile.nameSchool}</span>
                   </li>
 
                   <li className="list-inline-item">
                     <i className="bi-building me-1"></i>
-                    <span>{userProfile.nome_grupo}</span>
+                    <span>{userProfile.nameGroup}</span>
                   </li>
 
                   <li className="list-inline-item">
                     <i className="bi-calendar-week me-1"></i>
-                    <span>{formatDate(userProfile.data_registro)}</span>
+                    <span>{formatDate(userProfile.createDate)}</span>
                   </li>
                 </ul>
               </div>
@@ -191,18 +191,18 @@ export default function UserProfile() {
                     <div className="card-body" >
                       <ul className="list-unstyled list-py-2 text-dark mb-0">
                         <li className="pb-0"><span className="card-subtitle">Sobre</span></li>
-                        <li><i className="bi-person dropdown-item-icon"></i> {userProfile.nome_professor}</li>
-                        <li><i className="bi-geo-alt me-1 dropdown-item-icon"></i> {userProfile.nome_escola}</li>
-                        <li><i className="bi-building me-1 dropdown-item-icon"></i> {userProfile.nome_grupo}</li>
+                        <li><i className="bi-person dropdown-item-icon"></i> {userProfile.name}</li>
+                        <li><i className="bi-geo-alt me-1 dropdown-item-icon"></i> {userProfile.nameSchool}</li>
+                        <li><i className="bi-building me-1 dropdown-item-icon"></i> {userProfile.nameGroup}</li>
 
 
                         <li className="pt-4 pb-0"><span className="card-subtitle">Contacts</span></li>
-                        <li><i className="bi-at dropdown-item-icon"></i> {userProfile.email_professor}</li>
+                        <li><i className="bi-at dropdown-item-icon"></i> {userProfile.email}</li>
                         <li className="pt-4 pb-0" ><span className="card-subtitle">Equipa</span></li>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                           {teams.map(team => (
-                            <Link key={team.id_equipa} to={`/team/${team.id_equipa}`} style={{ marginBottom: '10px' }}>
-                              <i className="bi-people dropdown-item-icon"></i>#{team.equipa.nome_equipa}
+                            <Link key={team.idTeam} to={`/team/${team.idTeam}`} style={{ marginBottom: '10px' }}>
+                              <i className="bi-people dropdown-item-icon"></i>#{team.teams.nameTeam}
                             </Link>
                           ))}
                         </div>
@@ -248,13 +248,13 @@ export default function UserProfile() {
                                 <div className="step-content-wrapper">
                                   <span className="step-icon step-icon-pseudo step-icon-soft-dark"></span>
                                   <div className="step-content">
-                                    <Link className="text-dark" to={`/view-activity/${d.id}`}>{d.titulo}</Link>
-                                    <p className="fs-5 mb-1"> {d.descricao}<br />
-                                      <span className="badge bg-soft-primary text-primary rounded-pill"><span className="legend-indicator bg-primary"></span>{d.disciplinas.nome_disciplina} </span>
-                                      <span className="badge bg-soft-primary text-success rounded-pill"><span className="legend-indicator bg-success"></span>{d.nivel_ensino.nome_ensino} </span>
-                                      <span className="badge bg-soft-primary text-warning rounded-pill"><span className="legend-indicator bg-warning"></span>{d.anos.ano} </span>
+                                    <Link className="text-dark" to={`/view-activity/${d.id}`}>{d.title}</Link>
+                                    <p className="fs-5 mb-1"> {d.description}<br />
+                                      <span className="badge bg-soft-primary text-primary rounded-pill"><span className="legend-indicator bg-primary"></span>{d.subjects.nameSubject} </span>
+                                      <span className="badge bg-soft-primary text-success rounded-pill"><span className="legend-indicator bg-success"></span>{d.educations.nameEducation} </span>
+                                      <span className="badge bg-soft-primary text-warning rounded-pill"><span className="legend-indicator bg-warning"></span>{d.years.year} </span>
                                     </p>
-                                    <span className="text-muted small text-uppercase">{formatDate(d.data_criacao)}</span>
+                                    <span className="text-muted small text-uppercase">{formatDate(d.publishDate)}</span>
                                   </div>
                                 </div>
                               </li>
@@ -283,7 +283,7 @@ export default function UserProfile() {
                                               <img className="avatar avatar-xs" src="../assets/svg/components/placeholder-img-format.svg" alt="Image Description" />
                                             </span>
                                             <div className="flex-grow-1 text-truncate ms-2">
-                                              <span className="d-block fs-6 text-dark text-truncate"><Link className="text-dark" to="/resources">{d.filename}</Link></span>
+                                              <span className="d-block fs-6 text-dark text-truncate"><Link className="text-dark" to="/resources">{d.fileName}</Link></span>
                                               <span className="d-block small text-muted">{formatBytes(d.fileSize)}</span>
                                             </div>
                                           </div>

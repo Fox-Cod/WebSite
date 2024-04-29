@@ -1,19 +1,19 @@
-const Professor = require('../models/Professor');
-const Equipa = require('../models/Equipa');
-const Equipa_Atividades = require('../models/Equipa_Atividades');
-const RelacaoEquipaUtilizador = require('../models/Relacao_Equipa_Utilizador');
+const Users = require('../models/Users');
+const Teams = require('../models/Teams');
+const Activity_Team = require('../models/Activity_Team');
+const Team_List = require('../models/Team_List');
 const path = require('path');
 const fs = require('fs');
 
 async function showTeams(req, res) {
-  const { id_professor } = req.user;
+  const { idTeacher } = req.userToken;
 
   try {
-    const teams = await RelacaoEquipaUtilizador.findAll({
-      where: { id_professor },
+    const teams = await Team_List.findAll({
+      where: { idTeacher },
       include: [
-        { model: Professor, as: 'professores', attributes: ['id_professor', 'nome_professor'] },
-        { model: Equipa, as: 'equipa', attributes: ['id_equipa', 'id_professor', 'nome_equipa', 'descricao_equipa', 'industria'] }
+        { model: Users, as: 'users', attributes: ['idTeacher', 'name'] },
+        { model: Teams, as: 'teams', attributes: ['idTeam', 'idTeacher', 'nameTeam', 'descriptionTeam', 'areasWork'] }
       ]
     });
 
@@ -32,26 +32,27 @@ async function showTeams(req, res) {
 
 async function getTeamAndMembers(req, res) {
   try {
+    const { idTeacher } = req.userToken
     const teamId = req.params.teamId;
 
-    const team = await Equipa.findOne({ where: { id_equipa: teamId } });
+    const team = await Teams.findOne({ where: { idTeam: teamId } });
 
     if (!team) {
       return res.status(404).json({ error: 'Команда не найдена' });
     }
 
     const [teamMembers, teamActivity] = await Promise.all([
-      RelacaoEquipaUtilizador.findAll({
-        where: { id_equipa: teamId },
-        include: [{ model: Professor, as: 'professores', attributes: ['id_professor', 'nome_professor', 'email_professor'] }]
+      Team_List.findAll({
+        where: { idTeam: teamId },
+        include: [{ model: Users, as: 'users', attributes: ['idTeacher', 'name', 'email'] }]
       }),
-      Equipa_Atividades.findAll({
-        where: { id_equipa: teamId },
-        include: [{ model: Professor, as: 'professores', attributes: ['nome_professor'] }]
+      Activity_Team.findAll({
+        where: { idTeam: teamId },
+        include: [{ model: Users, as: 'users', attributes: ['name', 'idTeacher'] }]
       })
     ]);
-
-    res.json({ Status: 'Success', team, teamMembers, teamActivity });
+    console.log('adasdadsads', idTeacher)
+    res.json({ Status: 'Success', team, teamMembers, teamActivity, idTeacher });
   } catch (error) {
     console.error('Ошибка при получении команды и участников:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -61,27 +62,27 @@ async function getTeamAndMembers(req, res) {
 
 
 async function createTeam(req, res) {
-  const { id_professor } = req.user;
-  const { teamName, teamDescription, selectedOption, customDiscipline } = req.body;
+  const { idTeacher } = req.userToken;
+  const { nameTeam, descriptionTeam, selectedOption, customDiscipline } = req.body;
 
   try {
-    const existingTeam = await Equipa.findOne({ where: { nome_equipa: teamName } });
+    const existingTeam = await Teams.findOne({ where: { nameTeam } });
     if (existingTeam) {
       return res.status(400).json({ error: 'Команда с таким именем уже существует' });
     }
 
-    const team = await Equipa.create({
-      id_professor,
-      nome_equipa: teamName,
-      descricao_equipa: teamDescription,
-      industria: selectedOption === 'Outros' ? customDiscipline : selectedOption,
+    const team = await Teams.create({
+      idTeacher,
+      nameTeam,
+      descriptionTeam,
+      areasWork: selectedOption === 'Outros' ? customDiscipline : selectedOption,
       CreateDate: new Date(),
     });
 
-    const relacaoEquipaUtilizador = await RelacaoEquipaUtilizador.create({
-      id_equipa: team.id_equipa,
-      id_professor,
-      nivel_de_acesso: 'Administrator', // Или установите нужный уровень доступа
+    const relacaoEquipaUtilizador = await Team_List.create({
+      idTeam: team.idTeam,
+      idTeacher,
+      access: 'Administrador', // Или установите нужный уровень доступа
     });
 
     res.status(201).json({ success: true, team, relacaoEquipaUtilizador });
@@ -95,24 +96,23 @@ async function createTeam(req, res) {
 
 
 async function addMemberToTeam(req, res) {
-  const { nome_professor, nivel_de_acesso } = req.body;
+  const { email, access } = req.body;
+  const teamId = req.params.teamId;
 
   try {
-    const teamId = req.params.teamId;
-
-    const professor = await Professor.findOne({ where: { nome_professor } });
-    if (!professor) {
+    const teacher = await Users.findOne({ where: { email } });
+    if (!teacher) {
       return res.status(404).json({ message: 'Пользователь не найден' });
     }
 
-    const professorId = professor.id_professor;
+    const professorId = teacher.idTeacher;
 
-    const existingRelation = await RelacaoEquipaUtilizador.findOne({ where: { id_equipa: teamId, id_professor: professorId } });
+    const existingRelation = await Team_List.findOne({ where: { idTeam: teamId, idTeacher: professorId } });
     if (existingRelation) {
       return res.status(400).json({ message: 'Пользователь уже является членом команды' });
     }
       
-    const newRelation = await RelacaoEquipaUtilizador.create({ id_equipa: teamId, id_professor: professorId, nivel_de_acesso,  });
+    const newRelation = await Team_List.create({ idTeam: teamId, idTeacher: professorId, access });
 
     res.status(201).json({ message: 'Пользователь успешно добавлен в команду', newRelation });
   } catch (error) {
@@ -124,7 +124,7 @@ async function addMemberToTeam(req, res) {
 
 
 async function addActivityTeam(req, res) {
-  const { id_professor } = req.user;
+  const { idTeacher } = req.userToken;
   const teamId = req.params.teamId;
 
   try {
@@ -136,31 +136,27 @@ async function addActivityTeam(req, res) {
     if (req.file) {
       const { originalname, path: tempPath, size } = req.file;
 
-      // Генерируем уникальное имя файла
       newFileName = originalname;
 
-      // Путь для сохранения файла
       uploadPath = path.resolve(__dirname, `../uploads/${newFileName}`);
 
-      // Перемещаем файл в папку uploads с оригинальным именем
       fs.renameSync(tempPath, uploadPath);
 
-      // Определяем расширение файла
       const fileExtension = path.extname(originalname);
 
       fileSize = size;
       fileType = fileExtension;
     }
 
-    const newActivity = await Equipa_Atividades.create({
-      id_equipa: teamId,
-      id_professor,
-      descricao: req.body.descricao,
-      filename: newFileName,
+    const newActivity = await Activity_Team.create({
+      idTeam: teamId,
+      idTeacher,
+      descriptionActivityTeam: req.body.descricao,
+      fileName: newFileName,
       path: uploadPath,
       fileSize,
       fileType,
-      data_criacao: new Date(),
+      CreateDate: new Date(),
     });
 
     res.status(200).json({ success: true, message: 'Данные успешно сохранены', data: newActivity });
@@ -185,12 +181,5 @@ async function editTeamAcitivty(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
-
-
-
-
-
-
-
 
 module.exports = { showTeams, getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam, editTeamAcitivty };

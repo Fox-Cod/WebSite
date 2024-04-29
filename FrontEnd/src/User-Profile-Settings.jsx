@@ -6,9 +6,9 @@ export default function UserProfileSettings() {
   const [schoolAndGroupData, setSchoolAndGroupData] = useState({});
   const [userProfile, setUserProfile] = useState({});
   const [formData, setFormData] = useState({
-    nome: '',
+    name: '',
     group: '',
-    escola: '',
+    school: '',
   });
   const [newEmail, setNewEmail] = useState({
     email: '',
@@ -31,11 +31,7 @@ export default function UserProfileSettings() {
   const fetchViewData = async () => {
     try {
       const response = await axios.get('http://localhost:8081/api/view-data', {withCredentials: true});
-      if (response.data.Status === 'Success') {
-        setSchoolAndGroupData(response.data.data);
-      } else {
-        setError(response.data.Message);
-      }
+      setSchoolAndGroupData(response.data.data);
     } catch (error) {
       handleRequestError(error);
     }
@@ -47,8 +43,8 @@ export default function UserProfileSettings() {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    const { id, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -56,9 +52,9 @@ export default function UserProfileSettings() {
 
     try {
       const updatedFormData = {
-        nome: formData.nome || userProfile.nome_professor,
-        group: formData.group || userProfile.id_grupo,
-        escola: formData.escola || userProfile.id_escola,
+        name: formData.nome || userProfile.name,
+        group: formData.group || userProfile.idGroup,
+        school: formData.escola || userProfile.idSchool,
       };
 
       const response = await axios.post('http://localhost:8081/api/update-profile', updatedFormData, {withCredentials: true});
@@ -83,8 +79,8 @@ export default function UserProfileSettings() {
 
     try {
       const updatedEmailData = {
-        id: newEmail.id || userProfile.id_professor,
-        email: newEmail.email || userProfile.email_professor,
+        id: newEmail.id || userProfile.idTeaher,
+        email: newEmail.email || userProfile.email,
       };
 
       const response = await axios.post('http://localhost:8081/profile/email', updatedEmailData);
@@ -119,11 +115,11 @@ export default function UserProfileSettings() {
               </div>
               <div className="text-center mb-5">
                 <div className="avatar avatar-xxl avatar-circle profile-cover-avatar">
-                  <span className="bd-placeholder rounded avatar-initials">{userProfile?.nome_professor?.charAt(0).toUpperCase()}</span>
+                  <span className="bd-placeholder rounded avatar-initials">{userProfile?.name?.charAt(0).toUpperCase()}</span>
                   <span className="avatar-status avatar-status-success"></span>
                 </div>
 
-                <h1 className="page-header-title">{userProfile.nome_professor}</h1>
+                <h1 className="page-header-title">{userProfile.name}</h1>
               </div>
 
 
@@ -193,7 +189,7 @@ export default function UserProfileSettings() {
                             <label className="col-sm-3 col-form-label form-label">Nome completo</label>
                             <div className="col-sm-9">
                               <div className="input-group input-group-sm-vertical">
-                                <input type="text" className="form-control" name="nome" id="nome" placeholder={userProfile.nome_professor} aria-label="nome" value={formData.nome} onChange={handleChange} />
+                                <input type="text" className="form-control" id="name" placeholder={userProfile.name} value={formData.nome} onChange={handleChange} />
                               </div>
                             </div>
                           </div>
@@ -204,15 +200,14 @@ export default function UserProfileSettings() {
                               <select
                                 className="form-control"
                                 id="group"
-                                name="group"
-                                value={userProfile.nome_grupo}
+                                value={userProfile.nameGroup}
                                 onChange={handleChange}
                               >
-                                <option disabled>{userProfile.nome_grupo}</option>
+                                <option disabled>{userProfile.nameGroup}</option>
                                 <option disabled>-- Seleccione um grupo abaixo --</option>
-                                {schoolAndGroupData.grupos && schoolAndGroupData.grupos.map((grupo, index) => (
-                                    <option key={index} value={grupo.id_grupo}>
-                                      {grupo.cod_grupo} {grupo.nome_grupo}
+                                {schoolAndGroupData.groups && schoolAndGroupData.groups.map((id, index) => (
+                                    <option key={index} value={id.idGroup}>
+                                      {id.codGroup} {id.nameGroup}
                                     </option>
                                   ))}
                               </select>
@@ -224,16 +219,15 @@ export default function UserProfileSettings() {
                             <div className="col-sm-9">
                               <select
                                 className="form-control"
-                                id="escola"
-                                name="escola"
-                                value={userProfile.nome_escola}
+                                id="school"
+                                value={userProfile.nameSchool}
                                 onChange={handleChange}
                               >
-                                <option disabled>{userProfile.nome_escola}</option>
+                                <option disabled>{userProfile.nameSchool}</option>
                                 <option disabled>-- Seleccione um grupo abaixo --</option>
-                                  {schoolAndGroupData.escolas && schoolAndGroupData.escolas.map((escola, index) => (
-                                    <option key={index} value={escola.id_escola}>
-                                      {escola.nome_escola}
+                                  {schoolAndGroupData.schools && schoolAndGroupData.schools.map((id, index) => (
+                                    <option key={index} value={id.idSchool}>
+                                      {id.nameSchool}
                                     </option>
                                   ))}
                               </select>
@@ -252,7 +246,7 @@ export default function UserProfileSettings() {
                         <h4 className="card-title">Email</h4>
                       </div>
                       <div className="card-body">
-                        <p>O seu endereço de correio eletrónico atual é <span className="fw-semibold">{userProfile.email_professor}</span></p>
+                        <p>O seu endereço de correio eletrónico atual é <span className="fw-semibold">{userProfile.email}</span></p>
                         <form onSubmit={handleSubmitEmail}>
                           <div className="row mb-4">
                             <label className="col-sm-3 col-form-label form-label">Novo endereço de Email</label>
@@ -260,7 +254,6 @@ export default function UserProfileSettings() {
                               <input
                                 type="email"
                                 className="form-control"
-                                name="email"
                                 id="email"
                                 placeholder="Introduzir novo endereço de correio eletrónico"
                                 value={newEmail.email}

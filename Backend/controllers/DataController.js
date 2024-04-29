@@ -1,11 +1,11 @@
-const Escola = require('../models/Escola');
-const Grupo = require('../models/Grupo');
-const Ano = require('../models/Ano');
-const Ensino = require('../models/Ensino');
-const Disciplina = require('../models/Disciplina');
-const Ferramentos = require('../models/Ferramentos');
-const Professor = require('../models/Professor');
-const Recursos = require('../models/Recursos');
+const Schools = require('../models/Schools');
+const Groups = require('../models/Groups');
+const Years = require('../models/Years');
+const Educations = require('../models/Educations');
+const Subjects = require('../models/Subjects');
+const Tools = require('../models/Tools');
+const Users = require('../models/Users');
+const Resources = require('../models/Resources');
 
 const fs = require('fs');
 const path = require('path');
@@ -16,174 +16,136 @@ const sharp = require('sharp');
 
 async function getSchoolAndGroupData(req, res) {
   try {
-    const [escolas, grupos] = await Promise.all([
-      Escola.findAll({ attributes: ['id_escola', 'nome_escola'] }),
-      Grupo.findAll({ attributes: ['id_grupo', 'cod_grupo', 'nome_grupo'] })
+    const [schools, groups] = await Promise.all([
+      Schools.findAll({ attributes: ['idSchool', 'nameSchool'] }),
+      Groups.findAll({ attributes: ['idGroup', 'codGroup', 'nameGroup'] })
     ]);
-
-    res.json({ Status: 'Success', data: { escolas, grupos } });
+    res.json({ data: { schools, groups } });
   } catch (error) {
-    console.error('Ошибка при запросе к базе данных:', error);
-    return res.status(500).json({ Message: 'Internal Server Error' });
+    console.error('Erro ao consultar o banco de dados:', error);
+    res.status(500).json({ Message: 'Erro interno do servidor' });
   }
 }
 
 
 async function getYearsLessonAndTeachingData(req, res) {
   try {
-    const [anos, ensino, disciplinas] = await Promise.all([
-      Ano.findAll(),
-      Ensino.findAll(),
-      Disciplina.findAll()
+    const [years, educations, subjects] = await Promise.all([
+      Years.findAll(),
+      Educations.findAll(),
+      Subjects.findAll()
     ]);
-
-    res.status(200).json({ anos, ensino, disciplinas });
+    res.status(200).json({ years, educations, subjects });
   } catch (error) {
-    console.error('Ошибка при получении данных:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Erro ao obter dados:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
-};
-
-
+}
 
 async function postTools(req, res) {
   try {
-    const { titulo, link, sobre, aplicacao, tipo, estado } = req.body;
-    const iconeURL = req.file ? `http://localhost:8081/uploads/${req.file.filename}` : null;
-    
-    const tool = await Ferramentos.create({ titulo, link, sobre, aplicacao, tipo, estado, iconeURL });
-
-    res.status(201).json({ success: true, ferramento: tool });
+    const { title, link, about, application, type, state } = req.body;
+    const tool = await Tools.create({ title, link, about, application, type, state });
+    res.status(201).json({ success: true, ferramenta: tool });
   } catch (error) {
-    console.error('Ошибка при запросе к базе данных:', error);
-    res.status(500).json({ Message: 'Internal Server Error' });
+    res.status(500).json({ Message: 'Erro interno do servidor', error });
   }
 }
 
 
 async function getTools(req, res) {
   try {
-    const ferramentos = await Ferramentos.findAll();
-    res.json(ferramentos);
+    const ferramentas = await Tools.findAll();
+    res.json(ferramentas);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Ошибка при получении инструментов' });
+    res.status(500).json({ error: 'Erro ao obter ferramentas' });
   }
-};
+}
 
 async function postResourcesFiles(req, res) {
-  const { id_professor } = req.user;
+  const { idTeacher } = req.userToken;
   const { title } = req.body;
 
   try {
     if (!req.file) {
-      return res.status(400).send({ message: 'No file uploaded' });
+      return res.status(400).send({ message: 'Nenhum arquivo enviado' });
     }
 
     const { originalname, path: tempPath, size } = req.file;
-
-    // Генерируем уникальное имя файла
     const newFileName = originalname;
-
-    // Путь для сохранения файла
     const uploadPath = path.resolve(__dirname, `../uploads/${newFileName}`);
-
-    // Перемещаем файл в папку uploads с оригинальным именем
     fs.renameSync(tempPath, uploadPath);
-
-    // Определяем расширение файла
     const fileExtension = path.extname(originalname);
 
-    // Сохраняем информацию о файле в базе данных
-    const uploadedFile = await Recursos.create({
+    const uploadedFile = await Resources.create({
       title: title,
-      id_professor: id_professor,
-      filename: newFileName,
+      idTeacher: idTeacher,
+      fileName: newFileName,
       path: uploadPath,
-      fileSize: size, // Размер файла
-      fileType: mimeTypes.lookup(fileExtension), // MIME-тип файла
-      publishDate: new Date(), // Дата публикации файла
+      fileSize: size,
+      fileType: mimeTypes.lookup(fileExtension),
+      publishDate: new Date(),
     });
 
-    res.status(200).send({ message: 'File uploaded successfully', file: uploadedFile });
+    res.status(200).send({ message: 'Arquivo enviado com sucesso', file: uploadedFile });
   } catch (error) {
-    console.error('Error uploading file: ', error);
-    res.status(500).send({ message: 'Error uploading file' });
+    res.status(500).send({ message: 'Erro ao enviar arquivo', error });
   }
 }
 
 async function getResourcesFiles(req, res) {
   try {
-    const files = await Recursos.findAll({
+    const files = await Resources.findAll({
       include: [
-        { model: Professor, as: 'professores', attributes: ['id_professor', 'nome_professor'] },
+        { model: Users, as: 'users', attributes: ['idTeacher', 'name'] },
       ]
-    });;
-
-    // Динамически определить абсолютный путь к иконке файла на основе расширения файла
-    files.forEach(file => {
-      const fileExtension = path.extname(file.fileType);
-      file.iconPath = path.join(__dirname, `../FrontEnd/public/assets/svg/brands/${fileExtension.substring(1)}.svg`); // Абсолютный путь к иконке файла на сервере
     });
-
     res.status(200).send(files);
   } catch (error) {
-    console.error('Error fetching files: ', error);
-    res.status(500).send({ message: 'Error fetching files' });
+    res.status(500).send({ message: 'Erro ao buscar arquivos', error });
   }
-};
+}
 
 async function downloadResourcesFiles(req, res) {
   try {
     const filename = req.params.filename;
     const filePath = path.resolve(__dirname, `../uploads/${filename}`);
 
-    // Проверяем, существует ли файл
     if (!fs.existsSync(filePath)) {
-      return res.status(404).send({ message: 'File not found' });
+      return res.status(404).send({ message: 'Arquivo não encontrado' });
     }
 
-    // Определяем MIME-тип файла
     const fileMime = mimeTypes.lookup(filePath);
-
-    // Устанавливаем заголовки для скачивания файла
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-Type', fileMime);
-
-    // Отправляем файл клиенту
     res.sendFile(filePath);
   } catch (error) {
-    console.error('Error downloading file: ', error);
-    res.status(500).send({ message: 'Error downloading file' });
+    res.status(500).send({ message: 'Erro ao baixar arquivo', error });
   }
-};
+}
 
 async function getData(req, res) {
   try {
     const [professors, anos, escolas, grupos, ensinos, disciplinas] = await Promise.all([
-      Professor.findAll({
+      Users.findAll({
         include: [
-          { model: Escola, as: 'escola', attributes: ['id_escola', 'nome_escola'] },
-          { model: Grupo, as: 'grupo', attributes: ['id_grupo', 'cod_grupo', 'nome_grupo'] }
+          { model: Schools, as: 'schools', attributes: ['idSchool', 'nameSchool'] },
+          { model: Groups, as: 'groups', attributes: ['idGroup', 'codGroup', 'nameGroup'] }
         ]
       }),
-      Ano.findAll(),
-      Escola.findAll(),
-      Grupo.findAll(),
-      Ensino.findAll(),
-      Disciplina.findAll()
+      Years.findAll(),
+      Schools.findAll(),
+      Groups.findAll(),
+      Educations.findAll(),
+      Subjects.findAll()
     ]);
 
     return res.json({ professors, anos, escolas, grupos, ensinos, disciplinas, status: true });
   } catch (error) {
-    console.error('Ошибка при запросе к базе данных:', error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    return res.status(500).json({ message: 'Erro interno do servidor' , error});
   }
 }
-
-
-
-
 
 module.exports = { getSchoolAndGroupData, getYearsLessonAndTeachingData, postTools, getTools, postResourcesFiles, getResourcesFiles, downloadResourcesFiles, getData };
 

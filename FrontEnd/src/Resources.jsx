@@ -93,15 +93,15 @@ export default function Resources() {
             <div className="my-3 p-3 bg-body rounded shadow-sm">
               <div className="d-flex text-body-secondary pt-3">
                 <div className="avatar avatar-sm avatar-circle me-2" width="32" height="32">
-                  <span className="avatar-soft-dark" title={file.professores.nome_professor}>
-                    <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{file.professores.nome_professor.charAt(0).toUpperCase()}</span>
+                  <span className="avatar-soft-dark" title={file.users.name}>
+                    <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{file.users.name.charAt(0).toUpperCase()}</span>
                   </span>
                 </div>
                 <div className="pb-3 mb-0 small lh-sm border-bottom w-100">
 
                   <div className="content">
                     <ul className="list-group">
-                      <h5 className="mb-1"><Link to={`/view-profile/${file.professores.id_professor}`}>{file.professores.nome_professor}</Link></h5>
+                      <h5 className="mb-1"><Link to={`/view-profile/${file.users.idTeacher}`}>{file.users.name}</Link></h5>
                       <h6>{file.title}</h6>
                       <li key={file.id} className="list-group-item">
                         <div className="row align-items-center">
@@ -111,7 +111,7 @@ export default function Resources() {
 
                           <div className="col">
                             <h5 className="mb-0">
-                              <Link to={`http://localhost:8081/api/files/${file.filename}`} download>{file.filename}</Link>
+                              <Link to={`http://localhost:8081/api/files/${file.fileName}`} download>{file.fileName}</Link>
                             </h5>
                             <ul className="list-inline list-separator small text-body">
                               <li className="list-inline-item">Data de publicação: {formatDate(file.publishDate)}</li>

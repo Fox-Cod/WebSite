@@ -1,4 +1,4 @@
-const Professor = require('../models/Professor');
+const Users = require('../models/Users');
 const nodemailer = require('nodemailer');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
@@ -9,8 +9,8 @@ const generateUniqueToken = () => {
 
 const sendEmail = async (req, res) => {
   const { email } = req.body;
-  const user = await Professor.findOne({ where: { email_professor: email } });
-  if (!user) return res.status(404).send('Пользователь с таким email не найден');
+  const user = await Users.findOne({ where: { email } });
+  if (!user) return res.status(404).send('Usuário com este email não encontrado');
   
   const resetToken = uuidv4();
   await user.update({ resetToken });
@@ -31,28 +31,24 @@ const sendEmail = async (req, res) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Сброс пароля',
-    text: `Для сброса пароля перейдите по ссылке: ${resetLink}`,
+    subject: 'Redefinir senha',
+    text: `Para redefinir sua senha, siga este link: ${resetLink}`,
   };
-
-  
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log('Ошибка отправки письма:', error);
-      res.status(500).send('Ошибка отправки письма');
+      console.log('Erro ao enviar e-mail:', error);
+      res.status(500).send('Erro ao enviar e-mail');
     } else {
-      console.log('Письмо успешно отправлено:', info.response);
-      res.send('Письмо успешно отправлено');
+      console.log('E-mail enviado com sucesso:', info.response);
+      res.send('E-mail enviado com sucesso');
     }
   });
 };
 
 const feedBack = async (req, res) => {
   const { name, email, message } = req.body;
-  // const user = await Professor.findOne({ where: { email_professor: email } });
-  // if (!user) return res.status(404).send('Пользователь с таким email не найден');
-  
+
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -63,7 +59,7 @@ const feedBack = async (req, res) => {
       refreshToken: process.env.EMAIL_REFRESH_TOKEN,
     },
   });
-  console.log(email)
+
   const mailOptions = {
     from: email,
     to: process.env.EMAIL_USER,
@@ -73,11 +69,11 @@ const feedBack = async (req, res) => {
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log('Ошибка отправки письма:', error);
-      res.status(500).send('Ошибка отправки письма');
+      console.log('Erro ao enviar e-mail:', error);
+      res.status(500).send('Erro ao enviar e-mail');
     } else {
-      console.log('Письмо успешно отправлено:', info.response);
-      res.send('Письмо успешно отправлено');
+      console.log('E-mail enviado com sucesso:', info.response);
+      res.send('E-mail enviado com sucesso');
     }
   });
 };

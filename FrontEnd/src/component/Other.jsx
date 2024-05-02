@@ -853,7 +853,7 @@ export const AddActivityTeam = () => {
         formData,
         { withCredentials: true }
       );
-
+      window.location.reload();
       console.log(response.data);
     } catch (error) {
       console.error(error);

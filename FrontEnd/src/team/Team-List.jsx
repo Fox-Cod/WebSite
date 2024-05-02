@@ -6,6 +6,7 @@ import axios from 'axios';
 export default function TeamList() {
   const [data, setData] = useState([]);
   const [userProfile, setUserProfile] = useState('');
+  const [searchTeams, setSearchTeams] = useState([]);
 
   const fetchDataUserProfile = async () => {
     try {
@@ -20,14 +21,25 @@ export default function TeamList() {
     try {
       const response = await axios.get('http://localhost:8081/api/view-team-list', { withCredentials: true })
       setData(response.data.teams)
+      setTeamList(response.data)
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  const fetchDataSeachTeams = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8081/api/search-teams`, { withCredentials: true })
+      setSearchTeams(response.data.allTeams)
+    } catch (err) {
+      console.log(err)
     }
   }
 
   useEffect(() => {
     fetchDataUserProfile(),
       fetchDataTeamList();
+    fetchDataSeachTeams();
   }, []);
 
   function formatDate(rawDate) {
@@ -138,6 +150,11 @@ export default function TeamList() {
                           <i className="bi-view-list"></i>
                         </a>
                       </li>
+                      <li className="nav-item">
+                        <a className="nav-link" id="list-tab" data-bs-toggle="tab" href="#search" role="tab" aria-controls="list" aria-selected="false" title="List view">
+                          <i className="bi-search"></i>
+                        </a>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -185,7 +202,13 @@ export default function TeamList() {
                                   </div>
                                 </div>
                               </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                {/* <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div> */}
+                              </div>
                             </div>
+
+
                           </div>
                         </div>
                       </div>
@@ -216,6 +239,10 @@ export default function TeamList() {
                                 <div className="dropdown-divider"></div>
                                 <a className="dropdown-item text-danger" href="#">Delete</a>
                               </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                {/* <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div> */}
+                              </div>
                             </div>
                           </div>
 
@@ -226,6 +253,60 @@ export default function TeamList() {
                       </div>
                     </div>
                   ))}
+                </div>
+
+                <div className="tab-pane fade" id="search" role="tabpanel" aria-labelledby="grid-tab">
+                  <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
+                    {searchTeams.map(teams => (
+                      <div className="col mb-3 mb-lg-5" key={teams.idTeam}>
+                        <div className="card h-100">
+                          <div className="card-body pb-0">
+                            <div className="row align-items-center mb-2">
+                              <div className="col-9">
+                                <h4 className="mb-1">
+                                  <Link to={`/${teams.idTeam}`}>#{teams.nameTeam}</Link>
+                                </h4>
+                              </div>
+                              <div className="col-3 text-end">
+                                <div className="dropdown">
+                                  <button type="button" className="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="teamsDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i className="bi-three-dots-vertical"></i>
+                                  </button>
+                                  <div className="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="teamsDropdown1">
+                                    <a className="dropdown-item" href="#">Mudar o nome da equipa</a>
+                                    <a className="dropdown-item" href="#">Adicionar aos favoritos</a>
+                                    <a className="dropdown-item" href="#">Equipa de arquivo (Admin)</a>
+                                    <div className="dropdown-divider"></div>
+                                    <a className="dropdown-item text-danger" href="#">Delete</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <p>{teams.descriptionTeam}</p>
+                          </div>
+                          <div className="card-footer border-0 pt-0">
+                            <div className="list-group list-group-flush list-group-no-gutters">
+                              <div className="list-group-item">
+                                <div className="row align-items-center">
+                                  <div className="col">
+                                    <span className="card-subtitle">Indústria:</span>
+                                  </div>
+                                  <div className="col-auto">
+                                    <a className="badge bg-soft-primary text-primary p-2" href="#">{teams.areasWork}</a>
+                                  </div>
+                                </div>
+                              </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                {/* <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div> */}
+                                <div className='form-text badge bg-soft-primary text-body rounded-pill me-1'>Já na equipa</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

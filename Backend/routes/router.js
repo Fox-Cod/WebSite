@@ -41,9 +41,11 @@ router.get('/user-profile-and-activity/:userId', profileController.getProfileAnd
 
 
 // Команды пользувателя 'View other user profile'
+router.get('/search-teams', teamController.searchTeams)
 router.get('/view-team-list', authenticateToken, teamController.showTeams)
 
 // Команда 'Team'
+router.post('/join-team', authenticateToken, teamController.joinTeam)
 router.get('/view-teams/:teamId', authenticateToken, teamController.getTeamAndMembers)
 router.post('/create-team', authenticateToken, teamController.createTeam)
 router.post('/add-member-to-team/:teamId', teamController.addMemberToTeam)

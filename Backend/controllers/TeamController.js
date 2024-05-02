@@ -5,6 +5,15 @@ const Team_List = require('../models/Team_List');
 const path = require('path');
 const fs = require('fs');
 
+async function searchTeams(req, res){
+  try{
+    const allTeams = await Teams.findAll();
+    res.json({ Status: 'Success', allTeams})
+  } catch(err) {
+    console.log(err)
+  }
+}
+
 async function showTeams(req, res) {
   const { idTeacher } = req.userToken;
 
@@ -28,8 +37,6 @@ async function showTeams(req, res) {
   }
 }
 
-
-
 async function getTeamAndMembers(req, res) {
   try {
     const { idTeacher } = req.userToken
@@ -51,7 +58,8 @@ async function getTeamAndMembers(req, res) {
         include: [{ model: Users, as: 'users', attributes: ['name', 'idTeacher'] }]
       })
     ]);
-    console.log('adasdadsads', idTeacher)
+    
+    
     res.json({ Status: 'Success', team, teamMembers, teamActivity, idTeacher });
   } catch (error) {
     console.error('Ошибка при получении команды и участников:', error);
@@ -182,4 +190,30 @@ async function editTeamAcitivty(req, res) {
   }
 }
 
-module.exports = { showTeams, getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam, editTeamAcitivty };
+// Обработчик POST запроса на присоединение к команде
+async function joinTeam(req, res) {
+  try {
+      const { teamId, currentUser } = req.body; 
+
+      if (!currentUser || isNaN(teamId)) {
+          return res.status(400).json({ error: 'Неверный формат данных' });
+      }
+
+      const existingRelation = await Team_List.findOne({ where: { idTeam: teamId, idTeacher: currentUser } });
+      if (existingRelation) {
+        return res.status(400).json({ message: 'Пользователь уже является членом команды' });
+      }
+
+      console.log(teamId, currentUser)
+
+      const join = await Team_List.create({ idTeam: teamId, idTeacher: currentUser, access: 'Convidado' })
+
+      res.json({ status: 'Success', join });
+  } catch (error) {
+      console.error('Ошибка при добавлении пользователя в команду:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+
+module.exports = { showTeams, getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam, editTeamAcitivty, searchTeams, joinTeam };

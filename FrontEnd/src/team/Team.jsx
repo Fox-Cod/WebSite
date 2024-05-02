@@ -6,6 +6,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 export default function Team() {
+    const [editModes, setEditModes] = useState({});
+    const [editedText, setEditedText] = useState('');
     const [currentUser, setCurrentUser] = useState(null);
     const [teamData, setTeamData] = useState(null);
     const [teamActivity, setTeamActivity] = useState(null);
@@ -33,8 +35,6 @@ export default function Team() {
         }
     };
 
-    console.log(teamData)
-
     useEffect(() => {
         fetchData();
     }, [teamId]);
@@ -60,8 +60,17 @@ export default function Team() {
             console.error('Ошибка при отправке приглашения:', error.message);
         }
     };
-    const [editModes, setEditModes] = useState({});
-    const [editedText, setEditedText] = useState('');
+
+    const handleJoinTeam = async () => {
+        try {
+            const response = await axios.post('http://localhost:8081/api/join-team', { teamId, currentUser }, { withCredentials: true });
+            console.log(response.data);
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    
 
     const handleEdit = (index, activity) => {
         // Close edit mode for all other posts
@@ -133,7 +142,7 @@ export default function Team() {
     if (error) {
         return <p>Ошибка: {error}</p>;
     }
-
+    const isCurrentUserInTeam = teamMembers.some(member => member.users.idTeacher === currentUser);
 
     return (
         <div>
@@ -149,17 +158,27 @@ export default function Team() {
                                 </nav>
 
                                 <h1 className="page-header-title">#{teamData.nameTeam}</h1>
-
                                 <p>{teamData.descriptionTeam}</p>
+
+                                <div className="d-flex justify-content-between align-items-center"> {/* Добавлен контейнер для кнопок */}
+
+                                    <div>
+                                        <span className="card-subtitle pb-3">Indústria: <a className="badge bg-soft-primary text-primary p-2" href="#">{teamData.areasWork}</a></span>
+                                        <h6>Data de Criacao: {formatDate(teamData.CreateDate)}</h6>
+                                    </div>
+                                    {!isCurrentUserInTeam && (
+                                        <button type="button" className="btn btn-outline-primary btn-sm" onClick={handleJoinTeam}>
+                                            Entrar
+                                        </button>
+                                    )}
+
+                                </div>
 
                             </div>
                         </div>
                     </div>
-                    <div className='d-flex justify-content-between align-items-center'>
-                        <span className="card-subtitle pb-3">Indústria: <a className="badge bg-soft-primary text-primary p-2" href="#">{teamData.areasWork}</a></span>
-                        <h6>Data de Criacao: {formatDate(teamData.CreateDate)}</h6>
-                    </div>
                 </div>
+
                 <div className="row mt-4 mb-4">
                     <div className="col-lg-4">
                         <div id="accountSidebarNav"></div>
@@ -239,7 +258,7 @@ export default function Team() {
                                                                 />
                                                             </div>
                                                         ) : (
-                                                            <p className="fs-5 mb-1" width="32" height="32"><div dangerouslySetInnerHTML={{ __html: activity.descriptionActivityTeam }} /></p>
+                                                            <p className="fs-5 mb-1" width="64" height="64"><div dangerouslySetInnerHTML={{ __html: activity.descriptionActivityTeam }} /></p>
                                                         )}
                                                         {activity.fileName ? (
                                                             <ul className="list-group list-group-sm">

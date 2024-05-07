@@ -118,29 +118,6 @@ export default function Resources() {
                               <li className="list-inline-item">Tamanho do ficheiro: {formatBytes(file.fileSize)}</li>
                             </ul>
                           </div>
-
-                          {/* <div className="col-auto">
-                            <div className="dropdown">
-                              <button type="button" className="btn btn-white btn-sm" id="filesListDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span className="d-none d-sm-inline-block me-1">Mais</span>
-                                <i className="bi-chevron-down"></i>
-                              </button>
-
-                              <div className="dropdown-menu dropdown-menu-end" aria-labelledby="filesListDropdown1" style={{ minWidth: '13rem' }}>
-                                <span className="dropdown-header">Definições</span>
-
-                                <a className="dropdown-item" href="#">
-                                  <i className="bi-download dropdown-item-icon"></i> Descarregar
-                                </a>
-
-                                <div className="dropdown-divider"></div>
-
-                                <a className="dropdown-item" href="#">
-                                  <i className="bi-trash dropdown-item-icon"></i> Eliminar
-                                </a>
-                              </div>
-                            </div>
-                          </div> */}
                         </div>
                       </li>
 

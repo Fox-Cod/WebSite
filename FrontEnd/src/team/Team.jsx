@@ -4,6 +4,7 @@ import { AddActivityTeam } from '../component/Other';
 import { useParams, Link } from 'react-router-dom';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { act } from 'react';
 
 export default function Team() {
     const [editModes, setEditModes] = useState({});
@@ -39,27 +40,33 @@ export default function Team() {
         fetchData();
     }, [teamId]);
 
-    const inviteUser = async () => {
-        console.log(inviteFormData)
-        try {
-            const response = await axios.post(`http://localhost:8081/api/add-member-to-team/${(teamId)}`, { withCredentials: true }, {
+const inviteUser = async () => {
+    console.log(inviteFormData)
+    try {
+        const response = await axios.post(`http://localhost:8081/api/add-member-to-team/${teamId}`, 
+            { 
                 idTeam: teamId,
                 ...inviteFormData,
-            });
-            location.reload();
-            console.log('Приглашение отправлено:', response.data);
+            },
+            { 
+                withCredentials: true 
+            }
+        );
+        location.reload();
+        console.log('Приглашение отправлено:', response.data);
 
-            const updatedTeam = response.data.updatedTeam;
-            setTeamData(updatedTeam);
+        const updatedTeam = response.data.updatedTeam;
+        setTeamData(updatedTeam);
 
-            setInviteFormData({
-                email: "",
-                access: "Convidado",
-            });
-        } catch (error) {
-            console.error('Ошибка при отправке приглашения:', error.message);
-        }
-    };
+        setInviteFormData({
+            email: "",
+            access: "Convidado",
+        });
+    } catch (error) {
+        console.error('Ошибка при отправке приглашения:', error.message);
+    }
+};
+
 
     const handleJoinTeam = async () => {
         try {
@@ -70,37 +77,22 @@ export default function Team() {
             console.error(error);
         }
     };
-    
 
-    const handleEdit = (index, activity) => {
-        // Close edit mode for all other posts
-        const newEditModes = {};
-        Object.keys(editModes).forEach((key) => {
-            newEditModes[key] = false;
-        });
-
-        // Open edit mode for the selected post
-        newEditModes[index] = true;
-        setEditModes(newEditModes);
-        setEditedText(activity.descriptionActivityTeam);
-    };
-
-
-    const handleSave = async (index) => {
+    const updateTeamPrivacy = async (teamId, newPrivacy) => {
         try {
-
-            const response = await axios.post(`http://localhost:8081/api/lll/${teamId, index}`)
-            console.log(response)
-
-            setEditModes(prevState => ({
-                ...prevState,
-                [index]: false
-            }));
-
+            const response = await axios.put(`http://localhost:8081/api/team/${teamId}/privacy`, { newPrivacy }, { withCredentials: true });
+            console.log(response);
+            location.reload();
         } catch (error) {
-            console.error('Error saving data:', error);
+            console.error('Ошибка при обновлении статуса команды:', error.message);
         }
     };
+
+    const handlePrivacyChange = async (event) => {
+        const newPrivacy = event.target.checked ? 1 : 0;
+        await updateTeamPrivacy(teamId, newPrivacy); // Замените teamId на идентификатор вашей команды
+    };
+
 
     const handleCancel = (index) => {
         setEditModes(prevState => ({
@@ -109,6 +101,41 @@ export default function Team() {
         }));
     };
 
+    // Обработчик для кнопки "Редактировать"
+    const handleEditClick = (index, activity) => {
+        console.log("Index comm", activity, editedText)
+        const newEditModes = {};
+        Object.keys(editModes).forEach((key) => {
+            newEditModes[key] = false;
+        });
+        newEditModes[index] = true;
+        setEditModes(newEditModes);
+        setEditedText(activity.descriptionActivityTeam);
+    };
+
+    // Обработчик для кнопки "Удалить"
+    const handleDeleteClick = (index) => {
+        const newTeamActivity = [...teamActivity];
+        newTeamActivity.splice(index, 1); // Удалить элемент из массива
+        const newEditModes = [...editModes];
+        newEditModes.splice(index, 1); // Удалить соответствующий флаг редактирования
+        setTeamActivity(newTeamActivity);
+        setEditModes(newEditModes);
+    };
+
+    const handleSave = async (event, idActivityTeam) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post(`http://localhost:8081/api/update-activity-team`, { idActivityTeam, editedText });
+            console.log(response.data);
+        } catch (error) {
+            console.error('Ошибка при сохранении обновлённой деятельности:', error);
+        }
+    };
+
+    const handleEditorChange = (content) => {
+        setEditedText(content);
+    };
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
@@ -135,12 +162,12 @@ export default function Team() {
     };
 
     if (loading) {
-        return <p>Загрузка...</p>;
+        return <p>Loading...</p>;
 
     }
 
     if (error) {
-        return <p>Ошибка: {error}</p>;
+        return <p>Error: {error}</p>;
     }
     const isCurrentUserInTeam = teamMembers.some(member => member.users.idTeacher === currentUser);
 
@@ -161,19 +188,19 @@ export default function Team() {
                                 <p>{teamData.descriptionTeam}</p>
 
                                 <div className="d-flex justify-content-between align-items-center"> {/* Добавлен контейнер для кнопок */}
+                                    <span className="text-dark pb-3">O estado atual da sua equipa:
+                                        {teamData.privacy === 1 ? (
+                                            <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                        ) : (
+                                            <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div>
+                                        )}
+                                    </span>
 
-                                    <div>
-                                        <span className="card-subtitle pb-3">Indústria: <a className="badge bg-soft-primary text-primary p-2" href="#">{teamData.areasWork}</a></span>
-                                        <h6>Data de Criacao: {formatDate(teamData.CreateDate)}</h6>
-                                    </div>
-                                    {!isCurrentUserInTeam && (
-                                        <button type="button" className="btn btn-outline-primary btn-sm" onClick={handleJoinTeam}>
-                                            Entrar
-                                        </button>
-                                    )}
+
+                                    <span className="card-subtitle pb-3">Indústria: <a className="form-text badge bg-soft-primary text-primary rounded-pill me-1" href="#">{teamData.areasWork}</a></span>
+                                    {/* <p>Data de Criacao: {formatDate(teamData.CreateDate)}</p> */}
 
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -189,6 +216,12 @@ export default function Team() {
                                 <div className="col-lg-auto">
                                     <div className="input-group">
                                         <button type="button" className="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#shareWithPeopleModal"><i class="bi bi-plus"></i>Add user</button>
+                                        {isCurrentUserInTeam || (teamData.privacy === 1 && (
+                                            <button type="button" className="btn btn-outline-primary btn-sm" onClick={handleJoinTeam}>
+                                                Entrar
+                                            </button>
+                                        ))}
+
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +252,9 @@ export default function Team() {
 
 
                     <div className="col-sm-8">
-                        <AddActivityTeam />
+                        {isCurrentUserInTeam && (
+                            <AddActivityTeam />
+                        )}
                         <div className="card h-30">
                             <div className="card-header">
                                 <h4 className="card-header-title">Atividades</h4>
@@ -227,94 +262,97 @@ export default function Team() {
                             <div className="card-body">
                                 {teamActivity.length > 0 ? (
                                     teamActivity.map((activity, index) => (
-                                        <ul className="step" key={activity.users.idTeacher}>
-                                            <li className="step-item">
-                                                <div className="step-content-wrapper">
-                                                    <div className="step-avatar">
-                                                        <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={activity.users.name}>
-                                                            <span className="avatar-initials">{activity.users.name.charAt(0).toUpperCase()}</span>
-                                                        </span>
-                                                    </div>
+                                        <ul className="step" key={activity.idActivityTeam}>
+                                            <form className="step-item" onSubmit={(event) => handleSave(event, activity.idActivityTeam)}>
+                                                <li className="step-item">
+                                                    <div className="step-content-wrapper">
+                                                        <div className="step-avatar">
+                                                            <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={activity.users.name}>
+                                                                <span className="avatar-initials">{activity.users.name.charAt(0).toUpperCase()}</span>
+                                                            </span>
+                                                        </div>
 
-                                                    <div className="step-content">
-                                                        <Link className="d-flex align-items-center me-2" to={`/view-activity/${activity.users.idTeacher}`}><h5 className="mb-1">{activity.users.name}</h5></Link>
-                                                        {/* <p className="fs-5 mb-1" value={editedText} onChange={(e) => setEditedText(e.target.value)} width="32" height="32"><div dangerouslySetInnerHTML={{ __html: activity.descriptionActivityTeam }} /></p> */}
-                                                        {editModes[index] ? (
-                                                            <div className='quill-custom rounded'>
-                                                                <ReactQuill
-                                                                    value={editedText}
-                                                                    onChange={(e) => setEditedText(e.target.value)}
-                                                                    placeholder="Text..."
-                                                                    modules={{
-                                                                        toolbar: {
-                                                                            container: [
-                                                                                ['bold', 'italic', 'underline', 'strike'],
-                                                                                [{ list: 'ordered' }, { list: 'bullet' }],
-                                                                                ['link', 'image'],
-                                                                            ],
-                                                                        },
-                                                                    }}
-                                                                    formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image']}
-                                                                />
-                                                            </div>
-                                                        ) : (
-                                                            <p className="fs-5 mb-1" width="64" height="64"><div dangerouslySetInnerHTML={{ __html: activity.descriptionActivityTeam }} /></p>
-                                                        )}
-                                                        {activity.fileName ? (
-                                                            <ul className="list-group list-group-sm">
-                                                                <li className="list-group-item list-group-item-light">
-                                                                    <div className="row gx-1">
+                                                        <div className="step-content">
+                                                            <Link className="d-flex align-items-center me-2" to={`/view-activity/${activity.users.idTeacher}`}><h5 className="mb-1">{activity.users.name}</h5></Link>
+                                                            {/* <p className="fs-5 mb-1" value={editedText} onChange={(e) => setEditedText(e.target.value)} width="32" height="32"><div dangerouslySetInnerHTML={{ __html: activity.descriptionActivityTeam }} /></p> */}
+                                                            {editModes[index] ? (
+                                                                <div className='quill-custom rounded'>
+                                                                    <ReactQuill
+                                                                        value={editedText}
+                                                                        onChange={handleEditorChange}
+                                                                        placeholder="Text..."
+                                                                        modules={{
+                                                                            toolbar: {
+                                                                                container: [
+                                                                                    ['bold', 'italic', 'underline', 'strike'],
+                                                                                    [{ list: 'ordered' }, { list: 'bullet' }],
+                                                                                    ['link', 'image'],
+                                                                                ],
+                                                                            },
+                                                                        }}
+                                                                        formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image']}
+                                                                    />
+                                                                </div>
+                                                            ) : (
+                                                                <p className="fs-5 mb-1" width="64" height="64"><div dangerouslySetInnerHTML={{ __html: activity.descriptionActivityTeam }} /></p>
+                                                            )}
+                                                            {activity.fileName ? (
+                                                                <ul className="list-group list-group-sm">
+                                                                    <li className="list-group-item list-group-item-light">
+                                                                        <div className="row gx-1">
 
-                                                                        <div className="col-sm-4">
-                                                                            <div className="d-flex">
-                                                                                <div className="flex-shrink-0">
-                                                                                    <img className="avatar avatar-xs" src="../assets/svg/components/placeholder-img-format.svg" alt="Image Description" />
-                                                                                </div>
-                                                                                <div className="flex-grow-1 text-truncate ms-2">
-                                                                                    <span>{activity.fileName}
-                                                                                        <span className="d-block small text-muted">{formatBytes(activity.fileSize)}</span>
-                                                                                        {/* <span><Link to="#">Ver </Link></span> */}
+                                                                            <div className="col-sm-4">
+                                                                                <div className="d-flex">
+                                                                                    <div className="flex-shrink-0">
+                                                                                        <img className="avatar avatar-xs" src="../assets/svg/components/placeholder-img-format.svg" alt="Image Description" />
+                                                                                    </div>
+                                                                                    <div className="flex-grow-1 text-truncate ms-2">
+                                                                                        <span>{activity.fileName}
+                                                                                            <span className="d-block small text-muted">{formatBytes(activity.fileSize)}</span>
+                                                                                            {/* <span><Link to="#">Ver </Link></span> */}
 
-                                                                                        <span><Link to={`http://localhost:8081/api/files/${activity.filename}`} download> Download</Link></span>
-                                                                                    </span>
+                                                                                            <span><Link to={`http://localhost:8081/api/files/${activity.filename}`} download> Download</Link></span>
+                                                                                        </span>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
+
                                                                         </div>
+                                                                    </li>
+                                                                </ul>
+                                                            ) : null}
+                                                            <span className="d-block fs-6 text-dark text-truncate">{formatDate(activity.CreateDate)}</span>
+                                                        </div>
 
+
+                                                        {currentUser === activity.idTeacher && !editModes[index] ? (
+                                                            <div className="btn-group">
+                                                                <div>
+                                                                    <div style={{ display: 'inline-block', marginRight: '10px', cursor: 'pointer' }} onClick={() => handleEditClick(index, activity)}>
+                                                                        <i className="bi bi-pencil"></i>
                                                                     </div>
-                                                                </li>
-                                                            </ul>
-                                                        ) : null}
-                                                        <span className="d-block fs-6 text-dark text-truncate">{formatDate(activity.CreateDate)}</span>
-                                                    </div>
-
-
-                                                    {currentUser === activity.idTeacher && !editModes[index] ? (
-                                                        <div className="btn-group">
-                                                            <div>
-                                                                <div style={{ display: 'inline-block', marginRight: '10px', cursor: 'pointer' }}>
-                                                                    <i className="bi bi-pencil" onClick={() => handleEdit(index, activity)}></i>
-                                                                </div>
-                                                                <div style={{ display: 'inline-block', cursor: 'pointer' }}>
-                                                                    <i className="bi bi-trash"></i>
+                                                                    <div style={{ display: 'inline-block', cursor: 'pointer' }} onClick={() => handleDeleteClick(index)}>
+                                                                        <i className="bi bi-trash"></i>
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                        ) : null}
+
+
+                                                    </div>
+                                                    {editModes[index] ? (
+                                                        <div className="btn-group mt-2">
+                                                            <button className="btn btn-sm btn-success me-2" type='submit'>
+                                                                Сохранить
+                                                            </button>
+
+                                                            <button className="btn btn-sm btn-secondary" onClick={() => handleCancel(index)}>
+                                                                Отмена
+                                                            </button>
                                                         </div>
                                                     ) : null}
-
-
-                                                </div>
-                                                {editModes[index] ? (
-                                                    <div className="btn-group mt-2">
-                                                        <button className="btn btn-sm btn-success me-2" onClick={() => handleSave(index)}>
-                                                            Сохранить
-                                                        </button>
-                                                        <button className="btn btn-sm btn-secondary" onClick={() => handleCancel(index)}>
-                                                            Отмена
-                                                        </button>
-                                                    </div>
-                                                ) : null}
-                                            </li>
+                                                </li>
+                                            </form>
                                         </ul>
                                     ))
                                 ) : (
@@ -348,7 +386,7 @@ export default function Team() {
                                     <div className="input-group-append input-group-append-last-sm-down-none">
                                         <div className="tom-select-custom tom-select-custom-end">
                                             <select className="js-select form-select tom-select-custom-form-select-invite-user" id="access" value={inviteFormData.access} onChange={handleInputChange} >
-                                                <option value="Guest">Convidado</option>
+                                                <option value="Convidado">Convidado</option>
                                                 <option value="Administrador">Administrador</option>
                                             </select>
                                         </div>
@@ -389,10 +427,6 @@ export default function Team() {
                                                                         <option value="remove">Remover</option>
                                                                     </React.Fragment>
                                                                 )}
-
-
-
-
                                                             </select>
                                                         </div>
                                                     </div>
@@ -404,13 +438,26 @@ export default function Team() {
                             </ul>
                             <label className="row form-check form-switch" htmlFor="addTeamPreferencesNewProjectSwitch1">
                                 <span className="col-8 col-sm-9 ms-0">
-                                    <i className="bi-bell text-primary me-2"></i>
-                                    <span className="text-dark">Informar todos os membros do projeto</span>
+                                    <i className="bi bi-gear text-primary me-2"></i>
+                                    <span className="text-dark">O estado atual da sua equipa:
+                                        {teamData.privacy === 1 ? (
+                                            <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                        ) : (
+                                            <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div>
+                                        )}
+                                    </span>
                                 </span>
                                 <span className="col-4 col-sm-3 text-end">
-                                    <input type="checkbox" className="form-check-input" id="addTeamPreferencesNewProjectSwitch1" defaultChecked />
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        id="addTeamPreferencesNewProjectSwitch1"
+                                        defaultChecked={teamData.privacy === 1} // устанавливаем состояние в зависимости от teamData.privacy
+                                        onChange={handlePrivacyChange}
+                                    />
                                 </span>
                             </label>
+
                         </div>
 
                         <div className="modal-footer">

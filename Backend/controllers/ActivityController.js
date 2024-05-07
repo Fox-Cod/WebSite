@@ -1,8 +1,4 @@
-const Users = require('../models/Users'); 
-const Activitys = require('../models/Activitys'); 
-const Subjects = require('../models/Subjects'); 
-const Years = require('../models/Years'); 
-const Educations = require('../models/Educations');
+const { Users, Activitys, Subjects, Years, Educations } = require('../models/model')
 
 async function getAllActivity(req, res) {
   try {
@@ -24,8 +20,11 @@ async function getAllActivity(req, res) {
 
 async function getOneActivity(req, res) {
   const activityId = req.params.activityId;
+  console.log('Получен запрос для активности с id:', activityId);
+  
   try {
-    const oneActivity = await Activitys.findOne({where: { idActivity: activityId },
+    const activity = await Activitys.findOne({
+      where: { idActivity: activityId }, // Находим активность по idActivity
       include: [
         { model: Users, as: 'users', attributes: ['idTeacher', 'name'] },
         { model: Subjects, as: 'subjects', attributes: ['idSubject', 'nameSubject'] },
@@ -33,12 +32,20 @@ async function getOneActivity(req, res) {
         { model: Educations, as: 'educations', attributes: ['idEducation', 'nameEducation'] }
       ]
     });
-    res.json(oneActivity);
+
+    if (!activity) {
+      console.log('Активность с id', activityId, 'не найдена');
+      return res.status(404).json({ error: 'Активность не найдена' });
+    }
+
+    console.log('Активность с id', activityId, 'успешно найдена');
+    res.json(activity);
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Erro interno do servidor');
+    console.error('Ошибка при получении активности:', error);
+    res.status(500).send('Внутренняя ошибка сервера');
   }
 }
+
 
 
 async function saveActivity(req, res) {

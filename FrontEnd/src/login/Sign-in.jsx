@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { login } from '../http/userAPI.js'
 
 export default function SignIn() {
   const [formErrors, setFormErrors] = useState({});
@@ -28,26 +28,41 @@ export default function SignIn() {
     return Object.keys(errors).length === 0;
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (validateForm()) {
+  //     try {
+  //       const response = await axios.post('http://localhost:8081/api/user/login', formData, { withCredentials: true });
+  //       if (response.data.Status === 'Success') {
+  //         navigate('/');
+  //         location.reload();
+  //       } else {
+  //         setFormErrors({ general: 'Credenciais inválidas' });
+  //         console.log(response)
+  //       }
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   } else {
+  //     console.log('Falha na validação do formulário.');
+  //   }
+  // };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (validateForm()) {
-      try {
-        const response = await axios.post('http://localhost:8081/api/login', formData, { withCredentials: true });
-        if (response.data.Status === 'Success') {
-          navigate('/');
-          location.reload();
-        } else {
-          setFormErrors({ general: 'Credenciais inválidas' });
-          console.log(response)
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      console.log('Falha na validação do formulário.');
+    const { email, password } = formData;
+    try {
+        await login(email, password);
+        navigate('/');
+        location.reload();
+    } catch (error) {
+        setFormErrors({ general: 'Credenciais inválidas' });
+        console.error(error);
     }
-  };
+};
+  
 
 
   return (

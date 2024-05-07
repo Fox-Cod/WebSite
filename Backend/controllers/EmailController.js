@@ -1,4 +1,4 @@
-const Users = require('../models/Users');
+const { Users } = require('../models/model')
 const nodemailer = require('nodemailer');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();

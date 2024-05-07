@@ -1,7 +1,4 @@
-const Users = require('../models/Users');
-const Teams = require('../models/Teams');
-const Activity_Team = require('../models/Activity_Team');
-const Team_List = require('../models/Team_List');
+const { Users, Teams, Activity_Team, Team_List } = require('../models/model')
 const path = require('path');
 const fs = require('fs');
 
@@ -22,7 +19,7 @@ async function showTeams(req, res) {
       where: { idTeacher },
       include: [
         { model: Users, as: 'users', attributes: ['idTeacher', 'name'] },
-        { model: Teams, as: 'teams', attributes: ['idTeam', 'idTeacher', 'nameTeam', 'descriptionTeam', 'areasWork'] }
+        { model: Teams, as: 'teams', attributes: ['idTeam', 'idTeacher', 'nameTeam', 'descriptionTeam', 'areasWork', 'privacy'] }
       ]
     });
 
@@ -30,7 +27,7 @@ async function showTeams(req, res) {
       return res.status(404).json({ Message: 'Not Found: Пользователь не найден' });
     }
 
-    res.json({ Status: 'Success', teams });
+    res.json({ Status: 'Success', teams, idTeacher });
   } catch (error) {
     console.error('Ошибка при запросе к базе данных:', error);
     res.status(500).json({ Message: 'Internal Server Error' });
@@ -107,8 +104,10 @@ async function addMemberToTeam(req, res) {
   const { email, access } = req.body;
   const teamId = req.params.teamId;
 
+  console.log(email, access)
+
   try {
-    const teacher = await Users.findOne({ where: { email } });
+    const teacher = await Users.findOne({ where: { email: email } });
     if (!teacher) {
       return res.status(404).json({ message: 'Пользователь не найден' });
     }
@@ -215,5 +214,47 @@ async function joinTeam(req, res) {
   }
 }
 
+async function privacy(req, res) {
+  const teamId = req.params.id; // Получаем teamId из параметра маршрута
+  const { newPrivacy } = req.body;
+  try {
+      const team = await Teams.findByPk(teamId);
+      if (!team) {
+          return res.status(404).json({ error: 'Команда не найдена' });
+      }
 
-module.exports = { showTeams, getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam, editTeamAcitivty, searchTeams, joinTeam };
+      // Обновляем статус команды
+      team.privacy = newPrivacy;
+      await team.save();
+
+      return res.status(200).json({ message: 'Статус команды успешно обновлен' });
+  } catch (error) {
+      console.error('Ошибка при обновлении статуса команды:', error);
+      return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+  }
+}
+
+async function updateActivityTeam(req, res) {
+  const { editedText, idActivityTeam } = req.body;
+  try {
+      const activity = await Activity_Team.findByPk(idActivityTeam);
+      if (!activity) {
+          return res.status(404).json({ error: 'Сообщение не найдено' });
+      }
+
+      activity.descriptionActivityTeam = editedText;
+      await activity.save();
+
+      return res.status(200).json({ message: 'Данные успешно обновлены' });
+  } catch (error) {
+      console.error('Ошибка при обновлении данных:', error);
+      return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+  }
+}
+
+
+
+
+
+
+module.exports = { showTeams, getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam, editTeamAcitivty, searchTeams, joinTeam, privacy, updateActivityTeam };

@@ -1,11 +1,4 @@
-const Schools = require('../models/Schools');
-const Groups = require('../models/Groups');
-const Years = require('../models/Years');
-const Educations = require('../models/Educations');
-const Subjects = require('../models/Subjects');
-const Tools = require('../models/Tools');
-const Users = require('../models/Users');
-const Resources = require('../models/Resources');
+const { Schools, Groups, Years, Educations, Subjects, Tools, Users, Resources } = require('../models/model')
 
 const fs = require('fs');
 const path = require('path');

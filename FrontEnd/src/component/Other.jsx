@@ -822,7 +822,11 @@ export const AddActivityTeam = () => {
   const { teamId } = useParams();
   const [file, setFile] = useState(null);
   const [descricao, setDescricao] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [showFileInput, setShowFileInput] = useState(false);
+
+  const handleToggleFileInput = () => {
+    setShowFileInput(!showFileInput);
+  };
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -893,14 +897,19 @@ export const AddActivityTeam = () => {
                 </div>
               </div>
               <div className="mt-3">
-                <label htmlFor="fileInput" className="form-label">Escolher ficheiro</label>
-                <input
-                  id="fileInput"
-                  className="form-control"
-                  type="file"
-                  onChange={handleFileChange}
-                />
-                <div className="form-text">Não necessariamente.</div>
+                <span className='text-primary' onClick={handleToggleFileInput} style={{ cursor: 'pointer' }}> {showFileInput ? 'Fechar' : 'Adicionar ficheiro'}</span>
+                {showFileInput && (
+                  <div>
+                    <label htmlFor="fileInput" className="form-label">Escolher ficheiro</label>
+                    <input
+                      id="fileInput"
+                      className="form-control"
+                      type="file"
+                      onChange={handleFileChange}
+                    />
+                    <div className="form-text">Não necessariamente.</div>
+                  </div>
+                )}
               </div>
               <div className="d-grid mt-3">
                 <button type="submit" className="btn btn-primary btn-lg">Enviar</button>

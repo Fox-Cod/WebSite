@@ -3,6 +3,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const routes = require('./routes/router');
+const model = require('./models/model')
+const sequelize = require('./database');
 const multer = require('multer');
 const path = require('path');
 
@@ -46,7 +48,14 @@ app.post('/upload', upload.single('file'), (req, res) => {
   res.json({ message: 'File uploaded successfully!' });
 });
 
-
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('All tables were created successfully.');
+  } catch (error) {
+    console.error('Error occurred while creating tables:', error);
+  }
+})();
 
 
 app.listen(PORT, () => {

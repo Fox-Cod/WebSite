@@ -27,7 +27,7 @@ const teamController = require('../controllers/TeamController');
 const emailController = require('../controllers/EmailController');
 
 // Логин & Регистрация
-router.post('/login', authController.login);
+router.post('/user/login', authController.login);
 router.post('/registration', authController.registration)
 
 // Профиль пользувателя 'Profile'
@@ -45,6 +45,8 @@ router.get('/search-teams', teamController.searchTeams)
 router.get('/view-team-list', authenticateToken, teamController.showTeams)
 
 // Команда 'Team'
+router.post('/update-activity-team', teamController.updateActivityTeam)
+router.put('/team/:id/privacy', teamController.privacy);
 router.post('/join-team', authenticateToken, teamController.joinTeam)
 router.get('/view-teams/:teamId', authenticateToken, teamController.getTeamAndMembers)
 router.post('/create-team', authenticateToken, teamController.createTeam)

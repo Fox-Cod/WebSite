@@ -1,12 +1,4 @@
-const Schools = require('../models/Schools');
-const Groups = require('../models/Groups');
-const Users = require('../models/Users');
-const Activitys = require('../models/Activitys'); 
-const Resources = require('../models/Resources'); 
-const Subjects = require('../models/Subjects'); 
-const Years = require('../models/Years'); 
-const Educations = require('../models/Educations');
-
+const { Schools, Groups, Users, Activitys, Resources, Subjects, Years, Educations, Team_List, Teams } = require('../models/model')
 
 async function getProfileUser(req, res) {
   const { idTeacher } = req.userToken;
@@ -111,7 +103,7 @@ async function getProfileAndActivity(req, res) {
 
     // Получаем активность пользователя
     const userActivity = await Activitys.findAll({
-      where: { userId },
+      where: { idTeacher: userId },
       include: [
         { model: Subjects, as: 'subjects', attributes: ['nameSubject'] },
         { model: Years, as: 'years', attributes: ['year'] },
@@ -119,13 +111,27 @@ async function getProfileAndActivity(req, res) {
       ]
     });
 
+    const userResources = await Resources.findAll({
+      where: { idTeacher: userId },
+      include: [
+        { model: Users, as: 'users', attributes: ['name'] },
+      ]
+    });
+
+    const userTeamList = await Team_List.findAll({
+      where: { idTeacher: userId },
+      include: [
+        { model: Users, as: 'users', attributes: ['idTeacher', 'name'] },
+        { model: Teams, as: 'teams', attributes: ['idTeam', 'idTeacher', 'nameTeam', 'descriptionTeam', 'areasWork'] }
+      ]
+    });
 
     const { schools, groups, ...profile } = teacher.toJSON();
     const nameSchool = schools ? schools.nameSchool : null; 
     const { codGroup, nameGroup } = groups ? groups : {};
 
     // Отправляем профиль и активность вместе в ответе
-    res.json({ status: 'Success', profile: { ...profile, nameSchool, codGroup, nameGroup }, activity: userActivity });
+    res.json({ profile: { ...profile, nameSchool, codGroup, nameGroup }, activity: userActivity, resources: userResources, teams: userTeamList });
   } catch (error) {
     console.error('Ошибка при запросе к базе данных:', error);
     res.status(500).json({ message: 'Внутренняя ошибка сервера' });

@@ -126,7 +126,7 @@ export default function UserProfile() {
 
                   <li className="list-inline-item">
                     <i className="bi-calendar-week me-1"></i>
-                    <span>{formatDate(userProfile.createDate)}</span>
+                    <span>{formatDate(userProfile.CreateDate)}</span>
                   </li>
                 </ul>
               </div>
@@ -152,19 +152,19 @@ export default function UserProfile() {
                         </button>
 
                         <div className="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="profileDropdown">
-                          <span className="dropdown-header">Definições</span>
+                          <span className="dropdown-header">FAQ</span>
 
-                          <a className="dropdown-item" href="#">
-                            <i className="bi-info-circle dropdown-item-icon"></i> Sugerir edições
-                          </a>
+                          <Link className="dropdown-item" to="/faq">
+                            <i className="bi-info-circle dropdown-item-icon"></i> Mais informações
+                          </Link>
 
                           <div className="dropdown-divider"></div>
 
                           <span className="dropdown-header">Feedback</span>
 
-                          <a className="dropdown-item" href="#">
-                            <i className="bi-flag dropdown-item-icon"></i> <Link className='link' to="/#contact-section">Relatório</Link>
-                          </a>
+                          <Link className="dropdown-item" to="/#contact-section">
+                            <i className="bi-flag dropdown-item-icon"></i>Contacte-nos
+                          </Link>
                         </div>
                       </div>
                     </div>

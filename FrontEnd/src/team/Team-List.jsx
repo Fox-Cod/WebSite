@@ -7,6 +7,7 @@ export default function TeamList() {
   const [data, setData] = useState([]);
   const [userProfile, setUserProfile] = useState('');
   const [searchTeams, setSearchTeams] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const fetchDataUserProfile = async () => {
     try {
@@ -21,7 +22,7 @@ export default function TeamList() {
     try {
       const response = await axios.get('http://localhost:8081/api/view-team-list', { withCredentials: true })
       setData(response.data.teams)
-      setTeamList(response.data)
+      setCurrentUser(response.data.idTeacher);
     } catch (err) {
       console.error(err);
     }
@@ -50,6 +51,16 @@ export default function TeamList() {
     return `${day} ${month} ${year}`;
   }
 
+  const isCurrentUserInTeam = data.some(member => member.teams.idTeacher === currentUser);
+
+
+  const getRandomTeams = (arr, n) => {
+    const shuffled = arr.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, n);
+  };
+
+  // Выбираем 6 случайных записей
+  const randomTeams = getRandomTeams(searchTeams, 6);
   return (
     <div>
       <main id="content" role="main" className="main">
@@ -109,19 +120,19 @@ export default function TeamList() {
                         </button>
 
                         <div className="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="profileDropdown">
-                          <span className="dropdown-header">Definições</span>
+                          <span className="dropdown-header">FAQ</span>
 
-                          <a className="dropdown-item" href="#">
-                            <i className="bi-info-circle dropdown-item-icon"></i> Sugerir edições
-                          </a>
+                          <Link className="dropdown-item" to="/faq">
+                            <i className="bi-info-circle dropdown-item-icon"></i> Mais informações
+                          </Link>
 
                           <div className="dropdown-divider"></div>
 
                           <span className="dropdown-header">Feedback</span>
 
-                          <a className="dropdown-item" href="#">
-                            <i className="bi-flag dropdown-item-icon"></i> Relatório
-                          </a>
+                          <Link className="dropdown-item" to="/#contact-section">
+                            <i className="bi-flag dropdown-item-icon"></i>Contacte-nos
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -202,13 +213,15 @@ export default function TeamList() {
                                   </div>
                                 </div>
                               </div>
+
                               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
-                                {/* <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div> */}
+                                {team.teams.privacy === 1 ? (
+                                  <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                ) : (
+                                  <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div>
+                                )}
                               </div>
                             </div>
-
-
                           </div>
                         </div>
                       </div>
@@ -239,9 +252,12 @@ export default function TeamList() {
                                 <div className="dropdown-divider"></div>
                                 <a className="dropdown-item text-danger" href="#">Delete</a>
                               </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
-                                {/* <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div> */}
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                {team.teams.privacy === 1 ? (
+                                  <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                ) : (
+                                  <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -256,8 +272,9 @@ export default function TeamList() {
                 </div>
 
                 <div className="tab-pane fade" id="search" role="tabpanel" aria-labelledby="grid-tab">
+                  <h5>Recomendado </h5>
                   <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
-                    {searchTeams.map(teams => (
+                    {randomTeams.map(teams => (
                       <div className="col mb-3 mb-lg-5" key={teams.idTeam}>
                         <div className="card h-100">
                           <div className="card-body pb-0">
@@ -297,9 +314,14 @@ export default function TeamList() {
                                 </div>
                               </div>
                               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
-                                {/* <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div> */}
-                                <div className='form-text badge bg-soft-primary text-body rounded-pill me-1'>Já na equipa</div>
+                                {teams.privacy === 1 ? (
+                                  <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                ) : (
+                                  <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div>
+                                )}
+                                {/* {isCurrentUserInTeam && (
+                                  <div className='form-text badge bg-soft-primary text-body rounded-pill me-1'>Já na equipa</div>
+                                )} */}
                               </div>
                             </div>
                           </div>

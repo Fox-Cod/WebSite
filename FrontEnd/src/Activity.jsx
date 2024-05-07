@@ -116,7 +116,7 @@ export default function Activity() {
                 <h6 className="text-secondary">{formatDate(d.publishDate)}</h6>
               </div>
               <div className='d-block text-end'>
-                <Link to={`/view-activity/${d.id}`}>Mais</Link>
+                <Link to={`/view-activity/${d.idActivity}`}>Mais</Link>
               </div>
             </div>
           </div>

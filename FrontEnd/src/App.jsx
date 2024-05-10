@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Index from "./Index";
-import Nav from "./component/Navigator";
-import ViewProfile from "./component/View-Profile";
-import Footer from "./component/Footer";
-import Form from "./component/Form";
-import AdminPage from "./Admin-Page";
-import Activity from "./Activity";
-import SignIn from "./login/Sign-in";
-import SignUp from "./login/Sign-up";
-import Resources from "./Resources";
-import Tools from "./Tools";
-import UserProfile from "./User-Profile";
-import UserProfileSettings from "./User-Profile-Settings";
-import ResetPassword from "./login/Reset-Password";
-import PasswordResetEmail from "./login/Password-Reset-Email";
-import TokenValidation from "./login/Token-Validation";
-import TeamList from "./team/Team-List";
-import Team from "./team/Team";
-import Friends from "./Friends";
-import ViewActivity from "./component/View-Activity";
-import FAQs from "./FAQs";
+import Index from "./page/Index";
+import Nav from "./page/component/Navigator";
+import ViewProfile from "./page/component/View-Profile";
+import Footer from "./page/component/Footer";
+import Form from "./page/component/Form";
+import AdminPage from "./page/Admin-Page";
+import Activity from "./page/Activity";
+import SignIn from "./page/login/Sign-in";
+import SignUp from "./page/login/Sign-up";
+import Resources from "./page/Resources";
+import Tools from "./page/Tools";
+import UserProfile from "./page/User-Profile";
+import UserProfileSettings from "./page/User-Profile-Settings";
+import ResetPassword from "./page/login/Reset-Password";
+import PasswordResetEmail from "./page/login/Password-Reset-Email";
+import TokenValidation from "./page/login/Token-Validation";
+import TeamList from "./page/team/Team-List";
+import Team from "./page/team/Team";
+import Friends from "./page/Friends";
+import ViewActivity from "./page/component/View-Activity";
+import FAQs from "./page/FAQs";
 
 
 const App = () => {

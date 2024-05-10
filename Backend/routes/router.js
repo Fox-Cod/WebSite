@@ -27,7 +27,7 @@ const teamController = require('../controllers/TeamController');
 const emailController = require('../controllers/EmailController');
 
 // Логин & Регистрация
-router.post('/user/login', authController.login);
+router.post('/login', authController.login);
 router.post('/registration', authController.registration)
 
 // Профиль пользувателя 'Profile'

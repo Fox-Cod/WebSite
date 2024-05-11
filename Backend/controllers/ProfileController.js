@@ -17,19 +17,6 @@ async function getProfileUser(req, res) {
     const { schools, groups, ...profile } = teacher.toJSON();
     const { nameSchool } = schools, { codGroup, nameGroup } = groups;
 
-    res.json({ Status: 'Success', profile: { ...profile, nameSchool, codGroup, nameGroup } });
-  } catch (error) {
-    console.error('Ошибка при запросе к базе данных:', error);
-    return res.status(500).json({ Message: 'Internal Server Error' });
-  }
-}
-
-
-
-async function getUserActivity(req, res) {
-  const { idTeacher } = req.userToken;
-
-  try {
     const userActivity = await Activitys.findAll({
       where: { idTeacher: idTeacher },
       include: [
@@ -40,17 +27,6 @@ async function getUserActivity(req, res) {
       ]
     });
 
-    res.json({ Status: 'Success', activity: userActivity });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-  }
-}
-
-async function getUserResources(req, res) {
-  const { idTeacher } = req.userToken;
-
-  try {
     const userResources = await Resources.findAll({
       where: { idTeacher },
       include: [
@@ -58,12 +34,27 @@ async function getUserResources(req, res) {
       ]
     });
 
-    res.json({ Status: 'Success', resources: userResources });
+    const teams = await Team_List.findAll({
+      where: { idTeacher },
+      include: [
+        { model: Users, as: 'users', attributes: ['idTeacher', 'name'] },
+        { model: Teams, as: 'teams', attributes: ['idTeam', 'idTeacher', 'nameTeam', 'descriptionTeam', 'areasWork', 'privacy'] }
+      ]
+    });
+
+    res.json({ 
+      Status: 'Success', 
+      profile: { ...profile, nameSchool, codGroup, nameGroup }, 
+      activity: userActivity, 
+      resources: userResources,
+      teams,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
+    console.error('Ошибка при запросе к базе данных:', error);
+    return res.status(500).json({ Message: 'Internal Server Error' });
   }
 }
+
 
 
 async function updateProfile(req, res) {
@@ -142,6 +133,6 @@ async function getProfileAndActivity(req, res) {
 
 
 
-module.exports = { getProfileUser, getUserActivity, getUserResources, updateProfile, getProfileAndActivity };
+module.exports = { getProfileUser, updateProfile, getProfileAndActivity };
 
 

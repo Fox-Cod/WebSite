@@ -11,28 +11,6 @@ async function searchTeams(req, res){
   }
 }
 
-async function showTeams(req, res) {
-  const { idTeacher } = req.userToken;
-
-  try {
-    const teams = await Team_List.findAll({
-      where: { idTeacher },
-      include: [
-        { model: Users, as: 'users', attributes: ['idTeacher', 'name'] },
-        { model: Teams, as: 'teams', attributes: ['idTeam', 'idTeacher', 'nameTeam', 'descriptionTeam', 'areasWork', 'privacy'] }
-      ]
-    });
-
-    if (!teams || teams.length === 0) {
-      return res.status(404).json({ Message: 'Not Found: Пользователь не найден' });
-    }
-
-    res.json({ Status: 'Success', teams, idTeacher });
-  } catch (error) {
-    console.error('Ошибка при запросе к базе данных:', error);
-    res.status(500).json({ Message: 'Internal Server Error' });
-  }
-}
 
 async function getTeamAndMembers(req, res) {
   try {
@@ -257,4 +235,4 @@ async function updateActivityTeam(req, res) {
 
 
 
-module.exports = { showTeams, getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam, editTeamAcitivty, searchTeams, joinTeam, privacy, updateActivityTeam };
+module.exports = { getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam, editTeamAcitivty, searchTeams, joinTeam, privacy, updateActivityTeam };

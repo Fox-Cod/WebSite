@@ -1,54 +1,24 @@
-
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { login } from "../../http/userAPI";
+import axios from 'axios';
 
 export default function SignIn() {
-  const [formErrors, setFormErrors] = useState({});
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-
-
-  
-  const validateForm = () => {
-    const errors = {};
-
-    if (!formData.email || !formData.email.includes('@')) {
-      errors.email = 'Por favor, insira um endereço de e-mail válido.';
-    }
-
-    if (!formData.password || formData.password.length < 8) {
-      errors.password = 'A senha deve ter pelo menos 8 caracteres.';
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Предотвращаем дефолтное поведение отправки формы
 
-    if (validateForm()) {
-      try {
-        const response = await axios.post('http://localhost:8081/api/login', formData, { withCredentials: true });
-        if (response.data.Status === 'Success') {
-          navigate('/');
-          location.reload();
-        } else {
-          setFormErrors({ general: 'Credenciais inválidas' });
-          console.log(response)
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      console.log('Falha na validação do formulário.');
+    try {
+      const res = await login(email, password);
+      window.location.href = '/';
+    } catch (err) {
+      setError(err.message); // Устанавливаем сообщение об ошибке
     }
   };
-
 
   return (
     <div>
@@ -69,15 +39,13 @@ export default function SignIn() {
                       Seu e-mail
                     </label>
                     <input
-                      type="text"
-                      className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
-                      name="email"
+                      type="email"
+                      className="form-control"
                       id="floatingInput"
                       placeholder="example@example.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
-                    <span className="invalid-feedback">{formErrors.email}</span>
                   </div>
 
                   <div className="mb-4">
@@ -89,17 +57,18 @@ export default function SignIn() {
                         </Link>
                       </span>
                     </label>
-                      <input
-                        type="password"
-                        className={`form-control ${formErrors.password ? 'is-invalid' : ''}`}
-                        name="password"
-                        id="floatingPassword"
-                        placeholder="Senha"
-                        value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      />
-                    <span className="invalid-feedback">{formErrors.password}</span>
+                    <input
+                      type="password"
+                      className="form-control"
+                      name="password"
+                      id="floatingPassword"
+                      placeholder="Senha"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
                   </div>
+
+                  {error && <p className="text-danger">{error}</p>} {/* Выводим сообщение об ошибке */}
 
                   <p className="text-center">
                     Ainda não tem uma conta? <Link className="link" to="/sign-up">
@@ -115,7 +84,6 @@ export default function SignIn() {
           </div>
         </div>
       </main>
-
     </div>
   );
 }

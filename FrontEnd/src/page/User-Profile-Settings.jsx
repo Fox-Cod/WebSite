@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Context } from '../context';
+import { profile } from '../http/deviceAPI';
 
 export default function UserProfileSettings() {
+  const auth = useContext(Context);
   const [schoolAndGroupData, setSchoolAndGroupData] = useState({});
   const [userProfile, setUserProfile] = useState({});
   const [formData, setFormData] = useState({
@@ -15,18 +18,22 @@ export default function UserProfileSettings() {
   });
   const [error, setError] = useState(null);
 
-  const fetchUserProfile = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/api/profile', { withCredentials: true });
-      if (response.data.Status === 'Success') {
-        setUserProfile(response.data.profile);
-      } else {
-        setError(response.data.Message);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (auth.user._isAuth) {
+          const res = await profile();
+          setUserProfile(res.profile),
+          console.log("User is authenticated");
+        } else {
+          window.location.href = '/';
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (error) {
-      handleRequestError(error);
-    }
-  };
+    };
+    fetchData();
+  }, []);
 
   const fetchViewData = async () => {
     try {
@@ -38,7 +45,6 @@ export default function UserProfileSettings() {
   };
 
   useEffect(() => {
-    fetchUserProfile();
     fetchViewData();
   }, []);
 

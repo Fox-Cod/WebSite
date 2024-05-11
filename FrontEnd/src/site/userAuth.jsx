@@ -8,8 +8,8 @@ export default class userAuth {
         makeAutoObservable(this)
     }
 
-    setIsAuth(bool) {
-        this._isAuth = bool
+    setIsAuth(isAuth) {
+        this._isAuth = isAuth
     }
     setUser(user) {
         this._user = user

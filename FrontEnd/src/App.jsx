@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./page/Index";
@@ -19,29 +19,41 @@ import PasswordResetEmail from "./page/login/Password-Reset-Email";
 import TokenValidation from "./page/login/Token-Validation";
 import TeamList from "./page/team/Team-List";
 import Team from "./page/team/Team";
-import Friends from "./page/Friends";
 import ViewActivity from "./page/component/View-Activity";
 import FAQs from "./page/FAQs";
+import NotFoundPage from './page/component/Error404';
+import { Context } from "./context";
+import { Spinner } from "react-bootstrap";
 
+import { check } from './http/userAPI';
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState('');
+  const { user } = useContext(Context);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/api/user-info', { withCredentials: true });
-        setIsAuthenticated(true);
-        setUserRole(response.data.role);
+        const isAuthenticated = await check();
+        user.setIsAuth(true);
+        user.setUser(isAuthenticated.token.email);
+        user.setDefaultRole(isAuthenticated.token.role);
       } catch (error) {
-        setIsAuthenticated(false);
-        setUserRole('');
+        user.setIsAuth(false);
+        user.setUser({});
+        console.log("User is not authenticated :(", error)
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [user]);
+
+  if (loading) {
+    return <Spinner animation={"grow"} />;
+  }
+
 
   return (
     <Router>
@@ -52,24 +64,23 @@ const App = () => {
         <Route path="/activity" element={<Activity />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/tools" element={<Tools />} />
-        <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/faq" element={<FAQs />} />
         <Route path="/view-activity/:activityId" element={<ViewActivity />} />
         <Route path="/view-profile/:userId" element={<ViewProfile />} />
-        <Route path="/team-list" element={<TeamList />} />
-        <Route path="/:teamId" element={<Team />} />
-        <Route path="/friends" element={<Friends />} />
-        <Route path="/user-profile-settings" element={<UserProfileSettings />} />
         <Route path="/password-reset-email" element={<PasswordResetEmail />} />
         <Route path="/token-validation" element={<TokenValidation />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        {user._isAuth ? ( <Route path="/user-profile" element={<UserProfile />} /> ) : ( <Route path="/user-profile" element={<Navigate to="/error404" />} /> )}
+        {user._isAuth ? ( <Route path="/team-list" element={<TeamList />} /> ) : ( <Route path="/team-list" element={<Navigate to="/error404" />} /> )}
+        {user._isAuth ? ( <Route path="/:teamId" element={<Team />} /> ) : ( <Route path="/:teamId" element={<Navigate to="/error404" />} /> )}
+        {user._isAuth ? ( <Route path="/user-profile-settings" element={<UserProfileSettings />} /> ) : ( <Route path="/user-profile-settings" element={<Navigate to="/error404" />} /> )}
+        {user._isAuth && user.role === 'administrador' ? ( <Route path="/admin-page" element={<AdminPage />} /> ) : ( <Route path="/admin-page" element={<Navigate to="/" />} /> )}
+        {user._isAuth === false ? ( <Route path="/sign-in" element={<SignIn />} /> ) : ( <Route path="/sign-in" element={<Navigate to="/" />} /> )}
+        {user._isAuth === false ? ( <Route path="/sign-up" element={<SignUp />} /> ) : ( <Route path="/sign-in" element={<Navigate to="/" />} /> )}
 
-        {isAuthenticated && userRole === 'administrador' ? ( <Route path="/admin-page" element={<AdminPage />} /> ) : ( <Route path="/admin-page" element={<Navigate to="/" />} /> )}
-        
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/error404" element={<NotFoundPage />} />
+
+        <Route path="*" element={<Navigate to="/error404" />} />
       </Routes>
       <Footer />
     </Router>

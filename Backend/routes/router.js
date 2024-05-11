@@ -27,13 +27,12 @@ const teamController = require('../controllers/TeamController');
 const emailController = require('../controllers/EmailController');
 
 // Логин & Регистрация
-router.post('/login', authController.login);
 router.post('/registration', authController.registration)
+router.post('/user/login', authController.login);
+router.get('/user/auth', authenticateToken, authController.check)
 
 // Профиль пользувателя 'Profile'
-router.get('/profile', authenticateToken, profileController.getProfileUser);
-router.get('/view-activity-user', authenticateToken, profileController.getUserActivity)
-router.get('/view-resources-user', authenticateToken, profileController.getUserResources)
+router.get('/user/profile', authenticateToken, profileController.getProfileUser);
 router.post('/update-profile', authenticateToken, profileController.updateProfile)
 
 // Просмотр профиля другого пользувателя
@@ -42,7 +41,6 @@ router.get('/user-profile-and-activity/:userId', profileController.getProfileAnd
 
 // Команды пользувателя 'View other user profile'
 router.get('/search-teams', teamController.searchTeams)
-router.get('/view-team-list', authenticateToken, teamController.showTeams)
 
 // Команда 'Team'
 router.post('/update-activity-team', teamController.updateActivityTeam)

@@ -1,32 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AddTeam } from '../component/Other';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { profile } from '../../http/deviceAPI';
+import { Context } from '../../context';
 
 export default function TeamList() {
-  const [data, setData] = useState([]);
+  const auth = useContext(Context);
+  const [data, setTeams] = useState([]);
   const [userProfile, setUserProfile] = useState('');
   const [searchTeams, setSearchTeams] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
 
-  const fetchDataUserProfile = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/api/profile', { withCredentials: true })
-      setUserProfile(response.data.profile)
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  const fetchDataTeamList = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/api/view-team-list', { withCredentials: true })
-      setData(response.data.teams)
-      setCurrentUser(response.data.idTeacher);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (auth.user._isAuth) {
+          const res = await profile();
+          setUserProfile(res.profile),
+          setTeams(res.teams)
+          console.log("User is authenticated");
+        } else {
+          console.log("User is not authenticated");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
 
   const fetchDataSeachTeams = async () => {
     try {
@@ -38,8 +39,6 @@ export default function TeamList() {
   }
 
   useEffect(() => {
-    fetchDataUserProfile(),
-      fetchDataTeamList();
     fetchDataSeachTeams();
   }, []);
 
@@ -50,9 +49,6 @@ export default function TeamList() {
     const year = dataRegistro.getFullYear();
     return `${day} ${month} ${year}`;
   }
-
-  const isCurrentUserInTeam = data.some(member => member.teams.idTeacher === currentUser);
-
 
   const getRandomTeams = (arr, n) => {
     const shuffled = arr.sort(() => 0.5 - Math.random());

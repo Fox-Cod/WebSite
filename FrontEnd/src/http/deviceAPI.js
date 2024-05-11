@@ -1,8 +1,7 @@
 import {$authHost, $host} from "./index";
-import jwt_decode from "jwt-decode";
 
-export const createType = async (type) => {
-    const {data} = await $authHost.post('api/type', type)
+export const profile = async () => {
+    const {data} = await $authHost.get('api/user/profile')
     return data
 }
 

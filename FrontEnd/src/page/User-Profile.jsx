@@ -1,79 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-
-import axios from 'axios';
+import { profile } from '../http/deviceAPI';
+import { Context } from '../context';
 
 
 export default function UserProfile() {
+  const auth = useContext(Context);
   const [userProfile, setUserProfile] = useState({});
   const [dataActivtiy, setDataActvitiy] = useState([]);
   const [dataResources, setDataResources] = useState([]);
   const [teams, setTeams] = useState([]);
-  const [error, setError] = useState(null);
-
-  const handleError = (error) => {
-    console.error('Error fetching data:', error);
-    setError('Error fetching data');
-  };
-
-  const fetchUserProfile = () => {
-    return axios.get('http://localhost:8081/api/profile', { withCredentials: true })
-      .then(res => {
-        if (res.data.Status === 'Success') {
-          setUserProfile(res.data.profile);
-        } else {
-          setError(res.data.Message);
-        }
-      })
-      .catch(handleError);
-  };
-
-  const fetchUserActivity = () => {
-    return axios.get('http://localhost:8081/api/view-activity-user', { withCredentials: true })
-      .then(res => {
-        console.log('User activities response:', res.data);
-        if (res.data.Status === 'Success') {
-          setDataActvitiy(res.data.activity);
-        } else {
-          setError(res.data.Message);
-        }
-      })
-      .catch(handleError);
-  };
-
-  const fetchUserResources = () => {
-    return axios.get('http://localhost:8081/api/view-resources-user', { withCredentials: true })
-      .then(res => {
-        console.log('User activities response:', res.data);
-        if (res.data.Status === 'Success') {
-          setDataResources(res.data.resources);
-        } else {
-          setError(res.data.Message);
-        }
-      })
-      .catch(handleError);
-  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/api/view-team-list', { withCredentials: true });
-        setTeams(response.data.teams);
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
+        if (auth.user._isAuth) {
+          const res = await profile();
+          setUserProfile(res.profile),
+          setDataActvitiy(res.activity),
+          setDataResources(res.resources),
+          setTeams(res.teams)
+          console.log("User is authenticated");
+        } else {
+          window.location.href = '/error404';
+        }
+      } catch (err) {
+        console.log(err);
       }
     };
-
     fetchData();
   }, []);
-
-  useEffect(() => {
-    fetchUserProfile().catch(handleError);
-    fetchUserActivity().catch(handleError);
-    fetchUserResources().catch(handleError);
-  }, []);
-
 
   function formatDate(rawDate) {
     const dataRegistro = new Date(rawDate);

@@ -1,12 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import "./page/component/Navbar.module.css"; 
+// main.jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { Context } from './context'; // Импортируем Context
+import userAuth from "./site/userAuth";
 
 const app = ReactDOM.createRoot(document.getElementById('root'));
 
 app.render(
-  // <React.StrictMode>
+  <Context.Provider value={{ user: new userAuth() }}>
     <App />
-  // </React.StrictMode>
+  </Context.Provider>
 );

@@ -27,7 +27,7 @@ app.use('/uploads', express.static('uploads'));
 
 app.post('/logout', (req, res) => {
   res.clearCookie('token');
-  return res.json({ Status: 'Success', Message: 'Вы успешно вышли из системы' });
+  return res.json({ success: true });
 });
 
 const uploadDir = path.join(__dirname, 'uploads');

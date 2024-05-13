@@ -8,7 +8,6 @@ const sequelize = require('./database');
 const multer = require('multer');
 const path = require('path');
 
-
 const app = express();
 const PORT = 8081;
 

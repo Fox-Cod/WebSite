@@ -74,7 +74,7 @@ const App = () => {
         {user._isAuth ? ( <Route path="/team-list" element={<TeamList />} /> ) : ( <Route path="/team-list" element={<Navigate to="/error404" />} /> )}
         {user._isAuth ? ( <Route path="/:teamId" element={<Team />} /> ) : ( <Route path="/:teamId" element={<Navigate to="/error404" />} /> )}
         {user._isAuth ? ( <Route path="/user-profile-settings" element={<UserProfileSettings />} /> ) : ( <Route path="/user-profile-settings" element={<Navigate to="/error404" />} /> )}
-        {user._isAuth && user.role === 'administrador' ? ( <Route path="/admin-page" element={<AdminPage />} /> ) : ( <Route path="/admin-page" element={<Navigate to="/" />} /> )}
+        {user._isAuth && user._defaultRole === 'administrador' ? ( <Route path="/admin-page" element={<AdminPage />} /> ) : ( <Route path="/admin-page" element={<Navigate to="/" />} /> )}
         {user._isAuth === false ? ( <Route path="/sign-in" element={<SignIn />} /> ) : ( <Route path="/sign-in" element={<Navigate to="/" />} /> )}
         {user._isAuth === false ? ( <Route path="/sign-up" element={<SignUp />} /> ) : ( <Route path="/sign-in" element={<Navigate to="/" />} /> )}
 

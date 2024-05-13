@@ -5,8 +5,8 @@ export const profile = async () => {
     return data
 }
 
-export const fetchTypes = async () => {
-    const {data} = await $host.get('api/type')
+export const team = async (teamId) => {
+    const {data} = await $authHost.get(`api/team/view-teams/${(teamId)}`)
     return data
 }
 

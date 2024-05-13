@@ -34,7 +34,6 @@ async function login(req, res) {
     console.log(teacher.idTeacher);
 
     const token = generateJwt(teacher.idTeacher, teacher.email, teacher.role);
-    // const token = jwt.sign({ idTeacher, role }, jwtSecretKey, { expiresIn: '7day' });
     res.cookie('token', token, { httpOnly: true });
     return res.json({ Status: 'Success', idTeacher: teacher.idTeacher, role: teacher.role });
   } catch (error) {

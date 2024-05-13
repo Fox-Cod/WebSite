@@ -16,7 +16,7 @@ export default function SignIn() {
       const res = await login(email, password);
       window.location.href = '/';
     } catch (err) {
-      setError(err.message); // Устанавливаем сообщение об ошибке
+      setError(err.message + ' Wamp'); // Устанавливаем сообщение об ошибке
     }
   };
 

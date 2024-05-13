@@ -42,11 +42,11 @@ router.get('/user-profile-and-activity/:userId', profileController.getProfileAnd
 // Команды пользувателя 'View other user profile'
 router.get('/search-teams', teamController.searchTeams)
 
+router.get('/team/view-teams/:teamId', authenticateToken, teamController.getTeamAndMembers)
 // Команда 'Team'
 router.post('/update-activity-team', teamController.updateActivityTeam)
 router.put('/team/:id/privacy', teamController.privacy);
 router.post('/join-team', authenticateToken, teamController.joinTeam)
-router.get('/view-teams/:teamId', authenticateToken, teamController.getTeamAndMembers)
 router.post('/create-team', authenticateToken, teamController.createTeam)
 router.post('/add-member-to-team/:teamId', teamController.addMemberToTeam)
 router.post('/add-activity-team/:teamId', upload.single('file'), authenticateToken, teamController.addActivityTeam)

@@ -47,6 +47,8 @@ export default function UserProfile() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  console.log(userProfile.СreateDate)
+
   return (
     <div>
       <main id="content" role="main" className="main">
@@ -82,7 +84,7 @@ export default function UserProfile() {
 
                   <li className="list-inline-item">
                     <i className="bi-calendar-week me-1"></i>
-                    <span>{formatDate(userProfile.CreateDate)}</span>
+                    <span>{formatDate(userProfile.СreateDate)}</span>
                   </li>
                 </ul>
               </div>

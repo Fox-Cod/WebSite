@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { Context } from '../context';
+import { tool, addTool } from '../http/deviceAPI';
 
 export default function Tools() {
+  const { user } = useContext(Context);
   const [toolsData, setToolsData] = useState([]);
-  const [userProfile, setUserProfile] = useState({});
   const [formData, setFormData] = useState({
     title: '',
     link: '',
@@ -15,14 +16,9 @@ export default function Tools() {
   });
 
   const handleChange = (e) => {
-    const { id, value, type } = e.target;
-  
-    if (type === 'file') {
-      const file = e.target.files[0];
-      setFormData((prevData) => ({ ...prevData, [id]: file }));
-    } else {
-      setFormData((prevData) => ({ ...prevData, [id]: value }));
-    }
+    const { id, value } = e.target;
+
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
   };
   
 
@@ -30,57 +26,26 @@ export default function Tools() {
     e.preventDefault();
   
     try {
-      const formDataToSend = new FormData();
-
-      for (const key in formData) {
-        if (key === 'icone') {
-          formDataToSend.append(key, formData[key], formData[key].name);
-        } else {
-          formDataToSend.append(key, formData[key]);
-        }
-      }
-      
-  
-      const response = await axios.post('http://localhost:8081/api/add-tool', formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      console.log(response.data); // Посмотрите, что возвращает сервер
-      console.log(response);
+      const res = await addTool(formData);
+      console.log(res);
     } catch (error) {
       console.error(error);
     }
   };
   
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/api/view-tools')
-      setToolsData(response.data);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  const fetchUserProfile = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/api/profile', { withCredentials: true });
-      if (response.data.Status === 'Success') {
-        setUserProfile(response.data.profile);
-      } else {
-        console.log(response.data.Message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+          const res = await tool();
+          setToolsData(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
     fetchData();
-    fetchUserProfile();
   }, []);
+
 
 
   const getStatusBadge = (estado) => {
@@ -111,6 +76,7 @@ export default function Tools() {
         );
     }
   };
+
   return (
     <div>
       <div>
@@ -200,7 +166,7 @@ export default function Tools() {
 
                 <div className="dropdown">
                   
-                  {userProfile.role == "administrador" ?
+                  {user._defaultRole == "administrador" ?
 
                   <button
                     type="button"
@@ -379,20 +345,6 @@ export default function Tools() {
                         <option>Não está a funcionar</option>
                       </select>
                     </div>
-                  </div>
-                </div>
-
-
-                <div className="row mb-4">
-                  <div className="col-sm-3 mb-2 mb-sm-0">
-                    <div className="d-flex align-items-center mt-2">
-                      <i className="bi bi-image nav-icon"></i>
-                      <div className="flex-grow-1">Ícone</div>
-                    </div>
-                  </div>
-
-                  <div className="col-sm">
-                    <input type="file" id="icone" onChange={handleChange} class="form-control" />
                   </div>
                 </div>
               </div>

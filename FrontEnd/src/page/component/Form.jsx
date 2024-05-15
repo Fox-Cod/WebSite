@@ -1,36 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { activity, resources } from "../../http/deviceAPI";
 
 export default function Form() {
   const [data, setData] = useState([]);
   const [files, setFiles] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(8);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("http://localhost:8081/api/activity");
-      setData(response.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const fetchFiles = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/api/files');
-      setFiles(response.data);
-    } catch (error) {
-      console.error('Error fetching files: ', error);
-    }
-  };
-
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [filesRes, activityRes] = await Promise.all([resources(), activity()]);
+  
+        setFiles(filesRes);
+        setData(activityRes);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
     fetchData();
-    fetchFiles();
   }, []);
+  
 
   function formatDate(rawDate) {
     const dataRegistro = new Date(rawDate);
@@ -39,10 +29,6 @@ export default function Form() {
     const year = dataRegistro.getFullYear();
     return `${day} ${month} ${year}`;
   }
-
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = data.slice(indexOfFirstPost, indexOfLastPost);
 
   const formatBytes = (bytes) => {
     if (bytes === 0) return '0 Bytes';
@@ -96,7 +82,7 @@ export default function Form() {
             </ol>
           </nav>
         </div>
-        {currentPosts.slice(0, 3).map((d, i) => (
+        {data.slice(0, 3).map((d, i) => (
           <div className="my-3 p-3 bg-body rounded shadow-sm" key={i}>
             <div className="d-flex text-body-secondary">
               <div className="avatar avatar-sm avatar-circle me-2" width="32" height="32">

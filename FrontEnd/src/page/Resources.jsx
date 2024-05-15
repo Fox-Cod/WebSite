@@ -1,29 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { AddAndSearchResources } from './component/Other';
 import { Link } from "react-router-dom";
+import { resources } from '../http/deviceAPI';
 
 export default function Resources() {
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    // Получаем список файлов при загрузке компонента
-    const fetchFiles = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/api/files');
-        setFiles(response.data);
-      } catch (error) {
-        console.error('Error fetching files: ', error);
+          const res = await resources();
+          setFiles(res);
+      } catch (err) {
+        console.log(err);
       }
     };
-
-    fetchFiles();
+    fetchData();
   }, []);
-
-  const getIconPath = fileType => {
-    const fileExtension = fileType.split('/')[1];
-    return `/assets/svg/brands/${fileExtension}.svg`;
-  };
 
   function formatDate(rawDate) {
     const dataRegistro = new Date(rawDate);

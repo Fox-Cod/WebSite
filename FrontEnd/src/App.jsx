@@ -36,7 +36,7 @@ const App = () => {
       try {
         const isAuthenticated = await check();
         user.setIsAuth(true);
-        user.setUser(isAuthenticated.token.email);
+        user.setUserId(isAuthenticated.token.idTeacher);
         user.setDefaultRole(isAuthenticated.token.role);
       } catch (error) {
         user.setIsAuth(false);
@@ -49,6 +49,8 @@ const App = () => {
 
     fetchUserData();
   }, [user]);
+
+  console.log("App iduser: ", user._userId)
 
   if (loading) {
     return <Spinner animation={"grow"} />;

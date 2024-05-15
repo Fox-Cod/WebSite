@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { AddAndSearchActivity } from './component/Other';
 import { Link } from "react-router-dom";
-import axios from 'axios';
+import { activity } from '../http/deviceAPI';
 
 export default function Activity() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([])
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(8);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/api/activity');
-      const sortedData = response.data.sort((a, b) => new Date(b.data_criacao) - new Date(a.data_criacao));
-      setData(sortedData);
-    } catch (error) {
-      console.error('Ошибка при загрузке данных:', error);
-      // Добавьте обработку ошибки, например, уведомление пользователю или логирование
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+          const res = await activity();
+          setData(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
     fetchData();
   }, []);
-
 
 
   function formatDate(rawDate) {
@@ -39,6 +35,7 @@ export default function Activity() {
   const currentPosts = data.slice(indexOfFirstPost, indexOfLastPost);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
 
   return (
     <div>

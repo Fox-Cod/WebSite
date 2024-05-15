@@ -4,7 +4,7 @@ import { AddActivityTeam } from '../component/Other';
 import { useParams, Link } from 'react-router-dom';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { team } from '../../http/deviceAPI';
+import { team, sendInvite, joinTeam, updateTeamActivityText } from '../../http/deviceAPI';
 import { Context } from '../../context';
 
 export default function Team() {
@@ -23,6 +23,7 @@ export default function Team() {
     });
 
     const { teamId } = useParams();
+    const userId = auth.user._userId;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,42 +47,24 @@ export default function Team() {
         fetchData();
     }, []);
 
-
-    const inviteUser = async () => {
-        console.log(inviteFormData)
+    const handleInviteButtonClick = async () => {
         try {
-            const response = await axios.post(`http://localhost:8081/api/add-member-to-team/${teamId}`,
-                {
-                    idTeam: teamId,
-                    ...inviteFormData,
-                },
-                {
-                    withCredentials: true
-                }
-            );
+            const res = await sendInvite(teamId, inviteFormData);
+            console.log(res);
             location.reload();
-            console.log('Приглашение отправлено:', response.data);
-
-            const updatedTeam = response.data.updatedTeam;
-            setTeamData(updatedTeam);
-
-            setInviteFormData({
-                email: "",
-                access: "Convidado",
-            });
         } catch (error) {
             console.error('Ошибка при отправке приглашения:', error.message);
         }
     };
 
-
-    const handleJoinTeam = async () => {
+    const handleJoinTeamButtonClick = async () => {
         try {
-            const response = await axios.post('http://localhost:8081/api/join-team', { teamId, currentUser }, { withCredentials: true });
-            console.log(response.data);
-            window.location.reload();
+            const res = await joinTeam(teamId, userId);
+            console.log(res);
+            location.reload();
+
         } catch (error) {
-            console.error(error);
+            console.error(error, res);
         }
     };
 
@@ -130,11 +113,10 @@ export default function Team() {
         setEditModes(newEditModes);
     };
 
-    const handleSave = async (event, idActivityTeam) => {
-        event.preventDefault();
+    const handleSave = async (idActivityTeam) => {
         try {
-            const response = await axios.post(`http://localhost:8081/api/update-activity-team`, { idActivityTeam, editedText });
-            console.log(response.data);
+            const res = await updateTeamActivityText(idActivityTeam, editedText)
+            console.log(res.data);
         } catch (error) {
             console.error('Ошибка при сохранении обновлённой деятельности:', error);
         }
@@ -223,7 +205,7 @@ export default function Team() {
                                             <i className="bi bi-plus"></i>Add user
                                         </button>
                                         {!isCurrentUserInTeam && (teamData.privacy === 1 && (
-                                            <button type="button" className="btn btn-outline-primary btn-sm" onClick={handleJoinTeam}>
+                                            <button type="button" className="btn btn-outline-primary btn-sm" onClick={handleJoinTeamButtonClick}>
                                                 Entrar
                                             </button>
                                         ))}
@@ -266,7 +248,7 @@ export default function Team() {
                                 {teamActivity.length > 0 ? (
                                     teamActivity.map((activity, index) => (
                                         <ul className="step" key={activity.idActivityTeam}>
-                                            <form className="step-item" onSubmit={(event) => handleSave(event, activity.idActivityTeam)}>
+                                            <form className="step-item" onSubmit={(event) => handleSave(activity.idActivityTeam)}>
                                                 <li className="step-item">
                                                     <div className="step-content-wrapper">
                                                         <div className="step-avatar">
@@ -383,7 +365,7 @@ export default function Team() {
                                                 <option value="Administrador">Administrador</option>
                                             </select>
                                         </div>
-                                        <button className="btn btn-primary d-none d-sm-inline-block" onClick={inviteUser}>Convidar</button>
+                                        <button className="btn btn-primary d-none d-sm-inline-block" onClick={handleInviteButtonClick}>Convidar</button>
                                     </div>
                                 </div>
                             </div>

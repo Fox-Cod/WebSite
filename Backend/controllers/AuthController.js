@@ -6,9 +6,9 @@ const { Users } = require('../models/model')
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY || 'default-secret-key';
 
-const generateJwt = (idTeacher, email, role) => {
+const generateJwt = (idTeacher, role) => {
   return jwt.sign(
-      {idTeacher, email, role},
+      {idTeacher, role},
       jwtSecretKey,
       {expiresIn: '24h'}
   )
@@ -33,7 +33,7 @@ async function login(req, res) {
 
     console.log(teacher.idTeacher);
 
-    const token = generateJwt(teacher.idTeacher, teacher.email, teacher.role);
+    const token = generateJwt(teacher.idTeacher, teacher.role);
     res.cookie('token', token, { httpOnly: true });
     return res.json({ Status: 'Success', idTeacher: teacher.idTeacher, role: teacher.role });
   } catch (error) {

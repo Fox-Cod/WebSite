@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Link, useParams } from 'react-router-dom';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from 'axios';
+import { activity, resources } from '../../http/deviceAPI';
+import SearchComponent from './Search';
 
 export const EditTextActivity = () => {
-  const [userProfile, setUserProfile] = useState({});
   const [viewActivityUser, setViewActivityUser] = useState([]);
   const { activityId } = useParams();
   const [dataActivity, setDataActivity] = useState({});
@@ -47,17 +48,6 @@ export const EditTextActivity = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const fetchUserProfile = () => {
-    return axios.get('http://localhost:8081/api/profile', { withCredentials: true })
-      .then(res => {
-        if (res.data.Status === 'Success') {
-          setUserProfile(res.data.profile);
-        } else {
-          console.log('error');
-        }
-      })
-  };
-
   const handleChange = (event) => { const { id, value } = event.target; setViewActivityUser((prevFormData) => ({ ...prevFormData, [id]: value, })); };
 
   const handleSubmit = async (e) => {
@@ -88,30 +78,30 @@ export const EditTextActivity = () => {
   const fetchData2 = async () => {
     try {
       const response = await axios.get(`http://localhost:8081/api/view-activity/${activityId}`);
-      console.log(response.data);
-      setViewActivityUser(response.data.oneActivity);
+      console.log("asdsad", response.data);
+      setViewActivityUser(response.data);
     } catch (err) {
       console.error(err);
     }
   };
   useEffect(() => {
-    fetchUserProfile();
     fetchData2();
     fetchData();
   }, [activityId]);
+
+  console.log(viewActivityUser)
   return (
     <div>
-      {userProfile && userProfile.id_professor === viewActivityUser?.id && (
-        <div className="dropdown">
-          <button type="button" className="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="teamsListDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
-            <i className="bi-three-dots-vertical"></i>
-            <div className="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="teamsListDropdown1" data-bs-toggle="modal" data-bs-target="#addActivity">
-              <a className="dropdown-item">Editar o texto</a>
-              <a className="dropdown-item text-danger">Delete</a>
-            </div>
-          </button>
-        </div>
-      )}
+
+      <div className="dropdown">
+        <button type="button" className="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="teamsListDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
+          <i className="bi-three-dots-vertical"></i>
+          <div className="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="teamsListDropdown1" data-bs-toggle="modal" data-bs-target="#addActivity">
+            <a className="dropdown-item">Editar o texto</a>
+            <a className="dropdown-item text-danger">Delete</a>
+          </div>
+        </button>
+      </div>
 
       <div className="modal fade" id="addActivity" tabIndex="-1" role="dialog" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -324,6 +314,7 @@ export const NavForm = () => {
 
 export const AddAndSearchActivity = () => {
   const [data, setData] = useState({});
+  const [dataActivity, setDataActivity] = useState([]);
   const [formErrors, setFormErrors] = useState({});
   const [formData, setFormData] = useState({
     title: '',
@@ -389,8 +380,6 @@ export const AddAndSearchActivity = () => {
     }
   };
 
-
-
   const fetchData = async () => {
     try {
       const response = await axios.get('http://localhost:8081/api/view-data-activity');
@@ -404,108 +393,26 @@ export const AddAndSearchActivity = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchDataActivity = async () => {
+      try {
+        const res = await activity();
+        setDataActivity(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchDataActivity();
+  }, []);
 
   return (
     <div>
       <div className="card">
         <div className="card-header card-header-content-md-between">
           <div className="mb-2 mb-md-0">
-
-            <form>
-              <div className="input-group input-group-merge input-group-flush">
-                <div className="input-group-prepend input-group-text">
-                  <i className="bi-search"></i>
-                </div>
-                <input
-                  id="datatableSearch"
-                  type="search"
-                  className="form-control"
-                  placeholder="Procurar"
-                  aria-label="Procurar"
-                />
-              </div>
-            </form>
-
+            <SearchComponent posts={dataActivity} />
           </div>
-
           <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-            <div className="dropdown">
-              <button
-                type="button"
-                className="btn btn-white btn-sm w-100"
-                id="usersFilterDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <i className="bi-filter me-1"></i> Filtro{' '}
-                <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
-              </button>
-
-              <div
-                className="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered"
-                aria-labelledby="usersFilterDropdown"
-                style={{ minWidth: '22rem' }}
-              >
-                <div className="card">
-                  <div className="card-header card-header-content-between">
-                    <h5 className="card-header-title">Filtrar por categoria</h5>
-
-                    <button type="button" className="btn btn-ghost-secondary btn-icon btn-sm ms-2">
-                      <i className="bi-x-lg"></i>
-                    </button>
-                  </div>
-
-                  <div className="card-body">
-                    <form>
-                      <div className="row">
-
-                        <div className="col-sm mb-4">
-                          <small className="text-cap text-body">Disciplina</small>
-
-                          <div className="tom-select-custom">
-                            <select className="js-select js-datatable-filter form-select form-select-sm">
-                              <option value="">Qualquer</option>
-                              <option value="">"Disciplina"</option>
-                            </select>
-                          </div>
-
-                        </div>
-
-                        <div className="col-sm mb-4">
-                          <small className="text-cap text-body">Nivel</small>
-
-                          <div className="tom-select-custom">
-                            <select className="js-select js-datatable-filter form-select form-select-sm">
-                              <option value="">Qualquer</option>
-                              <option value="">"Nivel"</option>
-                            </select>
-                          </div>
-
-                        </div>
-
-                        <div className="col-sm mb-4">
-                          <small className="text-cap text-body">Ano</small>
-
-                          <div className="tom-select-custom">
-                            <select className="js-select js-datatable-filter form-select form-select-sm">
-                              <option value="">Qualquer</option>
-                              <option value="">"Ano"</option>
-                            </select>
-                          </div>
-
-                        </div>
-                      </div>
-
-                      <div className="d-grid">
-                        <a className="btn btn-primary">Aplicar</a>
-                      </div>
-                    </form>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div className="dropdown">
               <button type="button" className="btn btn-white btn-sm w-100" data-bs-toggle="modal" data-bs-target="#addActivity">
                 <i className="bi-plus me-1"></i> Novos atividades
@@ -690,6 +597,7 @@ export const AddAndSearchActivity = () => {
 }
 
 export const AddAndSearchResources = () => {
+  const [dataResources, setDataResources] = useState([]);
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState('');
 
@@ -748,25 +656,24 @@ export const AddAndSearchResources = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await resources();
+        setDataResources(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div>
       <div className="card">
         <div className="card-header card-header-content-md-between">
           <div className="mb-2 mb-md-0">
-            <form>
-              <div className="input-group input-group-merge input-group-flush">
-                <div className="input-group-prepend input-group-text">
-                  <i className="bi-search"></i>
-                </div>
-                <input
-                  id="datatableSearch"
-                  type="search"
-                  className="form-control"
-                  placeholder="Procurar"
-                  aria-label="Procurar"
-                />
-              </div>
-            </form>
+            <SearchComponent posts={dataResources} />
           </div>
           <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <div className="dropdown">

@@ -9,6 +9,8 @@ export default function ViewActivity() {
   const [error, setError] = useState(null);
   const { activityId } = useParams();
 
+  console.log(activityId)
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -83,7 +85,7 @@ export default function ViewActivity() {
               <span className="badge bg-soft-primary text-success rounded-pill me-1" title='Ensino'><span className="legend-indicator bg-success"></span>{data.subjects.nameSubject}</span>
               <span className="badge bg-soft-primary text-warning rounded-pill" title='Ano'><span className="legend-indicator bg-warning"></span>{data.years.year}</span>
             </div>
-            {/* <EditTextActivity /> */}
+            <EditTextActivity />
           </div>
           <div className="d-flex justify-content-between mt-1">
             <div className='d-block'>

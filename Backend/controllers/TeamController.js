@@ -170,20 +170,20 @@ async function editTeamAcitivty(req, res) {
 // Обработчик POST запроса на присоединение к команде
 async function joinTeam(req, res) {
   try {
-      const { teamId, currentUser } = req.body; 
+      const { teamId, userId } = req.body; 
 
-      if (!currentUser || isNaN(teamId)) {
+      if (!userId || isNaN(teamId)) {
           return res.status(400).json({ error: 'Неверный формат данных' });
       }
 
-      const existingRelation = await Team_List.findOne({ where: { idTeam: teamId, idTeacher: currentUser } });
+      const existingRelation = await Team_List.findOne({ where: { idTeam: teamId, idTeacher: userId } });
       if (existingRelation) {
         return res.status(400).json({ message: 'Пользователь уже является членом команды' });
       }
 
-      console.log(teamId, currentUser)
+      console.log(teamId, userId)
 
-      const join = await Team_List.create({ idTeam: teamId, idTeacher: currentUser, access: 'Convidado' })
+      const join = await Team_List.create({ idTeam: teamId, idTeacher: userId, access: 'Convidado' })
 
       res.json({ status: 'Success', join });
   } catch (error) {

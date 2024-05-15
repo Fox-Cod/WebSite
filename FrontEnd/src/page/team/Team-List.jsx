@@ -56,7 +56,7 @@ export default function TeamList() {
   };
 
   // Выбираем 6 случайных записей
-  const randomTeams = getRandomTeams(searchTeams, 6);
+  const randomTeams = getRandomTeams(searchTeams, 12);
   return (
     <div>
       <main id="content" role="main" className="main">
@@ -88,7 +88,7 @@ export default function TeamList() {
 
                   <li className="list-inline-item">
                     <i className="bi-calendar-week me-1"></i>
-                    <span>{formatDate(userProfile.createDate)}</span>
+                    <span>{formatDate(userProfile.СreateDate)}</span>
                   </li>
                 </ul>
               </div>
@@ -180,20 +180,6 @@ export default function TeamList() {
                                   <Link to={`/${team.teams.idTeam}`}>#{team.teams.nameTeam}</Link>
                                 </h4>
                               </div>
-                              <div className="col-3 text-end">
-                                <div className="dropdown">
-                                  <button type="button" className="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="teamsDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i className="bi-three-dots-vertical"></i>
-                                  </button>
-                                  <div className="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="teamsDropdown1">
-                                    <a className="dropdown-item" href="#">Mudar o nome da equipa</a>
-                                    <a className="dropdown-item" href="#">Adicionar aos favoritos</a>
-                                    <a className="dropdown-item" href="#">Equipa de arquivo (Admin)</a>
-                                    <div className="dropdown-divider"></div>
-                                    <a className="dropdown-item text-danger" href="#">Delete</a>
-                                  </div>
-                                </div>
-                              </div>
                             </div>
                             <p>{team.teams.descriptionTeam}</p>
                           </div>
@@ -237,17 +223,6 @@ export default function TeamList() {
 
                           <div className="col-3 col-md-auto order-md-last text-end">
                             <div className="dropdown">
-                              <button type="button" className="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="teamsListDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i className="bi-three-dots-vertical"></i>
-                              </button>
-
-                              <div className="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="teamsListDropdown1">
-                                <a className="dropdown-item" href="#">Mudar o nome da equipa</a>
-                                <a className="dropdown-item" href="#">Adicionar aos favoritos</a>
-                                <a className="dropdown-item" href="#">Equipa de arquivo (Admin)</a>
-                                <div className="dropdown-divider"></div>
-                                <a className="dropdown-item text-danger" href="#">Delete</a>
-                              </div>
                               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 {team.teams.privacy === 1 ? (
                                   <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
@@ -279,20 +254,6 @@ export default function TeamList() {
                                 <h4 className="mb-1">
                                   <Link to={`/${teams.idTeam}`}>#{teams.nameTeam}</Link>
                                 </h4>
-                              </div>
-                              <div className="col-3 text-end">
-                                <div className="dropdown">
-                                  <button type="button" className="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="teamsDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i className="bi-three-dots-vertical"></i>
-                                  </button>
-                                  <div className="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="teamsDropdown1">
-                                    <a className="dropdown-item" href="#">Mudar o nome da equipa</a>
-                                    <a className="dropdown-item" href="#">Adicionar aos favoritos</a>
-                                    <a className="dropdown-item" href="#">Equipa de arquivo (Admin)</a>
-                                    <div className="dropdown-divider"></div>
-                                    <a className="dropdown-item text-danger" href="#">Delete</a>
-                                  </div>
-                                </div>
                               </div>
                             </div>
                             <p>{teams.descriptionTeam}</p>

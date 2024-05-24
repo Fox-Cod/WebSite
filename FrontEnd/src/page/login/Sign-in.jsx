@@ -8,13 +8,12 @@ export default function SignIn() {
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Предотвращаем дефолтное поведение отправки формы
-
+    e.preventDefault();
     try {
       const res = await login(email, password);
       window.location.href = '/';
     } catch (err) {
-      setError(err.message + ' Wamp'); // Устанавливаем сообщение об ошибке
+      setError(err.message);
     }
   };
 
@@ -39,7 +38,6 @@ export default function SignIn() {
                     <input
                       type="email"
                       className="form-control"
-                      id="floatingInput"
                       placeholder="example@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -58,8 +56,6 @@ export default function SignIn() {
                     <input
                       type="password"
                       className="form-control"
-                      name="password"
-                      id="floatingPassword"
                       placeholder="Senha"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}

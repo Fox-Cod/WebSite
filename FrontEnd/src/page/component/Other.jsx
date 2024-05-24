@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import axios from 'axios';
-import { activity, resources } from '../../http/deviceAPI';
+import { getAllData, activity, editActivity, addActivity, deleteActivity, activityView, resources, uploadResources, addActivityToTeam, createTeam, addComment } from '../../http/deviceAPI';
 import SearchComponent from './Search';
 
 export const EditTextActivity = () => {
-  const [viewActivityUser, setViewActivityUser] = useState([]);
+  const [viewActivityUser, setViewActivityUser] = useState({});
   const { activityId } = useParams();
   const [dataActivity, setDataActivity] = useState({});
   const [formErrors, setFormErrors] = useState({});
@@ -25,11 +24,11 @@ export const EditTextActivity = () => {
     }
 
     if (!viewActivityUser.presentation) {
-      errors.presentation = 'O campo Presentacao é obrigatório.';
+      errors.presentation = 'O campo Presentação é obrigatório.';
     }
 
     if (!viewActivityUser.planning) {
-      errors.planning = 'O campo Planificacao é obrigatório.';
+      errors.planning = 'O campo Planejamento é obrigatório.';
     }
 
     if (!viewActivityUser.idEducation || viewActivityUser.idEducation === 'Qualquer') {
@@ -48,57 +47,71 @@ export const EditTextActivity = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleChange = (event) => { const { id, value } = event.target; setViewActivityUser((prevFormData) => ({ ...prevFormData, [id]: value, })); };
+  const handleChange = (event) => {
+    const { id, value } = event.target;
+    setViewActivityUser((prevFormData) => ({
+      ...prevFormData,
+      [id]: value,
+    }));
+  };
 
-  const handleSubmit = async (e) => {
+  const handleSubmitEdit = async (e) => {
     e.preventDefault();
 
     if (validateForm()) {
       try {
-        const response = await axios.post(`http://localhost:8081/api/edit-activity/${activityId}`, viewActivityUser, { withCredentials: true });
-        console.log(response.data);
+        await editActivity(activityId, viewActivityUser);
+        window.location.reload();
       } catch (err) {
-        console.error(err);
+        console.error('Erro ao editar atividade:', err);
       }
     } else {
-      console.log('Форма не прошла валидацию. Не отправляем данные на сервер.');
+      console.log('O formulário não passou na validação. Não enviando dados para o servidor.');
     }
   };
 
-
-
-  const fetchData = async () => {
+  const handleSubmitDelete = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.get('http://localhost:8081/api/view-data-activity');
-      setDataActivity(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-  const fetchData2 = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8081/api/view-activity/${activityId}`);
-      console.log("asdsad", response.data);
-      setViewActivityUser(response.data);
+      const res = await deleteActivity(activityId);
+      window.location.href = '/activity';
+
     } catch (err) {
-      console.error(err);
+      console.error('Erro ao editar atividade:', err);
     }
   };
+
+  const fetchActivityData = async () => {
+    try {
+      const res = await activityView(activityId);
+      setViewActivityUser(res);
+    } catch (err) {
+      console.error('Erro ao obter dados da atividade:', err);
+    }
+  };
+
+  const fetchAllData = async () => {
+    try {
+      const res = await getAllData();
+      setDataActivity(res);
+    } catch (error) {
+      console.error('Erro ao obter todos os dados:', error);
+    }
+  };
+
   useEffect(() => {
-    fetchData2();
-    fetchData();
+    fetchActivityData();
+    fetchAllData();
   }, [activityId]);
 
-  console.log(viewActivityUser)
   return (
     <div>
-
       <div className="dropdown">
         <button type="button" className="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="teamsListDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
           <i className="bi-three-dots-vertical"></i>
-          <div className="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="teamsListDropdown1" data-bs-toggle="modal" data-bs-target="#addActivity">
-            <a className="dropdown-item">Editar o texto</a>
-            <a className="dropdown-item text-danger">Delete</a>
+          <div className="dropdown-menu dropdown-menu-sm dropdown-menu-end">
+            <a className="dropdown-item" aria-labelledby="teamsListDropdown1" data-bs-toggle="modal" data-bs-target="#addActivity">Editar o texto</a>
+            <a className="dropdown-item text-danger" onClick={handleSubmitDelete}>Delete</a>
           </div>
         </button>
       </div>
@@ -109,7 +122,7 @@ export const EditTextActivity = () => {
             <div className="modal-close">
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmitEdit}>
 
               <div className="modal-body">
                 <label htmlFor="eventTitleLabel" className="visually-hidden form-label">Titulo</label>
@@ -199,7 +212,7 @@ export const EditTextActivity = () => {
                         onChange={handleChange}
                       >
                         <option>Qualquer</option>
-                        {dataActivity.subject && dataActivity.subject.map((index) => (
+                        {dataActivity.subjects && dataActivity.subjects.map((index) => (
                           <option key={index.idSubject} value={index.idSubject}>{index.nameSubject}</option>
                         ))}
                       </select>
@@ -216,7 +229,7 @@ export const EditTextActivity = () => {
                         onChange={handleChange}
                       >
                         <option>Qualquer</option>
-                        {dataActivity.education && dataActivity.education.map((index) => (
+                        {dataActivity.educations && dataActivity.educations.map((index) => (
                           <option key={index.idEducation} value={index.idEducation}>{index.nameEducation}</option>
                         ))}
                       </select>
@@ -260,7 +273,7 @@ export const EditTextActivity = () => {
                 >
                   Abolir
                 </button>
-                <button type="button" id="processEvent" className="btn btn-primary" onClick={handleSubmit}>
+                <button type="button" id="processEvent" className="btn btn-primary" onClick={handleSubmitEdit}>
                   Atualização
                 </button>
               </div>
@@ -273,44 +286,7 @@ export const EditTextActivity = () => {
   )
 }
 
-export const NavForm = () => {
-  return (
-    <div>
-      <header id="header" className="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column">
-        <div className="container">
-          <nav className="js-mega-menu flex-grow-1">
-            <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
-
-              <ul className="nav nav-tabs align-items-center">
-                <li className='nav-item'>
-                  <Link className="nav-link active" to="/form" data-placement="left">
-                    <i className="bi bi-house dropdown-item-icon"></i> Inicio
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link className="nav-link " to="/activity" data-placement="left">
-                    <i className="bi bi-activity dropdown-item-icon"></i> Atividades
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link className="nav-link " to="/resources" data-placement="left">
-                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> Recursos
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link className="nav-link " to="/tools" data-placement="left">
-                    <i className="bi bi-tools dropdown-item-icon"></i>Ferramentos
-                  </Link>
-                </li>
-              </ul>
-
-            </div>
-          </nav>
-        </div>
-      </header>
-    </div>
-  )
-}
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 export const AddAndSearchActivity = () => {
   const [data, setData] = useState({});
@@ -321,11 +297,18 @@ export const AddAndSearchActivity = () => {
     description: '',
     presentation: '',
     planning: '',
-    idSubject: '',
-    idYear: '',
-    idEducation: '',
+    idSubject: '' || 'Qualquer',
+    idYear: '' || 'Qualquer',
+    idEducation: '' || 'Qualquer',
   });
+  const [showTooltips, setShowTooltips] = useState(false);
 
+  useEffect(() => {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+    fetchData();
+    fetchDataActivity();
+  }, []);
 
   const validateForm = () => {
     const errors = {};
@@ -362,48 +345,65 @@ export const AddAndSearchActivity = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleChange = (event) => { const { id, value } = event.target; setFormData((prevFormData) => ({ ...prevFormData, [id]: value, })); };
+  const handleChange = (event) => {
+    const { id, value } = event.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [id]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validateForm()) {
       try {
-        const response = await axios.post('http://localhost:8081/api/add-activity', formData, { withCredentials: true });
-        console.log(response.data);
+        await addActivity(formData);
         window.location.reload();
       } catch (err) {
-        console.error(err);
+        console.error('Erro ao adicionar atividade:', err);
       }
     } else {
-      console.log('Форма не прошла валидацию. Не отправляем данные на сервер.');
+      console.log('O formulário falhou na validação. Não está a enviar dados para o servidor.');
     }
   };
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/api/view-data-activity');
-      setData(response.data);
+      const res = await getAllData();
+      setData(res);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Erro ao obter todos os dados:', error);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const fetchDataActivity = async () => {
+    try {
+      const res = await activity();
+      setDataActivity(res);
+    } catch (err) {
+      console.error('Erro ao obter atividades:', err);
+    }
+  };
 
-  useEffect(() => {
-    const fetchDataActivity = async () => {
-      try {
-        const res = await activity();
-        setDataActivity(res);
-      } catch (err) {
-        console.log(err);
-      }
+  const toggleTooltips = () => {
+    const tooltipContent = {
+      title: 'O título deve descrever a atividade claramente e ter pelo menos 4 caracteres.',
+      description: 'A descrição deve fornecer detalhes sobre a atividade e ter pelo menos 4 caracteres.',
+      presentation: 'Adicione um link para a apresentação, deve ser um URL válido.',
+      planning: 'Adicione um link para a planificação, deve ser um URL válido.',
+      idYear: 'Selecione o ano de estudo adequado para a atividade.',
+      idEducation: 'Selecione o nível de ensino adequado para a atividade.',
+      idSubject: 'Selecione a disciplina relevante para a atividade.'
     };
-    fetchDataActivity();
-  }, []);
+
+    Object.keys(tooltipContent).forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.setAttribute('title', tooltipContent[id]);
+        new bootstrap.Tooltip(element);
+      }
+    });
+
+    setShowTooltips(!showTooltips);
+  };
 
   return (
     <div>
@@ -414,12 +414,16 @@ export const AddAndSearchActivity = () => {
           </div>
           <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <div className="dropdown">
-              <button type="button" className="btn btn-white btn-sm w-100" data-bs-toggle="modal" data-bs-target="#addActivity">
+              <button
+                type="button"
+                className="btn btn-white btn-sm w-100"
+                data-bs-toggle="modal"
+                data-bs-target="#addActivity"
+              >
                 <i className="bi-plus me-1"></i> Novos atividades
                 <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
               </button>
             </div>
-
           </div>
         </div>
       </div>
@@ -431,7 +435,6 @@ export const AddAndSearchActivity = () => {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form onSubmit={handleSubmit}>
-
               <div className="modal-body">
                 <label htmlFor="eventTitleLabel" className="visually-hidden form-label">Titulo</label>
                 <textarea
@@ -440,6 +443,7 @@ export const AddAndSearchActivity = () => {
                   placeholder="Add title"
                   value={formData.title}
                   onChange={handleChange}
+                  data-bs-toggle="tooltip"
                 ></textarea>
                 <span className="invalid-feedback">{formErrors.title}</span>
 
@@ -450,17 +454,15 @@ export const AddAndSearchActivity = () => {
                       <div className="flex-grow-1">Descrição</div>
                     </div>
                   </div>
-
                   <div className="col-sm">
-                    <label htmlFor="eventDescriptionLabel" className="visually-hidden form-label">
-                      Add description
-                    </label>
+                    <label htmlFor="eventDescriptionLabel" className="visually-hidden form-label">Add description</label>
                     <textarea
                       id="description"
                       className={`form-control ${formErrors.description ? 'is-invalid' : ''}`}
                       placeholder="Add description"
                       value={formData.description}
                       onChange={handleChange}
+                      data-bs-toggle="tooltip"
                     ></textarea>
                     <span className="invalid-feedback">{formErrors.description}</span>
                   </div>
@@ -473,7 +475,6 @@ export const AddAndSearchActivity = () => {
                       <div className="flex-grow-1">Ligações</div>
                     </div>
                   </div>
-
                   <div className="col-sm">
                     Presentação
                     <input
@@ -483,6 +484,7 @@ export const AddAndSearchActivity = () => {
                       placeholder="https://example.com/word/"
                       value={formData.presentation}
                       onChange={handleChange}
+                      data-bs-toggle="tooltip"
                     />
                     <span className="invalid-feedback">{formErrors.presentation}</span>
                   </div>
@@ -495,20 +497,19 @@ export const AddAndSearchActivity = () => {
                       placeholder="https://example.com/excel/"
                       value={formData.planning}
                       onChange={handleChange}
+                      data-bs-toggle="tooltip"
                     />
                     <span className="invalid-feedback">{formErrors.planning}</span>
                   </div>
                 </div>
 
                 <div className="row mb-4">
-
                   <div className="col-sm-3 mb-2 mb-sm-0">
                     <div className="d-flex align-items-center mt-2">
                       <i className="bi bi-book nav-icon"></i>
                       <div className="flex-grow-1">Tipo de evento</div>
                     </div>
                   </div>
-
                   <div className="col-sm">
                     Ano
                     <select
@@ -517,7 +518,9 @@ export const AddAndSearchActivity = () => {
                       id="idYear"
                       value={formData.idYear}
                       onChange={handleChange}
+                      data-bs-toggle="tooltip"
                     >
+                      <option>Qualquer</option>
                       {data.years && data.years.map((index) => (
                         <option key={index.idYear} value={index.idYear}>{index.year}</option>
                       ))}
@@ -533,6 +536,7 @@ export const AddAndSearchActivity = () => {
                         id="idEducation"
                         value={formData.idEducation}
                         onChange={handleChange}
+                        data-bs-toggle="tooltip"
                       >
                         <option>Qualquer</option>
                         {data.educations && data.educations.map((index) => (
@@ -541,7 +545,6 @@ export const AddAndSearchActivity = () => {
                       </select>
                     </div>
                   </div>
-
                 </div>
 
                 <div className="row mb-4">
@@ -551,7 +554,6 @@ export const AddAndSearchActivity = () => {
                       <div className="flex-grow-1">Objeto</div>
                     </div>
                   </div>
-
                   <div className="col-sm">
                     Disciplina
                     <div className="tom-select-custom">
@@ -561,6 +563,7 @@ export const AddAndSearchActivity = () => {
                         id="idSubject"
                         value={formData.idSubject}
                         onChange={handleChange}
+                        data-bs-toggle="tooltip"
                       >
                         <option>Qualquer</option>
                         {data.subjects && data.subjects.map((index) => (
@@ -570,46 +573,43 @@ export const AddAndSearchActivity = () => {
                     </div>
                   </div>
                 </div>
-
               </div>
 
-
-              <div className="modal-footer gap-3">
+              <div className="modal-footer">
                 <button
                   type="button"
-                  id="discardFormt"
                   className="btn btn-white"
-                  data-bs-dismiss="modal"
+                  onMouseUp={toggleTooltips}
+                  data-bs-toggle="tooltip"
+                  title="Clique para ver mais informações sobre cada campo."
                 >
-                  Descartar
+                  Mostrar/Abrir Informações
                 </button>
-                <button type="button" id="processEvent" className="btn btn-primary" onClick={handleSubmit}>
-                  Criar atividade
+                <button type="submit" className="btn btn-primary" data-bs-toggle="tooltip" title="Salve a nova atividade após preencher todos os campos obrigatórios.">
+                  Adicionar atividade
                 </button>
               </div>
-
             </form>
           </div>
         </div>
       </div>
     </div>
   );
-}
-
+};
 export const AddAndSearchResources = () => {
   const [dataResources, setDataResources] = useState([]);
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState('');
 
-  const onDrop = useCallback(acceptedFiles => {
+  const onDrop = useCallback((acceptedFiles) => {
     setFile(acceptedFiles[0]);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  const handleDeleteFile = () => { setFile(null) };
+  const handleDeleteFile = () => setFile(null);
 
-  const handleTitleChange = (e) => { setTitle(e.target.value) };
+  const handleTitleChange = (e) => setTitle(e.target.value);
 
   const formatBytes = (bytes) => {
     if (bytes === 0) return '0 Bytes';
@@ -628,7 +628,9 @@ export const AddAndSearchResources = () => {
           <p>{formatBytes(file.size)}</p>
         </div>
       </div>
-      <button type="button" className="btn btn-danger" onClick={handleDeleteFile}>Eliminar</button>
+      <button type="button" className="btn btn-danger" onClick={handleDeleteFile}>
+        Eliminar
+      </button>
     </div>
   ) : (
     <p>Arraste e largue alguns ficheiros aqui, ou clique para selecionar ficheiros</p>
@@ -645,10 +647,8 @@ export const AddAndSearchResources = () => {
     formData.append('file', file);
     formData.append('title', title);
 
-    console.log(file)
-
     try {
-      await axios.post('http://localhost:8081/api/upload', formData, { withCredentials: true });
+      await uploadResources(formData);
       alert('Ficheiro carregado com sucesso');
     } catch (error) {
       console.error('Erro ao carregar o ficheiro: ', error);
@@ -662,12 +662,11 @@ export const AddAndSearchResources = () => {
         const res = await resources();
         setDataResources(res);
       } catch (err) {
-        console.log(err);
+        console.error('Erro ao obter recursos:', err);
       }
     };
     fetchData();
   }, []);
-
   return (
     <div>
       <div className="card">
@@ -759,11 +758,7 @@ export const AddActivityTeam = () => {
       formData.append('descricao', descricao);
       formData.append('id_equipa', teamId);
       formData.append('file', file);
-      const response = await axios.post(
-        `http://localhost:8081/api/add-activity-team/${teamId}`,
-        formData,
-        { withCredentials: true }
-      );
+      const response = await addActivityToTeam(teamId, formData)
       window.location.reload();
       console.log(response.data);
     } catch (error) {
@@ -794,11 +789,11 @@ export const AddActivityTeam = () => {
                           container: [
                             ['bold', 'italic', 'underline', 'strike'],
                             [{ list: 'ordered' }, { list: 'bullet' }],
-                            ['link', 'image'],
+                            ['link'],
                           ],
                         },
                       }}
-                      formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image']}
+                      formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link']}
                     />
                   </div>
                 </div>
@@ -875,17 +870,9 @@ export const AddTeam = () => {
     if (validateForm()) {
       try {
         // Отправка данных на бэкенд
-        const response = await axios.post('http://localhost:8081/api/create-team', formData, { withCredentials: true });
+        await createTeam(formData)
 
-        if (response.status === 400) {
-          console.log('Team creation failed:', response.data.error);
-          alert('Команда с таким именем уже существует');
-          return false;
-        }
-
-        console.log('Team created successfully:', response.data.team);
         location.reload();
-        return true;
       } catch (error) {
         console.error('Error creating team:', error);
       }
@@ -1021,6 +1008,45 @@ export const AddTeam = () => {
     </div>
   )
 }
+
+export const AddComment = ({ activityId }) => {
+  const [content, setContent] = useState('');
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await addComment(activityId, content);
+      location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <div className="card-body">
+      <form onSubmit={handleFormSubmit}>
+        <div className="modal-body">
+          <div className="row">
+            <div className="col">
+              <div className='quill-custom rounded'>
+                <ReactQuill
+                  value={content}
+                  onChange={setContent}
+                  placeholder="Text..."
+                  modules={{ toolbar: { container: [['bold', 'italic', 'underline', 'strike'], [{ list: 'ordered' }, { list: 'bullet' }], ['link']] } }}
+                  formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link']}
+                />
+              </div>
+            </div>
+          </div>
+          <div className=" mt-3">
+            <button type="submit" className="btn btn-primary">Enviar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+};
 
 
 

@@ -2,38 +2,32 @@ const { Schools, Groups, Years, Educations, Subjects, Tools, Users, Resources } 
 
 const fs = require('fs');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
 const mimeTypes = require('mime-types');
-const sharp = require('sharp');
 
 
-async function getSchoolAndGroupData(req, res) {
+async function getAllData(req, res) {
   try {
-    const [schools, groups] = await Promise.all([
+    const [schools, groups, years, educations, subjects] = await Promise.all([
       Schools.findAll({ attributes: ['idSchool', 'nameSchool'] }),
-      Groups.findAll({ attributes: ['idGroup', 'codGroup', 'nameGroup'] })
-    ]);
-    res.json({ data: { schools, groups } });
-  } catch (error) {
-    console.error('Erro ao consultar o banco de dados:', error);
-    res.status(500).json({ Message: 'Erro interno do servidor' });
-  }
-}
-
-
-async function getYearsLessonAndTeachingData(req, res) {
-  try {
-    const [years, educations, subjects] = await Promise.all([
+      Groups.findAll({ attributes: ['idGroup', 'codGroup', 'nameGroup'] }),
       Years.findAll(),
       Educations.findAll(),
       Subjects.findAll()
     ]);
-    res.status(200).json({ years, educations, subjects });
+
+    res.json({
+        schools,
+        groups,
+        years,
+        educations,
+        subjects
+    });
   } catch (error) {
     console.error('Erro ao obter dados:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 }
+
 
 async function postTools(req, res) {
   try {
@@ -140,6 +134,22 @@ async function getData(req, res) {
   }
 }
 
-module.exports = { getSchoolAndGroupData, getYearsLessonAndTeachingData, postTools, getTools, postResourcesFiles, getResourcesFiles, downloadResourcesFiles, getData };
+async function addComment(req, res) {
+  const activityId = req.params.activityId;
+  try {
+    const activity = await Activitys.findByPk(activityId);
+    if (!activity) return res.status(404).json({ message: 'Atividade não encontrada' });
+
+    await activity.update(req.body);
+
+    res.status(200).json(activity);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro interno do servidor' });
+  }
+}
+
+
+module.exports = { getAllData, postTools, getTools, postResourcesFiles, getResourcesFiles, downloadResourcesFiles, getData };
 
 

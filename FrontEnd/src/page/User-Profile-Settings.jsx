@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Context } from '../context';
-import { profile } from '../http/deviceAPI';
+import { profile, getAllData, profileUpdate } from '../http/deviceAPI';
 
 export default function UserProfileSettings() {
   const auth = useContext(Context);
@@ -37,10 +37,10 @@ export default function UserProfileSettings() {
 
   const fetchViewData = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/api/view-data', {withCredentials: true});
-      setSchoolAndGroupData(response.data.data);
+      const res = await getAllData()
+      setSchoolAndGroupData(res);
     } catch (error) {
-      handleRequestError(error);
+      console.log(error);
     }
   };
 
@@ -63,16 +63,11 @@ export default function UserProfileSettings() {
         school: formData.escola || userProfile.idSchool,
       };
 
-      const response = await axios.post('http://localhost:8081/api/update-profile', updatedFormData, {withCredentials: true});
-      console.log(response.data);
+      const response = await profileUpdate(updatedFormData)
       window.location.reload();
-      if (response.data.Status === 'Success') {
-        setUserProfile(response.data.profile);
-      } else {
-        setError(response.data.Message || 'Error on the server');
-      }
+      setUserProfile(response.data.profile);
     } catch (error) {
-      handleRequestError(error);
+      console.log(error);
     }
   };
 
@@ -85,7 +80,7 @@ export default function UserProfileSettings() {
 
     try {
       const updatedEmailData = {
-        id: newEmail.id || userProfile.idTeaher,
+        id: newEmail.id || userProfile.idTeacher,
         email: newEmail.email || userProfile.email,
       };
 
@@ -97,14 +92,7 @@ export default function UserProfileSettings() {
         setError(response.data.Message || 'Error on the server');
       }
     } catch (error) {
-      handleRequestError(error);
-    }
-  };
-
-  const handleRequestError = (error) => {
-    console.error('Error:', error);
-    if (error.response) {
-      setError(error.response.data.Message || 'Error on the server');
+      console.log(error);
     }
   };
 

@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { sendEmail } from '../../http/deviceAPI';
 
 export default function PasswordResetEmail() {
   const [statusTrue, setStatusTrue] = useState(null);
-
   const [formErrors, setFormErrors] = useState({});
-  const [values, setValues] = useState({
-    email: '',
-  });
-
-  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
 
   const validateForm = () => {
     const errors = {};
 
-    if (!values.email || !values.email.includes('@')) {
+    if (!email || !email.includes('@')) {
       errors.email = 'Por favor, insira um endereço de e-mail válido.';
     }
 
@@ -32,10 +25,7 @@ export default function PasswordResetEmail() {
     }
 
     try {
-      // Отправляем запрос на сервер для генерации кода подтверждения и его отправки на электронную почту
-      const response = await axios.post('http://localhost:8081/api/send-email', {
-        email: values.email,
-      });
+      const response = await sendEmail(email);
       setStatusTrue('Dados enviados com sucesso!');
       
       console.log('Resposta do servidor:', response.data);
@@ -70,10 +60,11 @@ export default function PasswordResetEmail() {
                     <input
                       type="email"
                       className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
+                      id="signinSrEmail"
                       name="email"
                       placeholder="example@example.com"
-                      value={values.email}
-                      onChange={(e) => setValues({ ...values, email: e.target.value })}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                     <span className="invalid-feedback">{formErrors.email}</span>
                     {statusTrue && <span className='text-success'>{statusTrue}</span>}

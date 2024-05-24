@@ -1,40 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import { profileView } from '../../http/deviceAPI';
 
 export default function UserProfile() {
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState(null);
   const [activity, setActivity] = useState([]);
   const [resources, setResources] = useState([]);
   const [teams, setTeams] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { userId } = useParams();
 
   useEffect(() => {
-    async function fetchProfileAndActivity() {
+    async function fetchData() {
       try {
-        const response = await axios.get(`http://localhost:8081/api/user-profile-and-activity/${userId}`);
-        setProfile(response.data.profile);
-        setActivity(response.data.activity);
-        setResources(response.data.resources);
-        setTeams(response.data.teams);
+        const res = await profileView(userId);
+        setProfile(res.profile);
+        setActivity(res.activity);
+        setResources(res.resources);
+        setTeams(res.teams);
+        setLoading(false);
       } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
+        console.error('Erro durante o carregamento de dados:', error);
+        setError('Erro durante o carregamento de dados');
+        setLoading(false);
       }
     }
 
-    fetchProfileAndActivity();
+    fetchData();
   }, [userId]);
 
-
   function formatDate(rawDate) {
-    const dataRegistro = new Date(rawDate);
-    const day = dataRegistro.getDate();
-    const month = dataRegistro.toLocaleString('default', { month: 'long' });
-    const year = dataRegistro.getFullYear();
-    return `${day} ${month} ${year}`;
-  }
-
-  function formatDate(rawDate) {
+    if (!rawDate) return '';
     const dataRegistro = new Date(rawDate);
     const day = dataRegistro.getDate();
     const month = dataRegistro.toLocaleString('default', { month: 'long' });
@@ -50,6 +47,13 @@ export default function UserProfile() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
   return (
     <div>
       <main id="content" role="main" className="main">
@@ -66,7 +70,6 @@ export default function UserProfile() {
                   <span className="bd-placeholder rounded avatar-initials">{profile?.name?.charAt(0).toUpperCase()}</span>
                   <span className="avatar-status avatar-status-success"></span>
                 </div>
-                {/* <i className="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i> */}
                 <h1 className="page-header-title">{profile?.name}</h1>
                 <ul className="list-inline list-px-2">
                   <li className="list-inline-item">
@@ -81,12 +84,9 @@ export default function UserProfile() {
 
                   <li className="list-inline-item">
                     <i className="bi-calendar-week me-1"></i>
-                    <span>{formatDate(profile?.CreateDate)}</span>
+                    <span>{formatDate(profile?.СreateDate)}</span>
                   </li>
 
-                  {/* <Link className="list-inline-item" style={{ cursor: 'pointer' }}>
-                    <i className="bi-exclamation-triangle-fill" title='Enviar uma queixa'></i>
-                  </Link> */}
                 </ul>
               </div>
 
@@ -103,7 +103,6 @@ export default function UserProfile() {
                       <h4 className="card-header-title">Equipa(s)</h4>
                       <ul className="list-unstyled list-py-3 mt-3">
                         <li className="pb-0">
-                          {/* <li ><span className="card-subtitle">Equipa</span></li> */}
                           <div style={{ display: 'flex', flexDirection: 'column' }}>
                             {teams.map(team => (
                               <Link key={team.idTeam} to={`/${team.idTeam}`} style={{ marginBottom: '10px' }}>

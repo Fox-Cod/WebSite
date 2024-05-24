@@ -1,14 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const NotFoundPage = () => {
+const Error404 = () => {
   return (
-    <div className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">
-      <h1 className="display-4">404</h1>
-      <p className="lead">Page not found.</p>
-      <p className="lead">Or you are trying to enter the page with authorization without authorization itself, if this is the case, then <Link to='/sign-in'>log in</Link></p>
+    <div className="d-flex align-items-center justify-content-center vh-100">
+      <div className="text-center">
+        <h1 className="display-1">404</h1>
+        <p className="lead">Página não encontrada</p>
+        <p className="mb-4">Desculpe, a página que você está procurando não existe.</p>
+        <Link to="/" className="link">
+          Voltar para a página inicial
+        </Link>
+      </div>
     </div>
   );
-}
+};
 
-export default NotFoundPage;
+export default Error404;

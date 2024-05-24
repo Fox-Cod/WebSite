@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AddTeam } from '../component/Other';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { profile } from '../../http/deviceAPI';
+import { profile, searchTeam } from '../../http/deviceAPI';
 import { Context } from '../../context';
 
 export default function TeamList() {
   const auth = useContext(Context);
   const [data, setTeams] = useState([]);
   const [userProfile, setUserProfile] = useState('');
+  const [userTeams, setUserTeams] = useState([]);
   const [searchTeams, setSearchTeams] = useState([]);
 
   useEffect(() => {
@@ -17,7 +18,8 @@ export default function TeamList() {
         if (auth.user._isAuth) {
           const res = await profile();
           setUserProfile(res.profile),
-          setTeams(res.teams)
+            setTeams(res.teams)
+          setUserTeams(res.teams.map(team => team.teams.idTeam));
           console.log("User is authenticated");
         } else {
           console.log("User is not authenticated");
@@ -31,8 +33,8 @@ export default function TeamList() {
 
   const fetchDataSeachTeams = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/api/search-teams`, { withCredentials: true })
-      setSearchTeams(response.data.allTeams)
+      const res = await searchTeam()
+      setSearchTeams(res.allTeams)
     } catch (err) {
       console.log(err)
     }
@@ -103,9 +105,6 @@ export default function TeamList() {
                   <li className="nav-item">
                     <Link className="nav-link active" to="/team-list">Equipa</Link>
                   </li>
-                  <li className="nav-item">
-                    <Link className="nav-link disabled" to="/friends">Amigos</Link>
-                  </li>
 
                   <li className="nav-item ms-auto">
                     <div className="d-flex gap-2">
@@ -166,6 +165,21 @@ export default function TeamList() {
                   </div>
                 </div>
               </div>
+
+              {data.length === 0 ? (
+              <div class="alert alert-soft-dark mb-5 mb-lg-7" role="alert">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0">
+                    <img class="avatar avatar-xl" src="./assets/svg/illustrations/oc-megaphone.svg" alt="Image Description" data-hs-theme-appearance="default" />
+                  </div>
+
+                  <div class="flex-grow-1 ms-3">
+                    <h3 class="alert-heading mb-1">Sem equipa!</h3>
+                    <p class="mb-0">Ainda não pertence a uma equipa. Clique no ícone <i className="bi-search"></i> para encontrar a sua equipa.</p>
+                  </div>
+                </div>
+              </div>
+              ) : ( null )}
 
               <div className="tab-content" id="profileTeamsTabContent">
                 <div className="tab-pane fade show active" id="grid" role="tabpanel" aria-labelledby="grid-tab">
@@ -276,9 +290,9 @@ export default function TeamList() {
                                 ) : (
                                   <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div>
                                 )}
-                                {/* {isCurrentUserInTeam && (
+                                {userTeams.includes(teams.idTeam) && (
                                   <div className='form-text badge bg-soft-primary text-body rounded-pill me-1'>Já na equipa</div>
-                                )} */}
+                                )}
                               </div>
                             </div>
                           </div>

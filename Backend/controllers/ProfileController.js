@@ -12,7 +12,7 @@ async function getProfileUser(req, res) {
       ]
     });
 
-    if (!teacher) return res.status(404).json({ Message: 'Not Found: Пользователь не найден' });
+    if (!teacher) return res.status(404).json({ Message: 'Not Found: Utilizador não encontrado' });
 
     const { schools, groups, ...profile } = teacher.toJSON();
     const { nameSchool } = schools, { codGroup, nameGroup } = groups;
@@ -42,20 +42,18 @@ async function getProfileUser(req, res) {
       ]
     });
 
-    res.json({ 
-      Status: 'Success', 
-      profile: { ...profile, nameSchool, codGroup, nameGroup }, 
-      activity: userActivity, 
+    res.json({
+      Status: 'Success',
+      profile: { ...profile, nameSchool, codGroup, nameGroup },
+      activity: userActivity,
       resources: userResources,
       teams,
     });
   } catch (error) {
-    console.error('Ошибка при запросе к базе данных:', error);
-    return res.status(500).json({ Message: 'Internal Server Error' });
+    console.error('Erro de consulta da base de dados:', error);
+    return res.status(500).json({ Message: 'Erro interno do servidor' });
   }
 }
-
-
 
 async function updateProfile(req, res) {
   try {
@@ -64,24 +62,21 @@ async function updateProfile(req, res) {
 
     const existingProfessor = await Users.findByPk(idTeacher);
 
-    if (!existingProfessor) return res.status(404).json({ success: false, message: 'Профессор не найден' });
+    if (!existingProfessor) return res.status(404).json({ success: false, message: 'Professor não encontrado' });
 
     await existingProfessor.update({ name, idGroup: group, idSchool: school });
 
-    return res.status(200).json({ success: true, message: 'Профессор успешно обновлен', data: existingProfessor });
+    return res.status(200).json({ success: true, message: 'O Professor foi atualizado com sucesso', data: existingProfessor });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: 'Ошибка при обновлении профессора' });
+    return res.status(500).json({ success: false, message: 'Erro ao atualizar um professor' });
   }
 }
-
-// View other users with their activities and files
 
 async function getProfileAndActivity(req, res) {
   const userId = req.params.userId;
 
   try {
-    // Получаем профиль другого пользователя
     const teacher = await Users.findByPk(userId, {
       include: [
         { model: Schools, as: 'schools', attributes: ['idSchool', 'nameSchool'] },
@@ -89,8 +84,7 @@ async function getProfileAndActivity(req, res) {
       ]
     });
 
-    // Если пользователь не найден, возвращаем 404
-    if (!teacher) return res.status(404).json({ message: 'Пользователь не найден' });
+    if (!teacher) return res.status(404).json({ message: 'Utilizador não encontrado' });
 
     // Получаем активность пользователя
     const userActivity = await Activitys.findAll({
@@ -118,21 +112,58 @@ async function getProfileAndActivity(req, res) {
     });
 
     const { schools, groups, ...profile } = teacher.toJSON();
-    const nameSchool = schools ? schools.nameSchool : null; 
+    const nameSchool = schools ? schools.nameSchool : null;
     const { codGroup, nameGroup } = groups ? groups : {};
 
     // Отправляем профиль и активность вместе в ответе
     res.json({ profile: { ...profile, nameSchool, codGroup, nameGroup }, activity: userActivity, resources: userResources, teams: userTeamList });
   } catch (error) {
-    console.error('Ошибка при запросе к базе данных:', error);
-    res.status(500).json({ message: 'Внутренняя ошибка сервера' });
+    console.error('Erro de consulta da base de dados:', error);
+    res.status(500).json({ message: 'Erro interno do servidor' });
   }
 }
 
+async function adminUpdateProfile(req, res) {
+  const { idTeacher } = req.params;
+  const { name, email, nameSchool, nameGroup } = req.body;
+
+  try {
+    const user = await Users.findByPk(idTeacher);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.name = name;
+    user.email = email;
+    user.idSchool = nameSchool;
+    user.idGroup = nameGroup;
+
+    await user.save();
+
+    res.json({ message: 'User updated successfully', user });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating user', error });
+  }
+}
+
+const deleteUser = async (req, res) => {
+  const { idTeacher } = req.params;
+  try {
+      await Team_List.destroy({ where: { idTeacher: idTeacher } });
+      await Activitys.destroy({ where: { idTeacher: idTeacher } });
+      await Teams.destroy({ where: { idTeacher: idTeacher } });
+      await Resources.destroy({ where: { idTeacher: idTeacher } });
+      await Users.destroy({ where: { idTeacher: idTeacher } });
 
 
+      res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+      res.status(500).json({ message: 'Error deleting user', error });
+  }
+};
 
+  
 
-module.exports = { getProfileUser, updateProfile, getProfileAndActivity };
+module.exports = { getProfileUser, updateProfile, getProfileAndActivity, adminUpdateProfile, deleteUser };
 
 

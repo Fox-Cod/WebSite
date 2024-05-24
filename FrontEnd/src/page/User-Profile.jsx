@@ -98,9 +98,6 @@ export default function UserProfile() {
                   <li className="nav-item">
                     <Link className="nav-link" to="/team-list">Equipa</Link>
                   </li>
-                  <li className="nav-item">
-                    <Link className="nav-link disabled" to="/friends">Amigos</Link>
-                  </li>
 
                   <li className="nav-item ms-auto">
                     <div className="d-flex gap-2">
@@ -131,11 +128,11 @@ export default function UserProfile() {
               </div>
 
               <div className="row">
-                <div className="col-lg-4">
+                <div className="col-lg">
 
                   <div id="accountSidebarNav"></div>
 
-                  <div className="js-sticky-block card mb-3 mb-lg-5" data-hs-sticky-block-options='{
+                  <div className="js-sticky-block card mb-3 mb-lg-5" style={{ maxHeight: '500px' }} data-hs-sticky-block-options='{
                        "parentSelector": "#accountSidebarNav",
                        "breakpoint": "lg",
                        "startPoint": "#accountSidebarNav",
@@ -146,7 +143,7 @@ export default function UserProfile() {
                       <h4 className="card-header-title">Profile</h4>
                     </div>
 
-                    <div className="card-body" >
+                    <div className="card-body overflow-auto" >
                       <ul className="list-unstyled list-py-2 text-dark mb-0">
                         <li className="pb-0"><span className="card-subtitle">Sobre</span></li>
                         <li><i className="bi-person dropdown-item-icon"></i> {userProfile.name}</li>
@@ -221,7 +218,7 @@ export default function UserProfile() {
                         ) : (
                           <div className="text-center">
                             <img className='mb-5' src="./assets/svg/illustrations/oc-looking-for-answers.svg" alt="Img NoData" style={{ height: '20rem' }} />
-                            <h5>Não tens nada.</h5><Link className='link' to="/form/activity"> Queres acrescentar alguma coisa? </Link>
+                            <h5>Não tens nada.</h5><Link className='link' to="/activity"> Queres acrescentar alguma coisa? </Link>
                           </div>
                         )}
                         {dataResources.map((d, i) => (

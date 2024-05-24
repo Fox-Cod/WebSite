@@ -11,7 +11,6 @@ async function searchTeams(req, res){
   }
 }
 
-
 async function getTeamAndMembers(req, res) {
   try {
     const { idTeacher } = req.userToken
@@ -20,7 +19,7 @@ async function getTeamAndMembers(req, res) {
     const team = await Teams.findOne({ where: { idTeam: teamId } });
 
     if (!team) {
-      return res.status(404).json({ error: 'Команда не найдена' });
+      return res.status(404).json({ error: 'Comando não encontrado' });
     }
 
     const [teamMembers, teamActivity] = await Promise.all([
@@ -37,7 +36,7 @@ async function getTeamAndMembers(req, res) {
     
     res.json({ Status: 'Success', team, teamMembers, teamActivity, idTeacher });
   } catch (error) {
-    console.error('Ошибка при получении команды и участников:', error);
+    console.error('Erro ao receber a equipa e os participantes:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
@@ -51,7 +50,7 @@ async function createTeam(req, res) {
   try {
     const existingTeam = await Teams.findOne({ where: { nameTeam } });
     if (existingTeam) {
-      return res.status(400).json({ error: 'Команда с таким именем уже существует' });
+      return res.status(400).json({ error: 'Já existe uma equipa com este nome' });
     }
 
     const team = await Teams.create({
@@ -70,8 +69,8 @@ async function createTeam(req, res) {
 
     res.status(201).json({ success: true, team, relacaoEquipaUtilizador });
   } catch (error) {
-    console.error('Ошибка при создании команды:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Erro ao criar uma equipa:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
 }
 
@@ -87,22 +86,22 @@ async function addMemberToTeam(req, res) {
   try {
     const teacher = await Users.findOne({ where: { email: email } });
     if (!teacher) {
-      return res.status(404).json({ message: 'Пользователь не найден' });
+      return res.status(404).json({ message: 'Utilizador não encontrado' });
     }
 
     const professorId = teacher.idTeacher;
 
     const existingRelation = await Team_List.findOne({ where: { idTeam: teamId, idTeacher: professorId } });
     if (existingRelation) {
-      return res.status(400).json({ message: 'Пользователь уже является членом команды' });
+      return res.status(400).json({ message: 'O utilizador já é membro da equipa' });
     }
       
     const newRelation = await Team_List.create({ idTeam: teamId, idTeacher: professorId, access });
 
-    res.status(201).json({ message: 'Пользователь успешно добавлен в команду', newRelation });
+    res.status(201).json({ message: 'Usuário adicionado com sucesso à equipe', newRelation });
   } catch (error) {
-    console.error('Ошибка при добавлении пользователя в команду:', error.message);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Erro ao adicionar usuário à equipe:', error.message);
+    res.status(500).json({ error: 'Erro do Servidor Interno' });
   }
 }
 
@@ -144,10 +143,10 @@ async function addActivityTeam(req, res) {
       CreateDate: new Date(),
     });
 
-    res.status(200).json({ success: true, message: 'Данные успешно сохранены', data: newActivity });
+    res.status(200).json({ success: true, message: 'Dados salvos com sucesso', data: newActivity });
   } catch (error) {
-    console.error('Ошибка при сохранении данных: ', error);
-    res.status(500).json({ success: false, message: 'Ошибка при сохранении данных' });
+    console.error('Erro ao salvar dados: ', error);
+    res.status(500).json({ success: false, message: 'Erro ao salvar dados' });
   }
 }
 
@@ -156,14 +155,14 @@ async function editTeamAcitivty(req, res) {
 
   try {
     const activity = await Atividades.findByPk(activityId);
-    if (!activity) return res.status(404).json({ message: 'Activity not found' });
+    if (!activity) return res.status(404).json({ message: 'Atividade não encontrada' });
 
     await activity.update(req.body);
 
     res.status(200).json(activity);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Erro do Servidor Interno' });
   }
 }
 
@@ -173,12 +172,12 @@ async function joinTeam(req, res) {
       const { teamId, userId } = req.body; 
 
       if (!userId || isNaN(teamId)) {
-          return res.status(400).json({ error: 'Неверный формат данных' });
+          return res.status(400).json({ error: 'Formato de dados inválido' });
       }
 
       const existingRelation = await Team_List.findOne({ where: { idTeam: teamId, idTeacher: userId } });
       if (existingRelation) {
-        return res.status(400).json({ message: 'Пользователь уже является членом команды' });
+        return res.status(400).json({ message: 'O usuário já é membro da equipe' });
       }
 
       console.log(teamId, userId)
@@ -187,14 +186,15 @@ async function joinTeam(req, res) {
 
       res.json({ status: 'Success', join });
   } catch (error) {
-      console.error('Ошибка при добавлении пользователя в команду:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Erro ao adicionar usuário à equipe:', error);
+      res.status(500).json({ error: 'Erro do Servidor Interno' });
   }
 }
 
 async function privacy(req, res) {
-  const teamId = req.params.id; // Получаем teamId из параметра маршрута
+  const teamId = req.params.teamId;
   const { newPrivacy } = req.body;
+
   try {
       const team = await Teams.findByPk(teamId);
       if (!team) {
@@ -205,28 +205,47 @@ async function privacy(req, res) {
       team.privacy = newPrivacy;
       await team.save();
 
-      return res.status(200).json({ message: 'Статус команды успешно обновлен' });
+      return res.status(200).json({ message: 'Status da equipe atualizado com sucesso' });
   } catch (error) {
-      console.error('Ошибка при обновлении статуса команды:', error);
-      return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+      console.error('Erro ao atualizar o status da equipe:', error);
+      return res.status(500).json({ error: 'Erro do Servidor Interno' });
   }
 }
+
 
 async function updateActivityTeam(req, res) {
   const { editedText, idActivityTeam } = req.body;
   try {
       const activity = await Activity_Team.findByPk(idActivityTeam);
       if (!activity) {
-          return res.status(404).json({ error: 'Сообщение не найдено' });
+          return res.status(404).json({ error: 'Mensagem não encontrada' });
       }
 
       activity.descriptionActivityTeam = editedText;
       await activity.save();
 
-      return res.status(200).json({ message: 'Данные успешно обновлены' });
+      return res.status(200).json({ message: 'Dados atualizados com sucesso' });
   } catch (error) {
-      console.error('Ошибка при обновлении данных:', error);
-      return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+      console.error('Erro ao atualizar dados:', error);
+      return res.status(500).json({ error: 'Erro do Servidor Interno' });
+  }
+}
+
+async function deleteActivityTeam(req, res) {
+  const { index, idActivityTeam } = req.body;
+  try {
+      const activity = await Activity_Team.findByPk(idActivityTeam);
+      if (!activity) {
+          return res.status(404).json({ error: 'Mensagem não encontrada' });
+      }
+
+      activity.descriptionActivityTeam = index;
+      await activity.destroy();
+
+      return res.status(200).json({ message: 'Dados atualizados com sucesso' });
+  } catch (error) {
+      console.error('Erro ao atualizar dados:', error);
+      return res.status(500).json({ error: 'Erro do Servidor Interno' });
   }
 }
 
@@ -235,4 +254,4 @@ async function updateActivityTeam(req, res) {
 
 
 
-module.exports = { getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam, editTeamAcitivty, searchTeams, joinTeam, privacy, updateActivityTeam };
+module.exports = { getTeamAndMembers, createTeam, addMemberToTeam, addActivityTeam, editTeamAcitivty, searchTeams, joinTeam, privacy, updateActivityTeam, deleteActivityTeam };

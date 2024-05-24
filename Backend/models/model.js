@@ -42,8 +42,9 @@ const Teams = sequelize.define('Teams', {
   descriptionTeam: { type: DataTypes.STRING(255), defaultValue: null },
   areasWork: { type: DataTypes.STRING(255), allowNull: false },
   CreateDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  privacy: { type: DataTypes.INTEGER, defaultValue: 0}
+  privacy: { type: DataTypes.INTEGER, defaultValue: 0 }
 }, { tableName: 'teams', timestamps: false });
+
 
 const Years = sequelize.define('Years', {
   idYear: { type: DataTypes.INTEGER, primaryKey: true },
@@ -59,10 +60,21 @@ const Activitys = sequelize.define('Activitys', {
   title: DataTypes.STRING,
   description: DataTypes.STRING,
   publishDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  viewsCount: { type: DataTypes.INTEGER, defaultValue: 0 },
+  commentsCount: { type: DataTypes.INTEGER, defaultValue: 0 },
   idSubject: { type: DataTypes.INTEGER, references: { model: Subjects, key: 'idSubject' } },
   idYear: { type: DataTypes.INTEGER, references: { model: Years, key: 'idYear' } },
   idEducation: { type: DataTypes.INTEGER, references: { model: Educations, key: 'idEducation' } },
 }, { tableName: 'Activitys', timestamps: false });
+
+const Comments = sequelize.define('Comments', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  idActivity: { type: DataTypes.INTEGER, allowNull: false, references: { model: Activitys, key: 'idActivity' } },
+  idTeacher: { type: DataTypes.INTEGER, allowNull: false, references: { model: Users, key: 'idTeacher' } },
+  content: { type: DataTypes.TEXT, allowNull: false },
+  created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, onUpdate: DataTypes.NOW },
+}, { tableName: 'comments', timestamps: false });
 
 const Resources = sequelize.define('Resources', {
   idResource: { type: DataTypes.INTEGER, primaryKey: true },
@@ -87,7 +99,7 @@ const Tools = sequelize.define('Tools', {
 
 const Activity_Team = sequelize.define('Activity_Team', {
   idActivityTeam: { type: DataTypes.INTEGER, allowNull: false, autoIncrement: true, primaryKey: true },
-  idTeam: { type: DataTypes.INTEGER } ,
+  idTeam: { type: DataTypes.INTEGER },
   idTeacher: { type: DataTypes.INTEGER },
   descriptionActivityTeam: { type: DataTypes.TEXT },
   fileName: { type: DataTypes.STRING },
@@ -111,6 +123,10 @@ Users.belongsTo(Groups, { foreignKey: 'idGroup', as: 'groups' });
 // В модели Activity_Team
 Activity_Team.belongsTo(Teams, { foreignKey: 'idTeam', targetKey: 'idTeam' });
 Activity_Team.belongsTo(Users, { foreignKey: 'idTeacher', targetKey: 'idTeacher', as: 'users' });
+
+// В модели Activity_Team
+Comments.belongsTo(Activitys, { foreignKey: 'idActivity', targetKey: 'idActivity' });
+Comments.belongsTo(Users, { foreignKey: 'idTeacher', targetKey: 'idTeacher', as: 'users' });
 
 // В модели Team_List
 Team_List.belongsTo(Teams, { foreignKey: 'idTeam', as: 'teams' });
@@ -140,16 +156,17 @@ Resources.belongsTo(Users, { foreignKey: 'idTeacher', as: 'users' });
 
 
 module.exports = {
-    Educations,
-    Subjects,
-    Groups,
-    Schools,
-    Users,
-    Teams,
-    Activitys,
-    Years,
-    Tools,
-    Resources,
-    Activity_Team,
-    Team_List,
+  Educations,
+  Subjects,
+  Groups,
+  Schools,
+  Users,
+  Teams,
+  Activitys,
+  Years,
+  Tools,
+  Resources,
+  Activity_Team,
+  Team_List,
+  Comments,
 }

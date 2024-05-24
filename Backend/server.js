@@ -15,10 +15,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
   origin: ["http://localhost:5173"],
-  methods: ['POST', 'GET'],
+  methods: ['POST', 'GET', 'PUT', 'DELETE'],
   credentials: true
 }));
-
 
 app.use('/api', routes);
 
@@ -41,22 +40,20 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Простой маршрут для обработки загрузки файла
 app.post('/upload', upload.single('file'), (req, res) => {
-  console.log('File uploaded:', req.file);
-  res.json({ message: 'File uploaded successfully!' });
+  console.log('Arquivo enviado:', req.file);
+  res.json({ message: 'Arquivo enviado com sucesso!' });
 });
 
 (async () => {
   try {
     await sequelize.authenticate();
-    console.log('All tables were created successfully.');
+    console.log('Todas as tabelas foram criadas com sucesso.');
   } catch (error) {
-    console.error('Error occurred while creating tables:', error);
+    console.error('Ocorreu um erro ao criar as tabelas:', error);
   }
 })();
 
-
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Servidor está rodando na porta ${PORT}`);
 });

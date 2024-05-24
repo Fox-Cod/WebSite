@@ -3,12 +3,9 @@ const nodemailer = require('nodemailer');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 
-const generateUniqueToken = () => {
-  return uuidv4();
-};
-
 const sendEmail = async (req, res) => {
   const { email } = req.body;
+  console.log('email;', email)
   const user = await Users.findOne({ where: { email } });
   if (!user) return res.status(404).send('Usuário com este email não encontrado');
   
@@ -26,7 +23,7 @@ const sendEmail = async (req, res) => {
     },
   });
 
-  const resetLink = `http://localhost:5173/token-validation?token=${resetToken}`;
+  const resetLink = `http://localhost:5173/reset-password?token=${resetToken}`;
   
   const mailOptions = {
     from: process.env.EMAIL_USER,

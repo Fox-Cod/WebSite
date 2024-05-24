@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { registration } from '../../http/userAPI';
+import { getAllData } from '../../http/deviceAPI';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
@@ -64,7 +66,7 @@ export default function SignUp() {
 
     if (validateForm()) {
       try {
-        await axios.post('http://localhost:8081/api/registration', userData);
+        await registration(userData)
         navigate('/sign-in');
       } catch (error) {
         console.error('Error submitting data to the server:', error);
@@ -73,11 +75,11 @@ export default function SignUp() {
       console.log('Form validation failed.');
     }
   };
-
+  
   const fetchViewData = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/api/view-data');
-        setSchoolAndGroupData(response.data.data);
+      const response = await getAllData()
+      setSchoolAndGroupData(response);
     } catch (error) {
       console.error('Error fetching view data:', error);
     }

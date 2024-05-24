@@ -155,9 +155,8 @@ export default function Nav() {
                 ) : (
                   <div>
                     <Link to="/sign-in" className="navbar-dropdown-account-wrapper">
-                      <div className="avatar avatar-sm avatar-circle">
-                        <img className="avatar-img" src="../assets/default-avatar-profile-icon.jpg" alt="Image Description" />
-                      </div>
+                      <button type="button" className="btn btn-outline-primary btn-sm">Settings
+                      </button>
                     </Link>
                   </div>
                 )}

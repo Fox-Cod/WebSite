@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
 import { Context } from '../context';
 import { tool, addTool } from '../http/deviceAPI';
+import SearchComponent from './component/Search';
 
 export default function Tools() {
   const { user } = useContext(Context);
@@ -10,35 +11,26 @@ export default function Tools() {
     title: '',
     link: '',
     about: '',
-    application: '' || "Redes sociais e plataformas de ligação em rede",
-    type: '' || "Apresentações e documentos",
-    state: '' || "Sem dados",
+    application: "Redes sociais e plataformas de ligação em rede",
+    type: "Apresentações e documentos",
+    state: "Sem dados",
   });
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-
-    setFormData((prevData) => ({ ...prevData, [id]: value }));
-  };
-  
+  const handleChange = ({ target: { id, value } }) => setFormData(prevData => ({ ...prevData, [id]: value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     try {
-      const res = await addTool(formData);
-      console.log(res);
+      await addTool(formData);
     } catch (error) {
       console.error(error);
     }
   };
-  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-          const res = await tool();
-          setToolsData(res);
+        setToolsData(await tool());
       } catch (err) {
         console.log(err);
       }
@@ -46,40 +38,22 @@ export default function Tools() {
     fetchData();
   }, []);
 
-
-
   const getStatusBadge = (estado) => {
-    switch (estado) {
-      case 'Não está a funcionar':
-        return (
-          <span className="badge bg-soft-danger text-danger rounded-pill">
-            <span className="legend-indicator bg-danger"></span> {estado}
-          </span>
-        );
-      case 'Está a funcionar':
-        return (
-          <span className="badge bg-soft-success text-success rounded-pill">
-            <span className="legend-indicator bg-success"></span> {estado}
-          </span>
-        );
-      case 'Sem dados':
-        return (
-          <span className="badge bg-soft-warning text-warning rounded-pill">
-            <span className="legend-indicator bg-warning"></span> {estado}
-          </span>
-        );
-      default:
-        return (
-          <span className="badge bg-secondary text-dark rounded-pill">
-            {estado}
-          </span>
-        );
-    }
+    const statusMap = {
+      'Não está a funcionar': 'danger',
+      'Está a funcionar': 'success',
+      'Sem dados': 'warning'
+    };
+    const status = statusMap[estado] || 'secondary';
+    return (
+      <span className={`badge bg-soft-${status} text-${status} rounded-pill`}>
+        <span className={`legend-indicator bg-${status}`}></span> {estado}
+      </span>
+    );
   };
 
   return (
-    <div>
-      <div>
+    <div className='container mt-4'>
       <header id="header" className="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column">
         <div className="container">
           <nav className="js-mega-menu flex-grow-1">
@@ -97,7 +71,7 @@ export default function Tools() {
                   </Link>
                 </li>
                 <li className='nav-item'>
-                  <Link className="nav-link " to="/resources" data-placement="left">
+                  <Link className="nav-link" to="/resources" data-placement="left">
                     <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> Recursos
                   </Link>
                 </li>
@@ -112,125 +86,45 @@ export default function Tools() {
           </nav>
         </div>
       </header>
-        <main className="container p-3">
-          <div className="my-2 p-3 bg-body rounded shadow-sm">
-            <nav aria-label="breadcrumb">
-              <ol className="breadcrumb breadcrumb-no-gutter border-bottom pb-0 mb-0">
-                <li className="breadcrumb-item">
-                  <Link className="breadcrumb-link" to="/form">
-                    Inicio
-                  </Link>
-                </li>
-                <li className="breadcrumb-item active">
-                  <Link className="breadcrumb-link" to="/tools">
-                    Ferramentos
-                  </Link>
-                </li>
-              </ol>
-            </nav>
+
+
+      <main>
+        <div className="card">
+          <div className="card-header card-header-content-md-between">
+            <SearchComponent posts={toolsData} />
+            {user._defaultRole === "administrador" && (
+              <button type="button" className="btn btn-white btn-sm" data-bs-toggle="modal" data-bs-target="#addTools">
+                <i className="bi-plus-circle"></i> Ferramentos
+              </button>
+            )}
           </div>
 
-          <div className="card ">
-            <div className="card-header card-header-content-md-between ">
-              <div className="mb-2 mb-md-0">
-                <form>
-                  <div className="input-group input-group-merge input-group-flush">
-                    <div className="input-group-prepend input-group-text">
-                      <i className="bi-search"></i>
-                    </div>
-                    <input
-                      id="datatableSearch"
-                      type="search"
-                      className="form-control"
-                      placeholder="Procurar"
-                      aria-label="Procurar"
-                    />
-                  </div>
-                </form>
-              </div>
-
-              <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-                <div id="datatableCounterInfo" style={{ display: "none" }}>
-                  <div className="d-flex align-items-center">
-                    <span className="fs-5 me-3">
-                      <span id="datatableCounter">0</span>
-                      Selecionados
-                    </span>
-                    <a
-                      className="btn btn-outline-danger btn-sm"
-                    >
-                      <i className="bi-trash"></i> Excluir
-                    </a>
-                  </div>
-                </div>
-
-                <div className="dropdown">
-                  
-                  {user._defaultRole == "administrador" ?
-
-                  <button
-                    type="button"
-                    className="btn btn-white btn-sm w-100"
-                    data-bs-toggle="modal"
-                    data-bs-target="#addTools"
-                  >
-                     <i className="bi-plus-circle"> Ferramentos </i>  
-                    <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
-                  </button>
-
-                  : ""}
-
-                </div>
-              </div>
-            </div>
-
-            <div className="table-responsive datatable-custom">
-              <table id="datatable" className="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Ferramentas</th>
-                    <th>Aplicação</th>
-                    <th>Tipo</th>
-                    <th>Estado</th>
-                    <th>Sobre a Aplicação</th>
-                    {/* <th>Data de Vencimento</th> */}
+          <div className="table-responsive">
+            <table className="table table-lg table-borderless table-thead-bordered table-nowrap card-table">
+              <thead className="thead-light">
+                <tr>
+                  <th>Ferramentas</th>
+                  <th>Aplicação</th>
+                  <th>Tipo</th>
+                  <th>Estado</th>
+                  <th>Sobre a Aplicação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {toolsData.map(({ id, title, link, application, type, state, about }) => (
+                  <tr key={id}>
+                    <td><Link className="d-flex align-items-center" to={link}><span className="d-block h5 text-inherit mb-0">{title}</span></Link></td>
+                    <td><span className="badge bg-soft-primary text-primary rounded-pill">{application}</span></td>
+                    <td><span className="badge bg-soft-secondary text-secondary rounded-pill">{type}</span></td>
+                    <td>{getStatusBadge(state)}</td>
+                    <td title={about}>{about.slice(0, 80)}{about.length > 80 && '...'}</td>
                   </tr>
-                </thead>
-              {toolsData.map(tool => (
-                <tbody key={tool.id}>
-                  <tr>
-                    <td>
-                      <Link className="d-flex align-items-center" to={tool.link}>
-                        <div className="ms-3">
-                          <span className="d-block h5 text-inherit mb-0"> {tool.title} </span>
-                        </div>
-                      </Link>
-                    </td>
-
-                    <td>
-                      <span className="badge bg-soft-primary text-primary rounded-pill">
-                        <span className="legend-indicator bg-primary"></span> {tool.application} </span>  
-                    </td>
-
-                    <td><span className="badge bg-soft-secondary text-secondary rounded-pill">
-                      <span className="legend-indicator bg-secondary"></span>{tool.type} </span>
-                    </td>
-
-                    <td>{getStatusBadge(tool.state)}</td>
-
-                    <td title={tool.about}>
-                      {tool.about.slice(0, 60)}{tool.about.length > 30 && '...'}
-                    </td>
-                    
-                    {/* <td>05 de junho</td> */}
-                  </tr>
-                </tbody>
                 ))}
-              </table>
-            </div>
+              </tbody>
+            </table>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
 
       <div className="modal fade" id="addTools" tabIndex="-1" role="dialog" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered modal-lg" role="document">

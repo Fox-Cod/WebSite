@@ -42,15 +42,15 @@ export default function ViewActivity() {
     fetchData();
   }, [activityId]);
 
-  function formatDate(rawDate) {
-    if (!rawDate) return '';
-
-    const dataRegistro = new Date(rawDate);
-    const day = dataRegistro.getDate();
-    const month = dataRegistro.toLocaleString('default', { month: 'long' });
-    const year = dataRegistro.getFullYear();
-    return `${day} ${month} ${year}`;
-  }
+  const formatDate = (rawDate) => {
+    const date = new Date(rawDate);
+    const currentDate = new Date();
+    if (date.toDateString() === currentDate.toDateString()) {
+      return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+    } else {
+      return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+  };
 
   if (loading) {
     return <div className="d-flex justify-content-center mt-5"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">Загрузка...</span></div></div>;
@@ -106,9 +106,8 @@ export default function ViewActivity() {
           </nav>
         </div>
       </header>
-      <main className="container mt-4">
-
-        <div className="my-3 p-3 bg-body rounded shadow-sm" style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+      <main className="mt-4 card card-body">
+        <div className="my-3 p-3 rounded shadow-sm card" style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
           <div className="d-flex align-items-start">
             <div className="avatar avatar-sm avatar-circle me-2">
               <span className="avatar-soft-dark" title={dataActivity.users.name}>
@@ -118,7 +117,7 @@ export default function ViewActivity() {
             <div className="flex-grow-1">
               <div className="d-flex justify-content-between align-items-center">
                 <h5 className="mb-1">
-                  <Link to={`/view-profile/${dataActivity.users.idTeacher}`} className="text-decoration-none">{dataActivity.users.name}</Link>
+                  <small className="text-muted"><Link to={`/view-profile/${dataActivity.users.idTeacher}`}>{dataActivity.users.name}</Link> | {formatDate(dataActivity.publishDate)}</small>
                 </h5>
                 {canEdit && <EditTextActivity />}
               </div>
@@ -133,13 +132,11 @@ export default function ViewActivity() {
                 <span className="badge bg-success me-1">{dataActivity.educations.nameEducation}</span>
                 <span className="badge bg-warning">{dataActivity.years.year}</span>
               </div>
-              <div className="card-footer d-flex justify-content-between align-items-center">
-                <small className="text-muted">{formatDate(dataActivity.publishDate)}</small>
-                <div>
-                  <Link to={dataActivity.planning} className="btn btn-outline-primary btn-sm me-2">Planificacao</Link>
-                  <Link to={dataActivity.presentation} className="btn btn-outline-secondary btn-sm">Presentacao</Link>
-                </div>
+              <div className="d-flex justify-content-end align-items-center">
+                <Link to={dataActivity.planning} className="btn btn-outline-primary btn-sm me-2">Planificacao</Link>
+                <Link to={dataActivity.presentation} className="btn btn-outline-secondary btn-sm">Presentacao</Link>
               </div>
+
             </div>
           </div>
         </div>
@@ -155,11 +152,9 @@ export default function ViewActivity() {
                     </a>
                   </div>
                   <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-
                     <div className="accordion-body">
                       <AddComment activityId={dataActivity.idActivity} />
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -167,8 +162,7 @@ export default function ViewActivity() {
           </div>
         ) : (null)}
 
-
-        <div className="card container card-body mt-3">
+        <div className="card card-body mt-3">
           {dataComment.length > 0 ? (
             <ul className="step step-icon-xs mb-0">
               {currentComments.map((d, i) => (

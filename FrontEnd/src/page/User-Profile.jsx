@@ -31,13 +31,15 @@ export default function UserProfile() {
     fetchData();
   }, []);
 
-  function formatDate(rawDate) {
-    const dataRegistro = new Date(rawDate);
-    const day = dataRegistro.getDate();
-    const month = dataRegistro.toLocaleString('default', { month: 'long' });
-    const year = dataRegistro.getFullYear();
-    return `${day} ${month} ${year}`;
-  }
+  const formatDate = (rawDate) => {
+    const date = new Date(rawDate);
+    const currentDate = new Date();
+    if (date.toDateString() === currentDate.toDateString()) {
+        return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+    } else {
+        return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+};
 
   const formatBytes = (bytes) => {
     if (bytes === 0) return '0 Bytes';
@@ -253,11 +255,6 @@ export default function UserProfile() {
                             </li>
                           </ul>
                         ))}
-                      </div>
-                      <div className="card-footer">
-                        <Link className="link link-collapse" data-bs-toggle="collapse" to="/form" role="button" aria-expanded="false" aria-controls="collapseActivitySection">
-                          <span className="link-collapse-default">Ver mais</span>
-                        </Link>
                       </div>
                     </div>
                   </div>

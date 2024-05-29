@@ -11,7 +11,7 @@ const Form = lazy(() => import('./page/component/Form'));
 const Activity = lazy(() => import('./page/Activity'));
 const Resources = lazy(() => import('./page/Resources'));
 const Tools = lazy(() => import('./page/Tools'));
-const FAQs = lazy(() => import('./page/FAQs'));
+const About = lazy(() => import('./page/About'));
 const ViewActivity = lazy(() => import('./page/component/View-Activity'));
 const ViewProfile = lazy(() => import('./page/component/View-Profile'));
 const PasswordResetEmail = lazy(() => import('./page/login/Password-Reset-Email'));
@@ -66,7 +66,7 @@ const App = () => {
           <Route path="/activity" element={<Activity />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/tools" element={<Tools />} />
-          <Route path="/faq" element={<FAQs />} />
+          <Route path="/about-us" element={<About />} />
           <Route path="/view-activity/:activityId" element={<ViewActivity />} />
           <Route path="/view-profile/:userId" element={<ViewProfile />} />
           <Route path="/password-reset-email" element={<PasswordResetEmail />} />

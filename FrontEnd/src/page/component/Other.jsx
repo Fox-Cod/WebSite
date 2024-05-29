@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { getAllData, activity, editActivity, addActivity, deleteActivity, activityView, resources, uploadResources, addActivityToTeam, createTeam, addComment } from '../../http/deviceAPI';
-import SearchComponent from './Search';
+import { SearchComponentForActivities, SearchComponentForResources } from './Search';
 
 export const EditTextActivity = () => {
   const [viewActivityUser, setViewActivityUser] = useState({});
@@ -286,8 +286,6 @@ export const EditTextActivity = () => {
   )
 }
 
-import 'bootstrap-icons/font/bootstrap-icons.css';
-
 export const AddAndSearchActivity = () => {
   const [data, setData] = useState({});
   const [dataActivity, setDataActivity] = useState([]);
@@ -301,11 +299,8 @@ export const AddAndSearchActivity = () => {
     idYear: '' || 'Qualquer',
     idEducation: '' || 'Qualquer',
   });
-  const [showTooltips, setShowTooltips] = useState(false);
 
   useEffect(() => {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
     fetchData();
     fetchDataActivity();
   }, []);
@@ -383,34 +378,12 @@ export const AddAndSearchActivity = () => {
     }
   };
 
-  const toggleTooltips = () => {
-    const tooltipContent = {
-      title: 'O título deve descrever a atividade claramente e ter pelo menos 4 caracteres.',
-      description: 'A descrição deve fornecer detalhes sobre a atividade e ter pelo menos 4 caracteres.',
-      presentation: 'Adicione um link para a apresentação, deve ser um URL válido.',
-      planning: 'Adicione um link para a planificação, deve ser um URL válido.',
-      idYear: 'Selecione o ano de estudo adequado para a atividade.',
-      idEducation: 'Selecione o nível de ensino adequado para a atividade.',
-      idSubject: 'Selecione a disciplina relevante para a atividade.'
-    };
-
-    Object.keys(tooltipContent).forEach(id => {
-      const element = document.getElementById(id);
-      if (element) {
-        element.setAttribute('title', tooltipContent[id]);
-        new bootstrap.Tooltip(element);
-      }
-    });
-
-    setShowTooltips(!showTooltips);
-  };
-
   return (
     <div>
       <div className="card">
         <div className="card-header card-header-content-md-between">
           <div className="mb-2 mb-md-0">
-            <SearchComponent posts={dataActivity} />
+            <SearchComponentForActivities posts={dataActivity} />
           </div>
           <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <div className="dropdown">
@@ -443,7 +416,6 @@ export const AddAndSearchActivity = () => {
                   placeholder="Add title"
                   value={formData.title}
                   onChange={handleChange}
-                  data-bs-toggle="tooltip"
                 ></textarea>
                 <span className="invalid-feedback">{formErrors.title}</span>
 
@@ -462,7 +434,6 @@ export const AddAndSearchActivity = () => {
                       placeholder="Add description"
                       value={formData.description}
                       onChange={handleChange}
-                      data-bs-toggle="tooltip"
                     ></textarea>
                     <span className="invalid-feedback">{formErrors.description}</span>
                   </div>
@@ -484,7 +455,6 @@ export const AddAndSearchActivity = () => {
                       placeholder="https://example.com/word/"
                       value={formData.presentation}
                       onChange={handleChange}
-                      data-bs-toggle="tooltip"
                     />
                     <span className="invalid-feedback">{formErrors.presentation}</span>
                   </div>
@@ -497,7 +467,6 @@ export const AddAndSearchActivity = () => {
                       placeholder="https://example.com/excel/"
                       value={formData.planning}
                       onChange={handleChange}
-                      data-bs-toggle="tooltip"
                     />
                     <span className="invalid-feedback">{formErrors.planning}</span>
                   </div>
@@ -514,11 +483,9 @@ export const AddAndSearchActivity = () => {
                     Ano
                     <select
                       className="js-select form-select"
-                      autoComplete="off"
                       id="idYear"
                       value={formData.idYear}
                       onChange={handleChange}
-                      data-bs-toggle="tooltip"
                     >
                       <option>Qualquer</option>
                       {data.years && data.years.map((index) => (
@@ -532,11 +499,9 @@ export const AddAndSearchActivity = () => {
                     <div className="tom-select-custom">
                       <select
                         className="js-select form-select"
-                        autoComplete="off"
                         id="idEducation"
                         value={formData.idEducation}
                         onChange={handleChange}
-                        data-bs-toggle="tooltip"
                       >
                         <option>Qualquer</option>
                         {data.educations && data.educations.map((index) => (
@@ -559,11 +524,9 @@ export const AddAndSearchActivity = () => {
                     <div className="tom-select-custom">
                       <select
                         className="js-select form-select"
-                        autoComplete="off"
                         id="idSubject"
                         value={formData.idSubject}
                         onChange={handleChange}
-                        data-bs-toggle="tooltip"
                       >
                         <option>Qualquer</option>
                         {data.subjects && data.subjects.map((index) => (
@@ -578,12 +541,11 @@ export const AddAndSearchActivity = () => {
               <div className="modal-footer">
                 <button
                   type="button"
+                  id="discardFormt"
                   className="btn btn-white"
-                  onMouseUp={toggleTooltips}
-                  data-bs-toggle="tooltip"
-                  title="Clique para ver mais informações sobre cada campo."
+                  data-bs-dismiss="modal"
                 >
-                  Mostrar/Abrir Informações
+                  Descartar
                 </button>
                 <button type="submit" className="btn btn-primary" data-bs-toggle="tooltip" title="Salve a nova atividade após preencher todos os campos obrigatórios.">
                   Adicionar atividade
@@ -596,6 +558,7 @@ export const AddAndSearchActivity = () => {
     </div>
   );
 };
+
 export const AddAndSearchResources = () => {
   const [dataResources, setDataResources] = useState([]);
   const [file, setFile] = useState(null);
@@ -672,7 +635,7 @@ export const AddAndSearchResources = () => {
       <div className="card">
         <div className="card-header card-header-content-md-between">
           <div className="mb-2 mb-md-0">
-            <SearchComponent posts={dataResources} />
+            <SearchComponentForResources posts={dataResources} />
           </div>
           <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <div className="dropdown">

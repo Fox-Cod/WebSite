@@ -20,13 +20,15 @@ export default function Activity() {
     fetchData();
   }, []);
 
-  function formatDate(rawDate) {
-    const dataRegistro = new Date(rawDate);
-    const day = dataRegistro.getDate();
-    const month = dataRegistro.toLocaleString('default', { month: 'long' });
-    const year = dataRegistro.getFullYear();
-    return `${day} ${month} ${year}`;
-  }
+  const formatDate = (rawDate) => {
+    const date = new Date(rawDate);
+    const currentDate = new Date();
+    if (date.toDateString() === currentDate.toDateString()) {
+        return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+    } else {
+        return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+};
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -69,10 +71,10 @@ export default function Activity() {
         </div>
       </header>
 
-      <main>
+      <main className='card card-body'>
         <AddAndSearchActivity />
         {currentPosts.map((d, i) => (
-          <div className="my-3 p-3 bg-body rounded shadow-sm" key={i} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+          <div className="my-3 p-3 rounded shadow-sm card" key={i} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
             <div className="d-flex align-items-start">
               <div className="avatar avatar-sm avatar-circle me-2">
                 <span className="avatar-soft-dark" title={d.users.name}>
@@ -82,7 +84,7 @@ export default function Activity() {
               <div className="flex-grow-1">
                 <div className="d-flex justify-content-between align-items-center">
                   <h5 className="mb-1">
-                    <Link to={`/view-profile/${d.users.idTeacher}`} className="text-decoration-none">{d.users.name}</Link>
+                    <small className="text-muted"><Link to={`/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link> | {formatDate(d.publishDate)}</small>
                   </h5>
                 </div>
                 <div className="d-flex justify-content-between">
@@ -98,12 +100,9 @@ export default function Activity() {
                   <span className="badge bg-success me-1">{d.educations.nameEducation}</span>
                   <span className="badge bg-warning">{d.years.year}</span>
                 </div>
-                <div className="card-footer d-flex justify-content-between align-items-center">
-                  <small className="text-muted">{formatDate(d.publishDate)}</small>
                   <div className="d-flex align-items-center">
-                    <Link to={`/view-activity/${d.idActivity}`} className="btn btn-outline-primary btn-sm">Mais</Link>
+                    <Link to={`/view-activity/${d.idActivity}`} className="link">Mais</Link>
                   </div>
-                </div>
               </div>
             </div>
           </div>

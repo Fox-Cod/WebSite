@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
 import { Context } from '../context';
 import { tool, addTool } from '../http/deviceAPI';
-import SearchComponent from './component/Search';
+import { SearchComponentForTools } from './component/Search';
 
 export default function Tools() {
   const { user } = useContext(Context);
@@ -91,7 +91,7 @@ export default function Tools() {
       <main>
         <div className="card">
           <div className="card-header card-header-content-md-between">
-            <SearchComponent posts={toolsData} />
+            <SearchComponentForTools posts={toolsData} />
             {user._defaultRole === "administrador" && (
               <button type="button" className="btn btn-white btn-sm" data-bs-toggle="modal" data-bs-target="#addTools">
                 <i className="bi-plus-circle"></i> Ferramentos

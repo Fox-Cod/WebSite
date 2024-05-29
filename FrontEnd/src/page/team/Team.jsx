@@ -232,85 +232,83 @@ export default function Team() {
                                 <h4 className="card-header-title">Atividade</h4>
                             </div>
                             <div className="card-body">
-                                {/* Display sorted activities */}
-                                {sortedActivities.length > 0 ? sortedActivities.map((activity, index) => (
-                                    <ul key={activity.idActivityTeam} className="list-unstyled list-py-2 text-dark mb-3">
-                                        <form>
-                                            <li className="card card-body mb-3">
-                                                <div className="d-flex">
+                                <ul className="step step-icon-xs mb-3">
+                                    {sortedActivities.length > 0 ? sortedActivities.map((activity, index) => (
+                                        <li key={activity.idActivityTeam} className="step-item">
+                                            <div className="step-content-wrapper">
+                                                <span className="step-icon">
                                                     <div className="flex-shrink-0">
                                                         <span className="avatar avatar-soft-dark">
                                                             <span className="avatar-initials">{activity.users.name.charAt(0).toUpperCase()}</span>
                                                         </span>
                                                     </div>
-                                                    <div className="flex-grow-1 ms-3">
-                                                        <h5 className="mb-1">
-                                                            <Link className="text-dark" to={`/view-profile/${activity.users.idTeacher}`}>{activity.users.name}</Link>
-                                                            <span className="fs-6 text-body"> {formatDate(activity.CreateDate)}</span>
-                                                        </h5>
-                                                        <div className="mt-1 text-dark">
-                                                            {state.editModes[index] && activity.users.idTeacher === auth.user._userId ? (
-                                                                <>
-                                                                    <div className='quill-custom rounded'>
-                                                                        <ReactQuill
-                                                                            value={state.editedText}
-                                                                            onChange={handleEditorChange}
-                                                                            placeholder="Text..."
-                                                                            modules={{
-                                                                                toolbar: {
-                                                                                    container: [
-                                                                                        ['bold', 'italic', 'underline', 'strike'],
-                                                                                        [{ list: 'ordered' }, { list: 'bullet' }],
-                                                                                        ['link'],
-                                                                                    ],
-                                                                                },
-                                                                            }}
-                                                                            formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link']}
-                                                                        />
-                                                                    </div>
-                                                                    <button className="btn btn-primary btn-xs ms-2 mt-2" onClick={() => handleSave(activity.idActivityTeam)}>Save</button>
-                                                                    <button className="btn btn-ghost-secondary btn-xs ms-2 mt-2" onClick={() => handleCancel(index)}>Cancel</button>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <div dangerouslySetInnerHTML={{ __html: activity.descriptionActivityTeam }} />
-                                                                    {activity.fileName && (
-                                                                        <ul className="list-group list-group-sm">
-                                                                            <li className="list-group-item list-group-item-light">
-                                                                                <div className="row gx-1">
-                                                                                    <div className="col-sm-4">
-                                                                                        <div className="d-flex">
-                                                                                            <div className="flex-shrink-0">
-                                                                                                <img className="avatar avatar-xs" src="../assets/svg/components/placeholder-img-format.svg" alt="Image Description" />
-                                                                                            </div>
-                                                                                            <div className="flex-grow-1 text-truncate ms-2">
-                                                                                                <span>{activity.fileName}
-                                                                                                    <span className="d-block small text-muted">{formatBytes(activity.fileSize)}</span>
-                                                                                                    <span><Link to={`http://localhost:8081/api/files/${activity.fileName}`} download> Download</Link></span>
-                                                                                                </span>
-                                                                                            </div>
+                                                </span>
+                                                <div className="flex-grow-1 ms-3">
+                                                    <h5 className="mb-1">
+                                                        <small className="text-muted"><Link className="text-dark" to={`/view-profile/${activity.users.idTeacher}`}>{activity.users.name}</Link> | {formatDate(activity.CreateDate)}</small>
+                                                    </h5>
+                                                    <div className="mt-1 text-dark">
+                                                        {state.editModes[index] && activity.users.idTeacher === auth.user._userId ? (
+                                                            <>
+                                                                <div className='quill-custom rounded'>
+                                                                    <ReactQuill
+                                                                        value={state.editedText}
+                                                                        onChange={handleEditorChange}
+                                                                        placeholder="Text..."
+                                                                        modules={{
+                                                                            toolbar: {
+                                                                                container: [
+                                                                                    ['bold', 'italic', 'underline', 'strike'],
+                                                                                    [{ list: 'ordered' }, { list: 'bullet' }],
+                                                                                    ['link'],
+                                                                                ],
+                                                                            },
+                                                                        }}
+                                                                        formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link']}
+                                                                    />
+                                                                </div>
+                                                                <button className="btn btn-primary btn-xs ms-2 mt-2" onClick={() => handleSave(activity.idActivityTeam)}>Save</button>
+                                                                <button className="btn btn-ghost-secondary btn-xs ms-2 mt-2" onClick={() => handleCancel(index)}>Cancel</button>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <div dangerouslySetInnerHTML={{ __html: activity.descriptionActivityTeam }} />
+                                                                {activity.fileName && (
+                                                                    <ul className="list-group list-group-sm">
+                                                                        <li className="list-group-item list-group-item-light">
+                                                                            <div className="row gx-1">
+                                                                                <div className="col-sm-4">
+                                                                                    <div className="d-flex">
+                                                                                        <div className="flex-shrink-0">
+                                                                                            <img className="avatar avatar-xs" src="../assets/svg/components/placeholder-img-format.svg" alt="Image Description" />
+                                                                                        </div>
+                                                                                        <div className="flex-grow-1 text-truncate ms-2">
+                                                                                            <span>{activity.fileName}
+                                                                                                <span className="d-block small text-muted">{formatBytes(activity.fileSize)}</span>
+                                                                                                <span><Link to={`http://localhost:8081/api/files/${activity.fileName}`} download> Download</Link></span>
+                                                                                            </span>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                            </li>
-                                                                        </ul>
-                                                                    )}
-                                                                    {activity.users.idTeacher === auth.user._userId ? (
-                                                                        <div className="d-flex justify-content-end">
-                                                                            <button type="button" className="btn btn-outline-primary btn-xs mt-2" onClick={() => handleEditClick(index, activity)}>Edit</button>
-                                                                            <button type="button" className="btn btn-outline-danger btn-xs ms-2 mt-2" onClick={() => handleDeleteClick(index, activity.idActivityTeam)}>Delete</button>
-                                                                        </div>
-                                                                    ) : null}
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                )}
+                                                                {activity.users.idTeacher === auth.user._userId ? (
+                                                                    <div className="d-flex justify-content-end">
+                                                                        <button type="button" className="btn btn-outline-primary btn-xs mt-2" onClick={() => handleEditClick(index, activity)}>Edit</button>
+                                                                        <button type="button" className="btn btn-outline-danger btn-xs ms-2 mt-2" onClick={() => handleDeleteClick(index, activity.idActivityTeam)}>Delete</button>
+                                                                    </div>
+                                                                ) : null}
 
-                                                                </>
-                                                            )}
-                                                        </div>
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            </li>
-                                        </form>
-                                    </ul>
-                                )) : <p>No team activity yet.</p>}
+                                            </div>
+                                        </li>
+                                    )) : <p>No team activity yet.</p>}
+                                </ul>
                             </div>
                         </div>
                     </div>

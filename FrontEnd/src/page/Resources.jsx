@@ -18,13 +18,15 @@ export default function Resources() {
     fetchData();
   }, []);
 
-  function formatDate(rawDate) {
-    const dataRegistro = new Date(rawDate);
-    const day = dataRegistro.getDate();
-    const month = dataRegistro.toLocaleString('default', { month: 'long' });
-    const year = dataRegistro.getFullYear();
-    return `${day} ${month} ${year}`;
-  }
+  const formatDate = (rawDate) => {
+    const date = new Date(rawDate);
+    const currentDate = new Date();
+    if (date.toDateString() === currentDate.toDateString()) {
+        return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+    } else {
+        return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+};
 
   const formatBytes = (bytes) => {
     if (bytes === 0) return '0 Bytes';
@@ -69,12 +71,12 @@ export default function Resources() {
           </nav>
         </div>
       </header>
-      <main>
+      <main className='card card-body'>
         <AddAndSearchResources />
 
         {/* Recursos */}
         {files.map((file) => (
-          <div className="my-3 p-3 bg-body rounded shadow-sm">
+          <div className="my-3 p-3 rounded shadow-sm card">
             <div className="d-flex text-body-secondary pt-3">
               <div className="avatar avatar-sm avatar-circle me-2" width="32" height="32">
                 <span className="avatar-soft-dark" title={file.users.name}>

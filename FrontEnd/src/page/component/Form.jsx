@@ -20,13 +20,15 @@ export default function Form() {
     fetchData();
   }, []);
   
-  function formatDate(rawDate) {
-    const dataRegistro = new Date(rawDate);
-    const day = dataRegistro.getDate();
-    const month = dataRegistro.toLocaleString("default", { month: "long" });
-    const year = dataRegistro.getFullYear();
-    return `${day} ${month} ${year}`;
-  }
+  const formatDate = (rawDate) => {
+    const date = new Date(rawDate);
+    const currentDate = new Date();
+    if (date.toDateString() === currentDate.toDateString()) {
+        return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+    } else {
+        return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+};
 
   const formatBytes = (bytes) => {
     if (bytes === 0) return '0 Bytes';
@@ -68,9 +70,9 @@ export default function Form() {
           </nav>
         </div>
       </header>
-      <main>
+      <main className="card card-body">
         {data.slice(0, 3).map((d, i) => (
-          <div className="my-3 p-3 bg-body rounded shadow-sm" key={i} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+          <div className="my-3 p-3 rounded shadow-sm card" key={i} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
             <div className="d-flex align-items-start">
               <div className="avatar avatar-sm avatar-circle me-2">
                 <span className="avatar-soft-dark" title={d.users.name}>
@@ -80,7 +82,7 @@ export default function Form() {
               <div className="flex-grow-1">
                 <div className="d-flex justify-content-between align-items-center">
                   <h5 className="mb-1">
-                    <Link to={`/view-profile/${d.users.idTeacher}`} className="text-decoration-none">{d.users.name}</Link>
+                  <small className="text-muted"><Link to={`/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link> | {formatDate(d.publishDate)}</small>
                   </h5>
                 </div>
                 <div className="d-flex justify-content-between">
@@ -97,15 +99,14 @@ export default function Form() {
                   <span className="badge bg-warning">{d.years.year}</span>
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
-                  <small className="text-muted">{formatDate(d.publishDate)}</small>
-                  <Link to={`/view-activity/${d.idActivity}`} className="btn btn-outline-primary btn-sm">Mais</Link>
+                  <Link to={`/view-activity/${d.idActivity}`} className="link">Mais</Link>
                 </div>
               </div>
             </div>
           </div>
         ))}
         {files.slice(0, 3).map((file, i) => (
-          <div className="my-3 p-3 bg-body rounded shadow-sm" key={i} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+          <div className="my-3 p-3 rounded shadow-sm card" key={i} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
             <div className="d-flex align-items-start">
               <div className="avatar avatar-sm avatar-circle me-2">
                 <span className="avatar-soft-dark" title={file.users.name}>
@@ -135,10 +136,6 @@ export default function Form() {
                     </div>
                   </li>
                 </ul>
-                <div className="d-flex justify-content-between align-items-center mt-2">
-                  <small className="text-muted">{formatDate(file.publishDate)}</small>
-                  <Link to={`http://localhost:8081/api/files/${file.fileName}`} className="btn btn-outline-primary btn-sm">Baixar</Link>
-                </div>
               </div>
             </div>
           </div>

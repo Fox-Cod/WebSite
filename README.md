@@ -19,10 +19,6 @@ To facilitate collaboration, there is a "Teams" section where users can create b
 - Express
 - Node.js
 - Sequelize
-- cors
-- multer
-- cookieparser
-- path
 
 ## How to Use
 

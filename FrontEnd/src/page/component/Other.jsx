@@ -295,9 +295,9 @@ export const AddAndSearchActivity = () => {
     description: '',
     presentation: '',
     planning: '',
-    idSubject: '' || 'Qualquer',
-    idYear: '' || 'Qualquer',
-    idEducation: '' || 'Qualquer',
+    idSubject: null,
+    idYear: null,
+    idEducation: null,
   });
 
   useEffect(() => {
@@ -317,22 +317,22 @@ export const AddAndSearchActivity = () => {
     }
 
     if (!formData.presentation) {
-      errors.presentation = 'O campo Presentacao é obrigatório.';
+      errors.presentation = 'O campo Presentação é obrigatório.';
     }
 
     if (!formData.planning) {
-      errors.planning = 'O campo Planificacao é obrigatório.';
+      errors.planning = 'O campo Planificação é obrigatório.';
     }
 
-    if (!formData.idSubject || formData.idSubject === 'Qualquer') {
+    if (formData.idSubject === null) {
       errors.idSubject = 'Selecione uma disciplina válida.';
     }
 
-    if (!formData.idEducation || formData.idEducation === 'Qualquer') {
+    if (formData.idEducation === null) {
       errors.idEducation = 'Selecione um nível válido.';
     }
 
-    if (!formData.idYear || formData.idYear === 'Qualquer') {
+    if (formData.idYear === null) {
       errors.idYear = 'Selecione um ano de estudo válido.';
     }
 
@@ -342,7 +342,10 @@ export const AddAndSearchActivity = () => {
 
   const handleChange = (event) => {
     const { id, value } = event.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [id]: value }));
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [id]: value === "null" ? null : value
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -393,7 +396,7 @@ export const AddAndSearchActivity = () => {
                 data-bs-toggle="modal"
                 data-bs-target="#addActivity"
               >
-                <i className="bi-plus me-1"></i> Novos atividades
+                <i className="bi-plus me-1"></i> Novas atividades
                 <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
               </button>
             </div>
@@ -410,13 +413,13 @@ export const AddAndSearchActivity = () => {
             <form onSubmit={handleSubmit}>
               <div className="modal-body">
                 <label htmlFor="eventTitleLabel" className="visually-hidden form-label">Titulo</label>
-                <textarea
+                <input
                   id="title"
                   className={`form-control form-control-title ${formErrors.title ? 'is-invalid' : ''}`}
                   placeholder="Add title"
                   value={formData.title}
                   onChange={handleChange}
-                ></textarea>
+                ></input>
                 <span className="invalid-feedback">{formErrors.title}</span>
 
                 <div className="row mb-4">
@@ -482,32 +485,34 @@ export const AddAndSearchActivity = () => {
                   <div className="col-sm">
                     Ano
                     <select
-                      className="js-select form-select"
+                      className={`js-select form-select ${formErrors.idYear ? 'is-invalid' : ''}`}
                       id="idYear"
                       value={formData.idYear}
                       onChange={handleChange}
                     >
-                      <option>Qualquer</option>
+                      <option value={null}>Qualquer</option>
                       {data.years && data.years.map((index) => (
                         <option key={index.idYear} value={index.idYear}>{index.year}</option>
                       ))}
                     </select>
+                    <span className="invalid-feedback">{formErrors.idYear}</span>
                   </div>
 
                   <div className="col-sm">
                     Ensino
                     <div className="tom-select-custom">
                       <select
-                        className="js-select form-select"
+                        className={`js-select form-select ${formErrors.idEducation ? 'is-invalid' : ''}`}
                         id="idEducation"
                         value={formData.idEducation}
                         onChange={handleChange}
                       >
-                        <option>Qualquer</option>
+                        <option value={null}>Qualquer</option>
                         {data.educations && data.educations.map((index) => (
                           <option key={index.idEducation} value={index.idEducation}>{index.nameEducation}</option>
                         ))}
                       </select>
+                      <span className="invalid-feedback">{formErrors.idEducation}</span>
                     </div>
                   </div>
                 </div>
@@ -523,16 +528,17 @@ export const AddAndSearchActivity = () => {
                     Disciplina
                     <div className="tom-select-custom">
                       <select
-                        className="js-select form-select"
+                        className={`js-select form-select ${formErrors.idSubject ? 'is-invalid' : ''}`}
                         id="idSubject"
                         value={formData.idSubject}
                         onChange={handleChange}
                       >
-                        <option>Qualquer</option>
+                        <option value={null}>Qualquer</option>
                         {data.subjects && data.subjects.map((index) => (
                           <option key={index.idSubject} value={index.idSubject}>{index.nameSubject}</option>
                         ))}
                       </select>
+                      <span className="invalid-feedback">{formErrors.idSubject}</span>
                     </div>
                   </div>
                 </div>
@@ -541,7 +547,7 @@ export const AddAndSearchActivity = () => {
               <div className="modal-footer">
                 <button
                   type="button"
-                  id="discardFormt"
+                  id="discardForm"
                   className="btn btn-white"
                   data-bs-dismiss="modal"
                 >
@@ -563,6 +569,7 @@ export const AddAndSearchResources = () => {
   const [dataResources, setDataResources] = useState([]);
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const onDrop = useCallback((acceptedFiles) => {
     setFile(acceptedFiles[0]);
@@ -601,8 +608,8 @@ export const AddAndSearchResources = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file) {
-      alert('Seleccione um ficheiro');
+    if (!file || !title.trim()) {
+      setErrorMessage('Preencha todos os campos obrigatórios.');
       return;
     }
 
@@ -613,6 +620,9 @@ export const AddAndSearchResources = () => {
     try {
       await uploadResources(formData);
       alert('Ficheiro carregado com sucesso');
+      setFile(null);
+      setTitle('');
+      setErrorMessage('');
     } catch (error) {
       console.error('Erro ao carregar o ficheiro: ', error);
       alert('Error uploading file');
@@ -630,6 +640,7 @@ export const AddAndSearchResources = () => {
     };
     fetchData();
   }, []);
+
   return (
     <div>
       <div className="card">
@@ -667,6 +678,7 @@ export const AddAndSearchResources = () => {
                   <input {...getInputProps()} />
                   {fileContent}
                 </div>
+                {errorMessage && <div className="alert alert-danger mt-2" role="alert">{errorMessage}</div>}
               </div>
               <div className="modal-footer gap-3">
                 <button
@@ -692,6 +704,7 @@ export const AddActivityTeam = () => {
   const [file, setFile] = useState(null);
   const [descricao, setDescricao] = useState('');
   const [showFileInput, setShowFileInput] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleToggleFileInput = () => {
     setShowFileInput(!showFileInput);
@@ -703,29 +716,36 @@ export const AddActivityTeam = () => {
 
   const validateForm = () => {
     if (!descricao && !file) {
-      setErrorMessage('Pelo menos um dos campos (comentário ou ficheiro) deve ser preenchido');
+      setErrorMessage('Pelo menos um dos campos (comentário ou ficheiro) deve ser preenchido.');
+      return false;
+    } else if (!descricao && file) {
+      setErrorMessage('Comentário não pode ser vazio.');
       return false;
     }
+    setErrorMessage('');
     return true;
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      if (!validateForm()) {
-        return;
-      }
+    if (!validateForm()) {
+      return;
+    }
 
+    try {
       const formData = new FormData();
       formData.append('descricao', descricao);
       formData.append('id_equipa', teamId);
-      formData.append('file', file);
-      const response = await addActivityToTeam(teamId, formData)
+      if (file) {
+        formData.append('file', file);
+      }
+
+      const response = await addActivityToTeam(teamId, formData);
       window.location.reload();
       console.log(response.data);
     } catch (error) {
-      console.error(error);
+      console.error('Error adding activity to team:', error);
     }
   };
 
@@ -742,11 +762,11 @@ export const AddActivityTeam = () => {
             <div className="modal-body">
               <div className="row">
                 <div className="col">
-                  <div className='quill-custom rounded'>
+                  <div className="quill-custom rounded">
                     <ReactQuill
                       value={descricao}
                       onChange={handleQuillChange}
-                      placeholder="Text..."
+                      placeholder="Texto..."
                       modules={{
                         toolbar: {
                           container: [
@@ -759,10 +779,13 @@ export const AddActivityTeam = () => {
                       formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link']}
                     />
                   </div>
+                  {errorMessage && <div className="text-danger mt-2">{errorMessage}</div>}
                 </div>
               </div>
               <div className="mt-3">
-                <span className='text-primary' onClick={handleToggleFileInput} style={{ cursor: 'pointer' }}> {showFileInput ? 'Fechar' : 'Adicionar ficheiro'}</span>
+                <span className="text-primary" onClick={handleToggleFileInput} style={{ cursor: 'pointer' }}>
+                  {showFileInput ? 'Fechar' : 'Adicionar ficheiro'}
+                </span>
                 {showFileInput && (
                   <div>
                     <label htmlFor="fileInput" className="form-label">Escolher ficheiro</label>
@@ -784,7 +807,6 @@ export const AddActivityTeam = () => {
         </div>
       </div>
     </div>
-
   );
 };
 
@@ -793,7 +815,7 @@ export const AddTeam = () => {
   const [formErrors, setFormErrors] = useState({});
   const [formData, setFormData] = useState({
     nameTeam: '',
-    descriptionTeam: '' || 'Somos uma equipa de entusiastas que está pronta para criar algo novo e conquistar o topo!',
+    descriptionTeam: 'Somos uma equipa de entusiastas que está pronta para criar algo novo e conquistar o topo!',
     selectedOption: 'Qualquer',
     customDiscipline: '',
   });
@@ -805,18 +827,17 @@ export const AddTeam = () => {
       errors.nameTeam = 'O nome deve ter pelo menos 3 caracteres.';
     }
 
-    if (formData.selectedOption === "Qualquer") {
-      errors.selectedOption = 'Algo de errado.';
+    if (formData.selectedOption === 'Qualquer') {
+      errors.selectedOption = 'Por favor, escolha uma opção válida.';
     }
 
     if (formData.selectedOption === 'Outros' && (!formData.customDiscipline || formData.customDiscipline.length < 3)) {
-      errors.customDiscipline = 'Algo errado.';
+      errors.customDiscipline = 'Especifique o objetivo com pelo menos 3 caracteres.';
     }
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
 
   const handleOptionChange = (event) => {
     const value = event.target.value;
@@ -827,14 +848,11 @@ export const AddTeam = () => {
     }));
   };
 
-
   const handleCreateTeam = async () => {
-    console.log(formData)
+    console.log(formData);
     if (validateForm()) {
       try {
-        // Отправка данных на бэкенд
-        await createTeam(formData)
-
+        await createTeam(formData);
         location.reload();
       } catch (error) {
         console.error('Error creating team:', error);
@@ -843,6 +861,7 @@ export const AddTeam = () => {
       console.log('Team creation failed 401');
     }
   };
+
   return (
     <div>
       <div className="form-check form-check-switch me-2">
@@ -854,26 +873,26 @@ export const AddTeam = () => {
         </button>
       </div>
 
-
       <div className="modal fade" id="addEventToCalendarModal" tabIndex="-1" role="dialog" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-close">
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form >
+            <form>
               <input type="hidden" id="autor" name="autor" />
-
               <div className="modal-body">
-                <label htmlFor="eventTitleLabel" className="visually-hidden form-label">Nome da Equipa</label>
-                <textarea
-                  id="title"
-                  className={`form-control form-control-title ${formErrors.nameTeam ? 'is-invalid' : ''}`}
-                  placeholder="Nome da equipa"
-                  value={formData.nameTeam}
-                  onChange={(e) => setFormData({ ...formData, nameTeam: e.target.value })}
-
-                ></textarea>
+                <div className="row mb-4">
+                  <label htmlFor="eventTitleLabel" className="visually-hidden form-label">Nome da Equipa</label>
+                  <input
+                    id="title"
+                    className={`form-control form-control-title ${formErrors.nameTeam ? 'is-invalid' : ''}`}
+                    placeholder="Nome da equipa"
+                    value={formData.nameTeam}
+                    onChange={(e) => setFormData({ ...formData, nameTeam: e.target.value })}
+                  ></input>
+                  {formErrors.nameTeam && <div className="invalid-feedback">{formErrors.nameTeam}</div>}
+                </div>
 
                 <div className="row mb-4">
                   <div className="col-sm-3 mb-2 mb-sm-0">
@@ -882,19 +901,17 @@ export const AddTeam = () => {
                       <div className="flex-grow-1">Adicionar descrição</div>
                     </div>
                   </div>
-
                   <div className="col-sm">
                     <textarea
                       id="descriptionTeam"
                       className="form-control"
                       placeholder="Não Necessariamente"
                       value={formData.descriptionTeam}
-                      onChange={(e) => setFormData({ ...formData, teamDescription: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, descriptionTeam: e.target.value })}
                     ></textarea>
                     <span className="invalid-feedback"></span>
                   </div>
                 </div>
-
 
                 <div className="row mb-4">
                   <div className="col-sm-3 mb-2 mb-sm-0">
@@ -903,7 +920,6 @@ export const AddTeam = () => {
                       <div className="flex-grow-1">Qual é o objetivo da sua equipa?</div>
                     </div>
                   </div>
-
                   <div className="col-sm">
                     <div className="tom-select-custom">
                       <select
@@ -913,20 +929,21 @@ export const AddTeam = () => {
                         onChange={handleOptionChange}
                         value={formData.selectedOption}
                       >
-                        <option>Qualquer</option>
-                        <option>Desenvolvimento de produtos</option>
-                        <option>Marketing e publicidade</option>
-                        <option>Serviço ao cliente</option>
-                        <option>Aprendizagem e desenvolvimento</option>
-                        <option>Investigação e desenvolvimento</option>
-                        <option>Finanças e orçamento</option>
-                        <option>Parcerias e colaborações</option>
-                        <option>Outros</option>
+                        <option value="Qualquer">Qualquer</option>
+                        <option value="Desenvolvimento de produtos">Desenvolvimento de produtos</option>
+                        <option value="Marketing e publicidade">Marketing e publicidade</option>
+                        <option value="Serviço ao cliente">Serviço ao cliente</option>
+                        <option value="Aprendizagem e desenvolvimento">Aprendizagem e desenvolvimento</option>
+                        <option value="Investigação e desenvolvimento">Investigação e desenvolvimento</option>
+                        <option value="Finanças e orçamento">Finanças e orçamento</option>
+                        <option value="Parcerias e colaborações">Parcerias e colaborações</option>
+                        <option value="Outros">Outros</option>
                       </select>
+                      {formErrors.selectedOption && <div className="invalid-feedback">{formErrors.selectedOption}</div>}
                     </div>
                   </div>
-
                 </div>
+
                 {formData.selectedOption === 'Outros' && (
                   <div className="js-add-field row mb-4">
                     <div className="col-sm-3 mb-2 mb-sm-0">
@@ -935,7 +952,6 @@ export const AddTeam = () => {
                         <div className="flex-grow-1">Outro objetivo</div>
                       </div>
                     </div>
-
                     <div className="col-sm-9">
                       <input
                         type="text"
@@ -951,10 +967,8 @@ export const AddTeam = () => {
                       {formErrors.customDiscipline && <div className="invalid-feedback">{formErrors.customDiscipline}</div>}
                     </div>
                   </div>
-
                 )}
               </div>
-
 
               <div className="modal-footer gap-3">
                 <button type="button" id="discardFormt" className="btn btn-white" data-bs-dismiss="modal">
@@ -969,14 +983,19 @@ export const AddTeam = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const AddComment = ({ activityId }) => {
   const [content, setContent] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (content.trim() === '') {
+      setErrorMessage('Preencher o campo de comentários.');
+      return;
+    }
     try {
       await addComment(activityId, content);
       location.reload();
@@ -988,7 +1007,7 @@ export const AddComment = ({ activityId }) => {
   return (
     <div className="card-body">
       <form onSubmit={handleFormSubmit}>
-        <div className="modal-body">
+        <div className="card">
           <div className="row">
             <div className="col">
               <div className='quill-custom rounded'>
@@ -1002,14 +1021,69 @@ export const AddComment = ({ activityId }) => {
               </div>
             </div>
           </div>
-          <div className=" mt-3">
-            <button type="submit" className="btn btn-primary">Enviar</button>
-          </div>
         </div>
+        {errorMessage && <div className="text-danger">{errorMessage}</div>}
+        <button type="submit" className="btn btn-primary btn-xs ms-2 mt-2">Save</button>
       </form>
     </div>
   );
 };
+
+export const Pagination = ({ dataPerPage, totalDatas, currentPage, paginate }) => {
+  const pageNumbers = [];
+  const totalPages = Math.ceil(totalDatas / dataPerPage);
+  const pagesToShow = 3;
+  
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+  const getPageGroup = () => {
+    if (totalPages <= pagesToShow) {
+      return pageNumbers;
+    }
+    
+    let startPage = currentPage - Math.floor(pagesToShow / 2);
+    let endPage = currentPage + Math.floor(pagesToShow / 2);
+
+    if (startPage <= 0) {
+      startPage = 1;
+      endPage = pagesToShow;
+    } else if (endPage > totalPages) {
+      startPage = totalPages - pagesToShow + 1;
+      endPage = totalPages;
+    }
+
+    return pageNumbers.slice(startPage - 1, endPage);
+  };
+
+  const currentPages = getPageGroup();
+
+  return (
+    <nav aria-label="Page navigation" className="mt-4">
+      <ul className="pagination justify-content-center">
+        {currentPages[0] > 1 && (
+          <li className='page-item'>
+            <button onClick={() => paginate(currentPages[0] - 1)} className='page-link'>i--</button>
+          </li>
+        )}
+        {currentPages.map((number) => (
+          <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+            <button onClick={() => paginate(number)} className='page-link'>
+              {number}
+            </button>
+          </li>
+        ))}
+        {currentPages[currentPages.length - 1] < totalPages && (
+          <li className='page-item'>
+            <button onClick={() => paginate(currentPages[currentPages.length - 1] + 1)} className='page-link'>i++</button>
+          </li>
+        )}
+      </ul>
+    </nav>
+  );
+};
+
 
 
 

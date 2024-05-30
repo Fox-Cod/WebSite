@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { activity, resources } from "../../http/deviceAPI";
+import { useTranslation } from 'react-i18next';
 
 export default function Form() {
   const [data, setData] = useState([]);
   const [files, setFiles] = useState([]);
+
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,35 +43,33 @@ export default function Form() {
 
   return (
     <div className="container mt-4">
-      <header id="header" className="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column">
-        <div className="container">
+      <header id="header" className="navbar navbar-expand-lg navbar-spacer-y-0 flex-lg-column">
           <nav className="js-mega-menu flex-grow-1">
             <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
               <ul className="nav nav-tabs align-items-center">
                 <li className='nav-item'>
                   <Link className="nav-link active" to="/form" data-placement="left">
-                    <i className="bi bi-house dropdown-item-icon"></i> Inicio
+                    <i className="bi bi-house dropdown-item-icon"></i> {t('home')}
                   </Link>
                 </li>
                 <li className='nav-item'>
                   <Link className="nav-link" to="/activity" data-placement="left">
-                    <i className="bi bi-activity dropdown-item-icon"></i> Atividades
+                    <i className="bi bi-activity dropdown-item-icon"></i> {t('activity')}
                   </Link>
                 </li>
                 <li className='nav-item'>
                   <Link className="nav-link" to="/resources" data-placement="left">
-                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> Recursos
+                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> {t('resources')}
                   </Link>
                 </li>
                 <li className='nav-item'>
                   <Link className="nav-link" to="/tools" data-placement="left">
-                    <i className="bi bi-tools dropdown-item-icon"></i> Ferramentas
+                    <i className="bi bi-tools dropdown-item-icon"></i> {t('tool')}
                   </Link>
                 </li>
               </ul>
             </div>
           </nav>
-        </div>
       </header>
       <main className="card card-body">
         {data.slice(0, 3).map((d, i) => (
@@ -99,7 +100,7 @@ export default function Form() {
                   <span className="badge bg-warning">{d.years.year}</span>
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
-                  <Link to={`/view-activity/${d.idActivity}`} className="link">Mais</Link>
+                  <Link to={`/view-activity/${d.idActivity}`} className="link">{t('more')}</Link>
                 </div>
               </div>
             </div>

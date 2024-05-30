@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { tokenValidation, resetPassword } from '../../http/deviceAPI';
+import { useTranslation } from 'react-i18next';
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
@@ -8,6 +9,8 @@ export default function ResetPasswordPage() {
   const [formErrors, setFormErrors] = useState({});
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const { t, i18n } = useTranslation();
 
   const token = new URLSearchParams(window.location.search).get("token");
 
@@ -20,10 +23,10 @@ export default function ResetPasswordPage() {
         }
       } catch (error) {
         setError(
-          <>
-            Erro ao verificar a validade do token <br />
-            Tente atualizar o sítio ou seguir novamente a ligação enviada para o gmail.
-          </>
+          <p className="text-center">
+            <span className="text-danger">{t('text_info_reset_password_1')} </span><br />
+            {t('text_info_reset_password_2')}
+          </p>
         );
       }
     };
@@ -62,27 +65,27 @@ export default function ResetPasswordPage() {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="text-center mb-5">
-                  <h1 className="display-5">Alterar password</h1>
+                  <h1 className="display-5">{t('change_your_password')}</h1>
                 </div>
                 <div className="mb-4">
-                  <label className="form-label w-100" htmlFor="password-novo">Nova senha</label>
+                  <label className="form-label w-100" htmlFor="password-novo">{t('new_password')}</label>
                   <input
                     type="password"
                     className={`form-control ${formErrors.password ? "is-invalid" : ""}`}
                     id="password-novo"
-                    placeholder="Nova senha"
+                    placeholder={t('password')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   <span className="invalid-feedback">{formErrors.password}</span>
                 </div>
                 <div className="mb-4">
-                  <label className="form-label w-100" htmlFor="password-novo-con">Confirmar nova senha</label>
+                  <label className="form-label w-100" htmlFor="password-novo-con">{t('confirm_password')}</label>
                   <input
                     type="password"
                     className={`form-control ${formErrors.confPassword ? "is-invalid" : ""}`}
                     id="password-novo-con"
-                    placeholder="Confirmar a nova senha"
+                    placeholder={t('confirm_password')}
                     value={confPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
@@ -90,7 +93,7 @@ export default function ResetPasswordPage() {
                 </div>
                 {error}
                 <div className="d-grid">
-                  <button type="submit" className="btn btn-primary btn-lg">Confirmar</button>
+                  <button type="submit" className="btn btn-primary btn-lg">{t('confirm')}</button>
                 </div>
               </form>
             </div>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AddTeam } from '../component/Other';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { profile, searchTeam } from '../../http/deviceAPI';
 import { Context } from '../../context';
+import { useTranslation } from 'react-i18next';
 
 export default function TeamList() {
   const auth = useContext(Context);
@@ -11,6 +11,8 @@ export default function TeamList() {
   const [userProfile, setUserProfile] = useState('');
   const [userTeams, setUserTeams] = useState([]);
   const [searchTeams, setSearchTeams] = useState([]);
+
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,10 +104,10 @@ export default function TeamList() {
 
                 <ul className="nav nav-tabs align-items-center">
                   <li className="nav-item">
-                    <Link className="nav-link" to="/user-profile">Perfil</Link>
+                    <Link className="nav-link" to="/user-profile">{t('profile')}</Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link active" to="/team-list">Equipa</Link>
+                    <Link className="nav-link active" to="/team-list">{t('teams')}</Link>
                   </li>
 
                   <li className="nav-item ms-auto">
@@ -117,18 +119,10 @@ export default function TeamList() {
                         </button>
 
                         <div className="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="profileDropdown">
-                          <span className="dropdown-header">FAQ</span>
-
-                          <Link className="dropdown-item" to="/faq">
-                            <i className="bi-info-circle dropdown-item-icon"></i> Mais informações
-                          </Link>
-
-                          <div className="dropdown-divider"></div>
-
-                          <span className="dropdown-header">Feedback</span>
+                          <span className="dropdown-header">{t('feedback')}</span>
 
                           <Link className="dropdown-item" to="/#contact-section">
-                            <i className="bi-flag dropdown-item-icon"></i>Contacte-nos
+                            <i className="bi-flag dropdown-item-icon"></i>{t('contact_us')}
                           </Link>
                         </div>
                       </div>
@@ -137,10 +131,10 @@ export default function TeamList() {
                 </ul>
               </div>
 
-              <div className="my-4 p-3 bg-body rounded shadow-sm">
+              <div className="my-4 p-3 card rounded shadow-sm">
                 <div className="row align-items-center">
                   <div className="col">
-                    <h3 className="mb-0">{data.length > 0 ? `${data.length} Equipa(s)` : 'Ainda não tem uma equipa'}</h3>
+                    <h3 className="mb-0">{data.length > 0 ? `${data.length} - ${t('teams')}` : `${t('no_user_team_data')}`}</h3>
                   </div>
 
                   <div className="col-auto">
@@ -176,8 +170,8 @@ export default function TeamList() {
                   </div>
 
                   <div class="flex-grow-1 ms-3">
-                    <h3 class="alert-heading mb-1">Sem equipa!</h3>
-                    <p class="mb-0">Ainda não pertence a uma equipa. Clique no ícone <i className="bi-search"></i> para encontrar a sua equipa.</p>
+                    <h3 class="alert-heading mb-1">{t('text_no_team_data_1')}</h3>
+                    <p class="mb-0">{t('text_no_team_data_2')} <i className="bi-search"></i></p>
                   </div>
                 </div>
               </div>
@@ -204,7 +198,7 @@ export default function TeamList() {
                               <div className="list-group-item">
                                 <div className="row align-items-center">
                                   <div className="col">
-                                    <span className="card-subtitle">Indústria:</span>
+                                    <span className="card-subtitle">{t('industry')}</span>
                                   </div>
                                   <div className="col-auto">
                                     <a className="badge bg-soft-primary text-primary p-2" href="#">{team.teams.areasWork}</a>
@@ -214,9 +208,9 @@ export default function TeamList() {
 
                               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 {team.teams.privacy === 1 ? (
-                                  <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                  <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>{t('public')} <i class="bi bi-globe2"></i></div>
                                 ) : (
-                                  <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div>
+                                  <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>{t('private')} <i class="bi bi-lock"></i></div>
                                 )}
                               </div>
                             </div>
@@ -241,9 +235,9 @@ export default function TeamList() {
                             <div className="dropdown">
                               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 {team.teams.privacy === 1 ? (
-                                  <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                  <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>{t('public')} <i class="bi bi-globe2"></i></div>
                                 ) : (
-                                  <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div>
+                                  <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>{t('private')} <i class="bi bi-lock"></i></div>
                                 )}
                               </div>
                             </div>
@@ -259,7 +253,7 @@ export default function TeamList() {
                 </div>
 
                 <div className="tab-pane fade" id="search" role="tabpanel" aria-labelledby="grid-tab">
-                  <h5>Recomendado </h5>
+                  <h5>{t('recommended')} </h5>
                   <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
                     {randomTeams.map(teams => (
                       <div className="col mb-3 mb-lg-5" key={teams.idTeam}>
@@ -279,7 +273,7 @@ export default function TeamList() {
                               <div className="list-group-item">
                                 <div className="row align-items-center">
                                   <div className="col">
-                                    <span className="card-subtitle">Indústria:</span>
+                                    <span className="card-subtitle">{t('industry')}</span>
                                   </div>
                                   <div className="col-auto">
                                     <a className="badge bg-soft-primary text-primary p-2" href="#">{teams.areasWork}</a>
@@ -288,12 +282,12 @@ export default function TeamList() {
                               </div>
                               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 {teams.privacy === 1 ? (
-                                  <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>Publico <i class="bi bi-globe2"></i></div>
+                                  <div className='form-text badge bg-soft-primary text-success rounded-pill me-1'>{t('public')} <i class="bi bi-globe2"></i></div>
                                 ) : (
-                                  <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>Privado <i class="bi bi-lock"></i></div>
+                                  <div className='form-text badge bg-soft-primary text-danger rounded-pill me-1'>{t('private')} <i class="bi bi-lock"></i></div>
                                 )}
                                 {userTeams.includes(teams.idTeam) && (
-                                  <div className='form-text badge bg-soft-primary text-body rounded-pill me-1'>Já na equipa</div>
+                                  <div className='form-text badge bg-soft-primary text-body rounded-pill me-1'>{t('user_is_already_on_the_team')}</div>
                                 )}
                               </div>
                             </div>

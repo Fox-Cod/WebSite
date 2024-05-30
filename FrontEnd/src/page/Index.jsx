@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
+import { useTranslation } from 'react-i18next';
 
 
 export default function Index() {
@@ -11,6 +12,8 @@ export default function Index() {
         email: '',
         message: ''
     });
+
+    const { t, i18n } = useTranslation();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -47,10 +50,10 @@ export default function Index() {
                             <div className="text-overlay mt-10">
                                 <h2 className="text-white mb-4 lead display-3">TeamTeach</h2>
                                 <p className="lead display-5 text-white">
-                                    Mergulhe num mundo de conhecimentos no nosso sítio Web, que inclui materiais educativos para melhorar a sua experiência em vários domínios
+                                    {t('text_info_home_1')}
                                 </p>
                                 <Link to="/form" className="btn btn-primary btn-lg rounded-pill">
-                                    Continuar
+                                    {t('continue')}
                                 </Link>
 
                             </div>
@@ -70,7 +73,7 @@ export default function Index() {
                         <div className="col-lg-12">
                             <div className="text-center section-title mx-auto">
                                 <small className="pb-2 text-muted"> ?</small>
-                                <h1 className="mb-0 display-4">Serviços</h1>
+                                <h1 className="mb-0 display-4">{t('text_info_home_2')}</h1>
                             </div>
                         </div>
                     </div>
@@ -81,8 +84,8 @@ export default function Index() {
                                     <img src="assets/svg/icons/board-analysis.svg" alt="" className="img-fluid" />
                                 </div>
                                 <div className="services-desc">
-                                    <h2>Planeamento e análise</h2>
-                                    <p className="text-muted">Aprenda algo novo e útil. Publique os seus planos ou apresentações para partilhar a sua experiência com outros utilizadores.</p>
+                                    <h2>{t('text_info_home_3')}</h2>
+                                    <p className="text-muted">{t('text_info_home_4')}</p>
                                 </div>
                             </div>
                         </div>
@@ -94,8 +97,8 @@ export default function Index() {
                                 </div>
 
                                 <div className="services-desc">
-                                    <h2>Conceção e visualização</h2>
-                                    <p className="text-muted">Consulte a lista de ferramentas para o seu trabalho, onde serão fornecidas ligações para essas ferramentas e as respectivas descrições.</p>
+                                    <h2>{t('text_info_home_5')}</h2>
+                                    <p className="text-muted">{t('text_info_home_6')}</p>
                                 </div>
                             </div>
                         </div>
@@ -107,8 +110,8 @@ export default function Index() {
                                 </div>
 
                                 <div className="services-desc">
-                                    <h2>Comunicação e cooperação</h2>
-                                    <p className="text-muted">Crie a sua própria equipa privada para partilhar tópicos e ideias interessantes com outros membros.</p>
+                                    <h2>{t('text_info_home_7')}</h2>
+                                    <p className="text-muted">{t('text_info_home_8')}</p>
                                 </div>
                             </div>
                         </div>
@@ -122,8 +125,8 @@ export default function Index() {
                                 </div>
 
                                 <div className="services-desc">
-                                    <h2>Criatividade e inspiração</h2>
-                                    <p className="text-muted">No nosso sítio, pode partilhar conteúdos interessantes que podem inspirar os outros a agir ou a superarem-se a si próprios.</p>
+                                    <h2>{t('text_info_home_9')}</h2>
+                                    <p className="text-muted">{t('text_info_home_10')}</p>
                                 </div>
                             </div>
                         </div>
@@ -135,8 +138,8 @@ export default function Index() {
                                 </div>
 
                                 <div className="services-desc">
-                                    <h2>Feedback</h2>
-                                    <p className="text-muted">Obter apoio amigável da nossa equipa a qualquer momento, porque estamos aqui para nos ajudarmos mutuamente a superar desafios, atingir objectivos e partilhar a alegria dos sucessos.</p>
+                                    <h2>{t('feedback')}</h2>
+                                    <p className="text-muted">{t('text_info_home_11')}.</p>
                                 </div>
                             </div>
                         </div>
@@ -148,8 +151,8 @@ export default function Index() {
                                 </div>
 
                                 <div className="services-desc">
-                                    <h2>Apoio amigável</h2>
-                                    <p className="text-muted">Os amigos com interesses e objectivos comuns podem ser a chave para uma cooperação bem sucedida e para a partilha de experiências.</p>
+                                    <h2>{t('text_info_home_12')}</h2>
+                                    <p className="text-muted">{t('text_info_home_13')}</p>
                                 </div>
                             </div>
                         </div>
@@ -164,16 +167,16 @@ export default function Index() {
                         <div className="col-lg-12">
                             <div className="text-center section-title mx-auto">
                                 <small className="pb-2 text-muted">?</small>
-                                <h3 className="mb-0 display-4">Contactar-nos</h3>
+                                <h3 className="mb-0 display-4">{t('contact_us')}</h3>
                             </div>
                         </div>
                     </div>
                     <div className="row mt-5 vertical-content">
                         <div className="col-lg-5">
                             <div className="contact-detail">
-                                <p className="pt-4 text-muted pb-3">Estamos sempre abertos à comunicação e prontos para o ajudar com quaisquer questões que possa ter. Não hesite em contactar-nos com as suas sugestões, comentários, preocupações ou dúvidas. A sua opinião é importante para nós e esforçamo-nos por garantir a sua satisfação com o nosso sítio Web.
+                                <p className="pt-4 text-muted pb-3">{t('text_info_home_14')}
                                     <br /><br />
-                                    Preencha o formulário abaixo ou contacte-nos através dos dados de contacto fornecidos e tentaremos responder-lhe o mais rapidamente possível..</p>
+                                    {t('text_info_home_15')}</p>
                                 <div className="contact-icon float-left mr-2">
                                     <i className="pe-7s-call"></i>
                                 </div>
@@ -196,28 +199,28 @@ export default function Index() {
                                     <div className="row">
                                         <div className="col-lg-6">
                                             <div className="form-group">
-                                                <label htmlFor="name">Nome</label>
-                                                <input name="name" id="name" type="text" className="form-control" placeholder="O seu nome..." value={formData.name} onChange={handleChange} />
+                                                <label htmlFor="name">{t('name')}</label>
+                                                <input name="name" id="name" type="text" className="form-control" placeholder="Mark" value={formData.name} onChange={handleChange} />
                                             </div>
                                         </div>
                                         <div className="col-lg-6">
                                             <div className="form-group">
-                                                <label htmlFor="email">E-mail</label>
-                                                <input name="email" id="email" type="email" className="form-control" placeholder="O seu e-mail..." value={formData.email} onChange={handleChange} />
+                                                <label htmlFor="email">{t('email')}</label>
+                                                <input name="email" id="email" type="email" className="form-control" placeholder="Mark2093@example.com" value={formData.email} onChange={handleChange} />
                                             </div>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-lg-12">
                                             <div className="form-group">
-                                                <label htmlFor="message">Mensagem</label>
-                                                <textarea name="message" id="message" rows="4" className="form-control" placeholder="A sua mensagem..." value={formData.message} onChange={handleChange} ></textarea>
+                                                <label htmlFor="message">{t('message')}</label>
+                                                <textarea name="message" id="message" rows="4" className="form-control" placeholder="Hi, i have a question..." value={formData.message} onChange={handleChange} ></textarea>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-lg-12 mt-3">
-                                            <input type="submit" id="submit" name="send" className="btn btn-primary" value="Enviar mensagem" />
+                                            <input type="submit" id="submit" name="send" className="btn btn-primary" value={t('confirm')} />
                                             <div className='text-success' id="simple-msg">{statusTrue}</div>
                                         </div>
                                     </div>

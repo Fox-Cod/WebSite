@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { profile } from '../http/deviceAPI';
 import { Context } from '../context';
+import { useTranslation } from 'react-i18next';
 
 
 export default function UserProfile() {
@@ -10,6 +11,8 @@ export default function UserProfile() {
   const [dataActivtiy, setDataActvitiy] = useState([]);
   const [dataResources, setDataResources] = useState([]);
   const [teams, setTeams] = useState([]);
+
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,10 +98,10 @@ export default function UserProfile() {
 
                 <ul className="nav nav-tabs align-items-center">
                   <li className="nav-item">
-                    <Link className="nav-link active" to="/user-profile">Perfil</Link>
+                    <Link className="nav-link active" to="/user-profile">{t('profile')}</Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/team-list">Equipa</Link>
+                    <Link className="nav-link" to="/team-list">{t('teams')}</Link>
                   </li>
 
                   <li className="nav-item ms-auto">
@@ -109,18 +112,10 @@ export default function UserProfile() {
                         </button>
 
                         <div className="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="profileDropdown">
-                          <span className="dropdown-header">FAQ</span>
-
-                          <Link className="dropdown-item" to="/faq">
-                            <i className="bi-info-circle dropdown-item-icon"></i> Mais informações
-                          </Link>
-
-                          <div className="dropdown-divider"></div>
-
-                          <span className="dropdown-header">Feedback</span>
+                          <span className="dropdown-header">{t('feedback')}</span>
 
                           <Link className="dropdown-item" to="/#contact-section">
-                            <i className="bi-flag dropdown-item-icon"></i>Contacte-nos
+                            <i className="bi-flag dropdown-item-icon"></i>{t('contact_us')}
                           </Link>
                         </div>
                       </div>
@@ -142,20 +137,20 @@ export default function UserProfile() {
                        "stickyOffsetTop": 20
                      }'>
                     <div className="card-header">
-                      <h4 className="card-header-title">Profile</h4>
+                      <h4 className="card-header-title">{t('profile')}</h4>
                     </div>
 
                     <div className="card-body overflow-auto" >
                       <ul className="list-unstyled list-py-2 text-dark mb-0">
-                        <li className="pb-0"><span className="card-subtitle">Sobre</span></li>
+                        <li className="pb-0"><span className="card-subtitle">{t('about')}</span></li>
                         <li><i className="bi-person dropdown-item-icon"></i> {userProfile.name}</li>
                         <li><i className="bi-geo-alt me-1 dropdown-item-icon"></i> {userProfile.nameSchool}</li>
                         <li><i className="bi-building me-1 dropdown-item-icon"></i> {userProfile.nameGroup}</li>
 
 
-                        <li className="pt-4 pb-0"><span className="card-subtitle">Contacts</span></li>
+                        <li className="pt-4 pb-0"><span className="card-subtitle">{t('contacts')}</span></li>
                         <li><i className="bi-at dropdown-item-icon"></i> {userProfile.email}</li>
-                        <li className="pt-4 pb-0" ><span className="card-subtitle">Equipa</span></li>
+                        <li className="pt-4 pb-0" ><span className="card-subtitle">{t('teams')}</span></li>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                           {teams.map(team => (
                             <Link key={team.idTeam} to={`/team/${team.idTeam}`} style={{ marginBottom: '10px' }}>
@@ -172,9 +167,9 @@ export default function UserProfile() {
                   <div className="d-grid gap-3 gap-lg-5">
                     <div className="card">
                       <div className="card-header card-header-content-between">
-                        <h4 className="card-header-title">A sua atividade</h4>
+                        <h4 className="card-header-title">{t('your_activity')}</h4>
 
-                        <div className="dropdown">
+                        {/* <div className="dropdown">
                           <button type="button" className="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="contentActivityStreamDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <i className="bi-three-dots-vertical"></i>
                           </button>
@@ -194,7 +189,7 @@ export default function UserProfile() {
                               <i className="bi-chat-left-dots dropdown-item-icon"></i> Relatório
                             </a>
                           </div>
-                        </div>
+                        </div> */}
                       </div>
 
                       <div className="card-body card-body-height" style={{ height: '30rem' }}>
@@ -220,7 +215,7 @@ export default function UserProfile() {
                         ) : (
                           <div className="text-center">
                             <img className='mb-5' src="./assets/svg/illustrations/oc-looking-for-answers.svg" alt="Img NoData" style={{ height: '20rem' }} />
-                            <h5>Não tens nada.</h5><Link className='link' to="/activity"> Queres acrescentar alguma coisa? </Link>
+                            <h5>{t('no_user_activity_data_1')}.</h5><Link className='link' to="/activity"> {t('no_user_activity_data_2')} </Link>
                           </div>
                         )}
                         {dataResources.map((d, i) => (

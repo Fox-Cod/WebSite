@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { sendEmail } from '../../http/deviceAPI';
+import { useTranslation } from 'react-i18next';
 
 export default function PasswordResetEmail() {
   const [statusTrue, setStatusTrue] = useState(null);
   const [formErrors, setFormErrors] = useState({});
   const [email, setEmail] = useState('');
+
+  const { t, i18n } = useTranslation();
 
   const validateForm = () => {
     const errors = {};
@@ -49,14 +52,14 @@ export default function PasswordResetEmail() {
                 <form onSubmit={handleSubmit}>
                   <div className="text-center">
                     <div className="mb-5">
-                      <h1 className="display-5">Esqueceu-se da sua Senha?</h1>
-                      <p>Introduza o endereço de correio eletrónico que utilizou para se registar e enviar-lhe-emos instruções sobre como redefinir a sua palavra-passe.</p>
+                      <h1 className="display-5">{t('text_info_send_email_1')}</h1>
+                      <p>{t('text_info_send_email_2')}</p>
                     </div>
                   </div>
 
                   {/* Email */}
                   <div className="mb-4">
-                    <label className="form-label" htmlFor="signinSrEmail"> Email </label>
+                    <label className="form-label" htmlFor="signinSrEmail"> {t('email')} </label>
                     <input
                       type="email"
                       className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
@@ -71,7 +74,7 @@ export default function PasswordResetEmail() {
                   </div>
 
                   <div className="d-grid">
-                    <button type="submit" className="btn btn-primary btn-lg">Confirmar</button>
+                    <button type="submit" className="btn btn-primary btn-lg">{t('confirm')}</button>
                   </div>
                 </form>
               </div>

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../../http/userAPI';
 import { profile } from '../../http/deviceAPI';
 import { Context } from '../../context';
+import { useTranslation } from 'react-i18next';
 
 export default function Nav() {
   const auth = useContext(Context);
@@ -84,6 +85,12 @@ export default function Nav() {
     document.getElementById('theme-link').href = newTheme === 'dark' ? 'css/theme-dark.min.css' : 'css/theme.min.css';
   };
 
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
   return (
     <div style={{ paddingTop: isHomePage() ? '0' : '60px' }}>
       <nav id="navbar" className={`navbar navbar-expand-lg navbar-end fixed-top navbar-dark ${isHomePage() ? 'navbar-transparent' : ''}`} style={{ transition: "background-color 0.3s ease" }}>
@@ -99,27 +106,25 @@ export default function Nav() {
               <ul className="navbar-nav ms-auto">
                 <li className="nav-item">
                   <Link to="/" className="nav-link text-body">
-                    Inicio
+                    {t('home')}
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link to="/form" className="nav-link text-body">
-                    Forms
+                    {t('forum')}
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link to="/tools" className="nav-link text-body">
-                    Ferramentos
+                    {t('tool')}
                   </Link>
                 </li>
                 <li className="nav-item">
                   <div className="dropdown">
                     <Link to="#" className="navbar-dropdown-account-wrapper">
-                      <div className="avatar avatar-sm avatar-circle">
-                        <span className="avatar-img avatar-soft">
-                          <span className="avatar-img" onClick={toggleDarkMode}>
-                            {darkMode ? <i className="avatar-initials bi bi-sun-fill"></i> : <i className="avatar-initials bi bi-moon-fill"></i>}
-                          </span>
+                      <div className="avatar-sm avatar-circle">
+                        <span className="avatar-img" onClick={toggleDarkMode}>
+                          {darkMode ? <i className="avatar-initials bi bi-sun-fill"></i> : <i className="avatar-initials bi bi-moon-fill"></i>}
                         </span>
                       </div>
                     </Link>
@@ -153,20 +158,19 @@ export default function Nav() {
                           </div>
                         </div>
 
-                        <Link to="/user-profile" className="dropdown-item"><i className="bi bi-person"></i> Profil </Link>
-                        <Link to="/user-profile-settings" className="dropdown-item"><i className="bi bi-gear"></i> Configurações </Link>
-                        <Link to="/team-list" className="dropdown-item"><i className="bi bi-people"></i> Equipa </Link>
+                        <Link to="/user-profile" className="dropdown-item"><i className="bi bi-person"></i> {t('profile')} </Link>
+                        <Link to="/user-profile-settings" className="dropdown-item"><i className="bi bi-gear"></i> {t('settings')} </Link>
+                        <Link to="/team-list" className="dropdown-item"><i className="bi bi-people"></i> {t('teams')} </Link>
 
-                        {userProfile.role === "administrador" && <Link to="/admin-page" className="dropdown-item text-primary"><i className="bi bi-person-gear"></i> AdminPage </Link>}
-
-                        <div className="dropdown-divider"></div>
-
-                        <Link to="/faq" className="dropdown-item"><i className="bi bi-question-circle"></i> Apoio </Link>
+                        {userProfile.role === "administrador" && <Link to="/admin-page" className="dropdown-item text-primary"><i className="bi bi-person-gear"></i> {t('admin_page')} </Link>}
 
                         <div className="dropdown-divider"></div>
 
+                        <Link to="/faq" className="dropdown-item"><i className="bi bi-question-circle"></i> {t('about')} </Link>
+
+                        <div className="dropdown-divider"></div>
                         <button className="dropdown-item" onClick={handleLogout}>
-                          <span className="text-danger"><i className="bi bi-box-arrow-right"></i> Sign out</span>
+                          <span className="text-danger"><i className="bi bi-box-arrow-right"></i> {t('sign_out')}</span>
                         </button>
                       </div>
                     </div>

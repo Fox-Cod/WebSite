@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { profileView } from '../../http/deviceAPI';
+import { useTranslation } from 'react-i18next';
 
 export default function UserProfile() {
   const [profile, setProfile] = useState(null);
@@ -10,6 +11,8 @@ export default function UserProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { userId } = useParams();
+
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     async function fetchData() {
@@ -101,7 +104,7 @@ export default function UserProfile() {
                        "stickyOffsetTop": 20
                      }'>
                     <div className="card-header">
-                      <h4 className="card-header-title">Equipa(s)</h4>
+                      <h4 className="card-header-title">{t('teams')}</h4>
                       <ul className="list-unstyled list-py-3 mt-3">
                         <li className="pb-0">
                           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -111,7 +114,6 @@ export default function UserProfile() {
                               </Link>
                             ))}
                           </div>
-                          <Link to="#"><i className="bi-people dropdown-item-icon"></i>#123</Link>
                         </li>
                       </ul>
                     </div>
@@ -126,7 +128,7 @@ export default function UserProfile() {
                   <div className="d-grid gap-3 gap-lg-5">
                     <div className="card">
                       <div className="card-header card-header-content-between">
-                        <h4 className="card-header-title">Atividade(s)</h4>
+                        <h4 className="card-header-title">{t('activity')}</h4>
                       </div>
                       <div className="card-body card-body-height" style={{ height: '30rem' }}>
                         <ul className="step step-icon-xs mb-0">

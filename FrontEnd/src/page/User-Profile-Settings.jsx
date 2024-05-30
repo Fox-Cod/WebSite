@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Context } from '../context';
 import { profile, getAllData, profileUpdate } from '../http/deviceAPI';
+import { useTranslation } from 'react-i18next';
 
 export default function UserProfileSettings() {
   const auth = useContext(Context);
@@ -13,10 +14,9 @@ export default function UserProfileSettings() {
     group: '',
     school: '',
   });
-  const [newEmail, setNewEmail] = useState({
-    email: '',
-  });
+  const [newEmail, setNewEmail] = useState({email: ''});
   const [error, setError] = useState(null);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -120,21 +120,6 @@ export default function UserProfileSettings() {
               <div className="row">
                 <div className="col-lg-3">
                   <div className="navbar-expand-lg navbar-vertical mb-3 mb-lg-5">
-                    <div className="d-grid">
-                      <button type="button" className="navbar-toggler btn btn-white mb-3" data-bs-toggle="collapse" data-bs-target="#navbarVerticalNavMenu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarVerticalNavMenu">
-                        <span className="d-flex justify-content-between align-items-center">
-                          <span className="text-dark">Menu</span>
-
-                          <span className="navbar-toggler-default">
-                            <i className="bi-list"></i>
-                          </span>
-
-                          <span className="navbar-toggler-toggled">
-                            <i className="bi-x"></i>
-                          </span>
-                        </span>
-                      </button>
-                    </div>
                     <div id="navbarVerticalNavMenu" className="collapse navbar-collapse">
                       <ul id="navbarSettings" className="js-sticky-block js-scrollspy card card-navbar-nav nav nav-tabs nav-lg nav-vertical" data-hs-sticky-block-options='{
                             "parentSelector": "#navbarVerticalNavMenu",
@@ -146,22 +131,22 @@ export default function UserProfileSettings() {
                           }'>
                         <li className="nav-item">
                           <a className="nav-link active" href="#content">
-                            <i className="bi-person nav-icon"></i> Informações de base
+                            <i className="bi-person nav-icon"></i> {t('user_info')}
                           </a>
                         </li>
                         <li className="nav-item">
                           <a className="nav-link" href="#emailSection">
-                            <i className="bi-at nav-icon"></i> Email
+                            <i className="bi-at nav-icon"></i> {t('email')}
                           </a>
                         </li>
                         <li className="nav-item">
                           <a className="nav-link" href="#passwordSection">
-                            <i className="bi-key nav-icon"></i> Palavra-passe
+                            <i className="bi-key nav-icon"></i> {t('password')}
                           </a>
                         </li>
                         <li className="nav-item">
                           <a className="nav-link" href="#deleteAccountSection">
-                            <i className="bi-trash nav-icon"></i> Eliminar a conta
+                            <i className="bi-trash nav-icon"></i> {t('delete_account')}
                           </a>
                         </li>
                       </ul>
@@ -172,7 +157,7 @@ export default function UserProfileSettings() {
                   <div className="d-grid gap-3 gap-lg-5">
                     <div className="card">
                       <div className="card-header">
-                        <h2 className="card-title">Informações de base</h2>
+                        <h2 className="card-title">{t('user_info')}</h2>
                       </div>
 
                       <div className="card-body">
@@ -180,7 +165,7 @@ export default function UserProfileSettings() {
 
                           
                           <div className="row mb-4">
-                            <label className="col-sm-3 col-form-label form-label">Nome completo</label>
+                            <label className="col-sm-3 col-form-label form-label">{t('name')}</label>
                             <div className="col-sm-9">
                               <div className="input-group input-group-sm-vertical">
                                 <input type="text" className="form-control" id="name" placeholder={userProfile.name} value={formData.nome} onChange={handleChange} />
@@ -189,7 +174,7 @@ export default function UserProfileSettings() {
                           </div>
 
                           <div className="row mb-4">
-                            <label className="col-sm-3 col-form-label form-label">Grupo</label>
+                            <label className="col-sm-3 col-form-label form-label">{t('group')}</label>
                             <div className="col-sm-9">
                               <select
                                 className="form-control"
@@ -198,7 +183,7 @@ export default function UserProfileSettings() {
                                 onChange={handleChange}
                               >
                                 <option disabled>{userProfile.nameGroup}</option>
-                                <option disabled>-- Seleccione um grupo abaixo --</option>
+                                <option disabled>-- {t('text_info_settings_1')} --</option>
                                 {schoolAndGroupData.groups && schoolAndGroupData.groups.map((id, index) => (
                                     <option key={index} value={id.idGroup}>
                                       {id.codGroup} {id.nameGroup}
@@ -209,7 +194,7 @@ export default function UserProfileSettings() {
                           </div>
 
                           <div className="row mb-4">
-                            <label className="col-sm-3 col-form-label form-label">Escola</label>
+                            <label className="col-sm-3 col-form-label form-label">{t('school')}</label>
                             <div className="col-sm-9">
                               <select
                                 className="form-control"
@@ -218,7 +203,7 @@ export default function UserProfileSettings() {
                                 onChange={handleChange}
                               >
                                 <option disabled>{userProfile.nameSchool}</option>
-                                <option disabled>-- Seleccione um grupo abaixo --</option>
+                                <option disabled>-- {t('text_info_settings_1')} --</option>
                                   {schoolAndGroupData.schools && schoolAndGroupData.schools.map((id, index) => (
                                     <option key={index} value={id.idSchool}>
                                       {id.nameSchool}
@@ -229,7 +214,7 @@ export default function UserProfileSettings() {
                           </div>
 
                           <div className="d-flex justify-content-end">
-                            <button type="submit" className="btn btn-primary">Guardar alterações</button>
+                            <button type="submit" className="btn btn-primary">{t('save_changes')}</button>
                           </div>
                         </form>
                       </div>
@@ -237,13 +222,13 @@ export default function UserProfileSettings() {
 
                     <div id="emailSection" className="card">
                       <div className="card-header">
-                        <h4 className="card-title">Email</h4>
+                        <h4 className="card-title">{t('email')}</h4>
                       </div>
                       <div className="card-body">
-                        <p>O seu endereço de correio eletrónico atual é <span className="fw-semibold">{userProfile.email}</span></p>
+                        <p>{t('text_info_settings_2')} <span className="fw-semibold">{userProfile.email}</span></p>
                         <form onSubmit={handleSubmitEmail}>
                           <div className="row mb-4">
-                            <label className="col-sm-3 col-form-label form-label">Novo endereço de Email</label>
+                            <label className="col-sm-3 col-form-label form-label">{t('new_email')}</label>
                             <div className="col-sm-9">
                               <input
                                 type="email"
@@ -256,9 +241,7 @@ export default function UserProfileSettings() {
                             </div>
                           </div>
                           <div className="d-flex justify-content-end">
-                            <button type="submit" className="btn btn-primary">
-                              Guardar alterações
-                            </button>
+                            <button type="submit" className="btn btn-primary">{t('save_changes')}</button>
                           </div>
                         </form>
                       </div>
@@ -266,16 +249,16 @@ export default function UserProfileSettings() {
 
                     <div id="passwordSection" className="card">
                       <div className="card-header">
-                        <h4 className="card-title">Alterar a sua palavra-passe</h4>
+                        <h4 className="card-title">{t('text_info_settings_3')}</h4>
                       </div>
 
                       <div className="card-body">
                         <div className="mb-4">
-                          <p className="fs-5"><strong>A segurança da sua palavra-passe é de extrema importância.</strong> Certifique-se de não compartilhar sua palavra-passe com ninguém e escolha uma senha robusta que seja difícil de adivinhar. Utilizar uma combinação de caracteres maiúsculos e minúsculos, números e símbolos pode fortalecer significativamente a segurança da sua conta.</p>
+                          <p className="fs-5">{t('text_info_settings_4')}</p>
                         </div>
 
                         <div className="d-flex justify-content-end">
-                          <Link className="btn btn-primary" to="/password-reset-email">Alterar senha</Link>
+                          <Link className="btn btn-primary" to="/password-reset-email">{t('change_your_password')}</Link>
                         </div>
                       </div>
 
@@ -283,22 +266,22 @@ export default function UserProfileSettings() {
 
                     <div id="deleteAccountSection" className="card">
                       <div className="card-header">
-                        <h4 className="card-title">Eliminar a sua conta</h4>
+                        <h4 className="card-title">{t('delete_account')}</h4>
                       </div>
                       <div className="card-body">
-                        <p className="card-text">Quando elimina a sua conta, perde o acesso aos serviços da conta Front e nós eliminamos permanentemente os seus dados pessoais. Pode cancelar a eliminação durante 14 dias.</p>
+                        <p className="card-text">{t('text_info_settings_5')}</p>
 
                         <div className="mb-4">
                           <div className="form-check">
                             <input className="form-check-input" type="checkbox" value="" id="deleteAccountCheckbox" />
                             <label className="form-check-label">
-                              Confirmar que pretendo apagar a minha conta.
+                              {t('text_info_settings_6')}
                             </label>
                           </div>
                         </div>
 
                         <div className="d-flex justify-content-end gap-3">
-                          <button type="submit" className="btn btn-danger">Eliminar</button>
+                          <button type="submit" className="btn btn-danger">{t('delete')}</button>
                         </div>
                       </div>
                     </div>

@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { EditTextActivity, AddComment } from './Other';
 import { activityView, getComment } from '../../http/deviceAPI';
 import { Context } from '../../context';
+import { useTranslation } from 'react-i18next';
 
 export default function ViewActivity() {
   const { user } = useContext(Context);
@@ -13,6 +14,8 @@ export default function ViewActivity() {
   const [currentPage, setCurrentPage] = useState(1);
   const commentsPerPage = 10;
   const { activityId } = useParams();
+
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     async function fetchData() {
@@ -74,39 +77,35 @@ export default function ViewActivity() {
 
   return (
     <div className="container mt-4">
-      <header id="header" className="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column">
-        <div className="container">
+      <header id="header" className="navbar navbar-expand-lg navbar-spacer-y-0 flex-lg-column">
           <nav className="js-mega-menu flex-grow-1">
             <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
-
               <ul className="nav nav-tabs align-items-center">
                 <li className='nav-item'>
-                  <Link className="nav-link " to="/form" data-placement="left">
-                    <i className="bi bi-house dropdown-item-icon"></i> Inicio
+                  <Link className="nav-link" to="/form" data-placement="left">
+                    <i className="bi bi-house dropdown-item-icon"></i> {t('home')}
                   </Link>
                 </li>
                 <li className='nav-item'>
                   <Link className="nav-link active" to="/activity" data-placement="left">
-                    <i className="bi bi-activity dropdown-item-icon"></i> Atividades
+                    <i className="bi bi-activity dropdown-item-icon"></i> {t('activity')}
                   </Link>
                 </li>
                 <li className='nav-item'>
-                  <Link className="nav-link " to="/resources" data-placement="left">
-                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> Recursos
+                  <Link className="nav-link" to="/resources" data-placement="left">
+                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> {t('resources')}
                   </Link>
                 </li>
                 <li className='nav-item'>
-                  <Link className="nav-link " to="/tools" data-placement="left">
-                    <i className="bi bi-tools dropdown-item-icon"></i>Ferramentos
+                  <Link className="nav-link" to="/tools" data-placement="left">
+                    <i className="bi bi-tools dropdown-item-icon"></i> {t('tool')}
                   </Link>
                 </li>
               </ul>
-
             </div>
           </nav>
-        </div>
       </header>
-      <main className="mt-4 card card-body">
+      <main className="card card-body">
         <div className="my-3 p-3 rounded shadow-sm card" style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
           <div className="d-flex align-items-start">
             <div className="avatar avatar-sm avatar-circle me-2">
@@ -133,8 +132,8 @@ export default function ViewActivity() {
                 <span className="badge bg-warning">{dataActivity.years.year}</span>
               </div>
               <div className="d-flex justify-content-end align-items-center">
-                <Link to={dataActivity.planning} className="btn btn-outline-primary btn-sm me-2">Planificacao</Link>
-                <Link to={dataActivity.presentation} className="btn btn-outline-secondary btn-sm">Presentacao</Link>
+                <Link to={dataActivity.planning} className="btn btn-outline-primary btn-sm me-2">{t('planning')}</Link>
+                <Link to={dataActivity.presentation} className="btn btn-outline-secondary btn-sm">{t('presentation')}</Link>
               </div>
 
             </div>
@@ -142,29 +141,23 @@ export default function ViewActivity() {
         </div>
 
         {user._isAuth ? (
-          <div className='mt-2'>
-            <div className="accordion" id="accordionExample">
-              <div className="accordion-item">
-                <div className="accordion-item">
-                  <div className="accordion-header collapsed" id="headingOne">
-                    <a className="accordion-button" role="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                      Add Commentarios
-                    </a>
-                  </div>
-                  <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                    <div className="accordion-body">
-                      <AddComment activityId={dataActivity.idActivity} />
-                    </div>
-                  </div>
+            <div className="card" id="accordionExample">
+              <div className="accordion-header collapsed" id="headingOne">
+                <a className="accordion-button link" role="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                   <i class="bi bi-chat"> {t('add_comments')} </i>
+                </a>
+              </div>
+              <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div className="accordion-body">
+                  <AddComment activityId={dataActivity.idActivity} />
                 </div>
               </div>
             </div>
-          </div>
         ) : (null)}
 
         <div className="card card-body mt-3">
           {dataComment.length > 0 ? (
-            <ul className="step step-icon-xs mb-0">
+            <ul className="step">
               {currentComments.map((d, i) => (
                 <li className="step-item" key={i}>
                   <div className="step-content-wrapper">
@@ -174,13 +167,10 @@ export default function ViewActivity() {
                       </span>
                     </div>
                     <div className="step-content">
-                      <Link className="d-flex align-items-center me-2" to={`/view-profile/${d.users.idTeacher}`}>
-                        <h5 className="mb-1">{d.users.name}</h5>
-                      </Link>
+                    <small className="text-muted"><Link className='link' to={`/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link> | {formatDate(d.created_at)}</small>
                       <p className="fs-5">
                         <div dangerouslySetInnerHTML={{ __html: d.content }} />
                       </p>
-                      <span className="text-muted small text-uppercase">{formatDate(d.created_at)}</span>
                     </div>
                   </div>
                 </li>
@@ -189,14 +179,14 @@ export default function ViewActivity() {
           ) : (
             user._isAuth ? (
               <div className="text-center">
-                <h5>Não tens nada.</h5>
+                <h5>{t('text_info_no_comments_1')}</h5>
                 <Link className='link' data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                  Queres acrescentar alguma coisa?
+                {t('text_info_no_comments_2')}
                 </Link>
               </div>
             ) : (
               <div className="accordion-body">
-                Para adicionar comentários, <Link className='link' to='/sign-in'>inicie sessão</Link>.
+                {t('text_info_no_comments_3')}, <Link className='link' to='/sign-in'>{t('log_in')}</Link>.
               </div>
             )
           )}

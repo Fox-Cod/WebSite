@@ -23,12 +23,12 @@ async function login(req, res) {
   try {
     const teacher = await Users.findOne({ where: { email: email } });
     if (!teacher) {
-      return res.status(401).json({ Message: 'Credenciais incorrectas' });
+      return res.status(401).json({ Message: 'Correio eletrónico errado ou não existe' });
     }
 
     const passwordMatch = await bcrypt.compare(password, teacher.password);
     if (!passwordMatch) {
-      return res.status(401).json({ Message: 'Credenciais incorrectas' });
+      return res.status(401).json({ Message: 'Palavra-passe errada' });
     }
 
     console.log(teacher.idTeacher);
@@ -46,7 +46,6 @@ async function login(req, res) {
 async function registration(req, res) {
   try {
     const { name, email, password, group, school } = req.body;
-    console.log(name, email, password, group, school)
     const hashedPassword = await bcrypt.hashSync(password, 10);
     const newProfessor = await Users.create({ name: name, email: email, password: hashedPassword, idGroup: group, idSchool: school, role: 'utilizador', });
     res.status(201).json({ success: true, professor: newProfessor });

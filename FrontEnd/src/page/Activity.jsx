@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { AddAndSearchActivity } from './component/Other';
+import { AddAndSearchActivity, Pagination } from './component/Other';
 import { Link } from "react-router-dom";
 import { activity } from '../http/deviceAPI';
+import { useTranslation } from 'react-i18next';
 
 export default function Activity() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(8);
+
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,11 +27,11 @@ export default function Activity() {
     const date = new Date(rawDate);
     const currentDate = new Date();
     if (date.toDateString() === currentDate.toDateString()) {
-        return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+      return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
     } else {
-        return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
+      return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
     }
-};
+  };
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -38,37 +41,33 @@ export default function Activity() {
 
   return (
     <div className="container mt-4">
-      <header id="header" className="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column">
-        <div className="container">
+      <header id="header" className="navbar navbar-expand-lg navbar-spacer-y-0 flex-lg-column">
           <nav className="js-mega-menu flex-grow-1">
             <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
-
               <ul className="nav nav-tabs align-items-center">
                 <li className='nav-item'>
-                  <Link className="nav-link " to="/form" data-placement="left">
-                    <i className="bi bi-house dropdown-item-icon"></i> Inicio
+                  <Link className="nav-link" to="/form" data-placement="left">
+                    <i className="bi bi-house dropdown-item-icon"></i> {t('home')}
                   </Link>
                 </li>
                 <li className='nav-item'>
                   <Link className="nav-link active" to="/activity" data-placement="left">
-                    <i className="bi bi-activity dropdown-item-icon"></i> Atividades
+                    <i className="bi bi-activity dropdown-item-icon"></i> {t('activity')}
                   </Link>
                 </li>
                 <li className='nav-item'>
-                  <Link className="nav-link " to="/resources" data-placement="left">
-                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> Recursos
+                  <Link className="nav-link" to="/resources" data-placement="left">
+                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> {t('resources')}
                   </Link>
                 </li>
                 <li className='nav-item'>
-                  <Link className="nav-link " to="/tools" data-placement="left">
-                    <i className="bi bi-tools dropdown-item-icon"></i>Ferramentos
+                  <Link className="nav-link" to="/tools" data-placement="left">
+                    <i className="bi bi-tools dropdown-item-icon"></i> {t('tool')}
                   </Link>
                 </li>
               </ul>
-
             </div>
           </nav>
-        </div>
       </header>
 
       <main className='card card-body'>
@@ -100,25 +99,20 @@ export default function Activity() {
                   <span className="badge bg-success me-1">{d.educations.nameEducation}</span>
                   <span className="badge bg-warning">{d.years.year}</span>
                 </div>
-                  <div className="d-flex align-items-center">
-                    <Link to={`/view-activity/${d.idActivity}`} className="link">Mais</Link>
-                  </div>
+                <div className="d-flex align-items-center">
+                  <Link to={`/view-activity/${d.idActivity}`} className="link">{t('more')}</Link>
+                </div>
               </div>
             </div>
           </div>
         ))}
 
-        <nav aria-label="Page navigation" className="mt-4">
-          <ul className="pagination justify-content-center">
-            {[...Array(Math.ceil(data.length / postsPerPage)).keys()].map((number) => (
-              <li key={number + 1} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
-                <button onClick={() => paginate(number + 1)} className="page-link">
-                  {number + 1}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <Pagination
+          dataPerPage={postsPerPage}
+          totalDatas={data.length}
+          currentPage={currentPage}
+          paginate={paginate}
+        />
       </main>
     </div>
   );

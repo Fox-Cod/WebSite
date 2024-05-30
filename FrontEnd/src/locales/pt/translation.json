@@ -1,0 +1,159 @@
+{
+  "language_code": "pt",
+  "change_language": "Mudar Idioma",
+  "home": "Início",
+  "forum": "Fórum",
+  "activity": "Atividades",
+  "resources": "Recursos",
+  "tool": "Ferramentas",
+  "contacts": "Contatos",
+
+  "profile": "Perfil",
+  "settings": "Configurações",
+  "teams": "Equipes",
+  "admin_page": "Painel de Administração",
+  "about": "Sobre",
+  "sign_out": "Sair",
+
+  "text_info_home_1": "Mergulhe em um mundo de conhecimento em nosso site, que inclui materiais educacionais para melhorar sua experiência em várias áreas",
+
+  "text_info_home_2": "Serviços",
+  "text_info_home_3": "Planejamento e análise",
+  "text_info_home_4": "Aprenda algo novo e útil. Publique seus planos ou apresentações para compartilhar sua experiência com outros usuários.",
+  
+  "text_info_home_5": "Design e visualização",
+  "text_info_home_6": "Veja a lista de ferramentas para o seu trabalho, onde serão fornecidos links para essas ferramentas e suas descrições.",
+
+  "text_info_home_7": "Comunicação e cooperação",
+  "text_info_home_8": "Crie sua própria equipe privada para compartilhar tópicos e ideias interessantes com outros membros.",
+
+  "text_info_home_9": "Criatividade e inspiração",
+  "text_info_home_10": "Em nosso site, você pode compartilhar conteúdo interessante que pode inspirar outros a agir ou a se aperfeiçoar.",
+
+  "text_info_home_11": "Receba suporte amigável de nossa equipe a qualquer momento, pois estamos aqui para ajudar uns aos outros a superar desafios, alcançar objetivos e compartilhar a alegria do sucesso.",
+
+  "text_info_home_12": "Suporte amigável",
+  "text_info_home_13": "Amigos com interesses e objetivos comuns podem ser a chave para uma cooperação bem-sucedida e experiências compartilhadas.",
+
+  "text_info_home_14": "Estamos sempre abertos à comunicação e prontos para ajudá-lo com quaisquer perguntas que possa ter. Não hesite em nos contatar com suas sugestões, comentários, preocupações ou perguntas. Sua opinião é importante para nós e nos esforçamos para garantir sua satisfação com nosso site.",
+  "text_info_home_15": "Preencha o formulário abaixo ou entre em contato conosco usando os dados de contato fornecidos e tentaremos responder o mais rápido possível.",
+  "message": "Mensagem",
+
+  "text_info_about_1": "Sobre Nós",
+  "text_info_about_2": "Bem-vindo ao nosso site!",
+  "text_info_about_3": "Nosso site é uma plataforma de comunicação entre professores, onde eles podem compartilhar suas atividades, arquivos, planos e apresentações para facilitar seu trabalho e melhorar o processo de ensino.",
+
+  "text_info_about_4": "Recursos",
+  "text_info_about_5": "Compartilhamento de arquivos: os professores podem fazer upload e compartilhar documentos, apresentações e outros materiais.",
+  "text_info_about_6": "Planejamento colaborativo: possibilidade de criar e editar planos de aula e currículos juntos.",
+  "text_info_about_7": "Criação de equipes: qualquer usuário pode criar sua equipe para realizar projetos, desenvolver planos ou outras atividades com seus colegas.",
+  "text_info_about_8": "Integração com ferramentas: acesso a ferramentas de terceiros que facilitam o trabalho dos professores, com links diretos para elas.",
+
+  "text_info_about_9": "Nossa Missão",
+  "text_info_about_10": "Nossa missão é fornecer aos professores uma plataforma conveniente e eficaz para colaboração, compartilhamento de conhecimento e recursos. Nos esforçamos para tornar o processo de ensino o mais produtivo e interessante possível para professores e alunos.",
+
+  "text_info_about_11": "Por que nos escolher?",
+  "text_info_about_12": "Entendemos a importância da colaboração e do compartilhamento de conhecimento no ambiente educacional. Nossa plataforma oferece:",
+
+  "text_info_about_13": "Facilidade de uso: interface intuitiva que não requer treinamento prolongado.",
+  "text_info_about_14": "Segurança de dados: garantimos um alto nível de proteção para seus dados e materiais.",
+  "text_info_about_15": "Comunidade: uma comunidade ativa de professores pronta para ajudar e compartilhar seu conhecimento e experiência.",
+
+  "text_info_about_16": "Contate-nos",
+  "text_info_about_17": "Se você tiver alguma dúvida ou sugestão, não hesite em nos contatar:",
+  "text_info_about_18": "Email: support@yourwebsite.com",
+  "phone": "Telefone",
+
+  "your_activity": "Sua atividade",
+  "feedback": "Feedback",
+  "contact_us": "Contate-nos",
+  "no_user_activity_data_1": "Você ainda não teve nenhuma atividade",
+  "no_user_activity_data_2": "Algo que gostaria de adicionar?",
+
+  "user_info": "Informações do Usuário",
+  "delete_account": "Excluir conta",
+  "text_info_settings_1": "Selecione um grupo abaixo",
+  "save_changes": "Salvar alterações",
+  "text_info_settings_2": "Seu endereço de email atual é",
+  "new_email": "Novo endereço de email",
+  "text_info_settings_3": "Mude sua senha",
+  "text_info_settings_4": "A segurança da sua senha é extremamente importante. Certifique-se de não compartilhar sua senha com ninguém e escolha uma senha forte que seja difícil de adivinhar. Usar uma combinação de caracteres maiúsculos e minúsculos, números e símbolos pode fortalecer significativamente a segurança da sua conta.",
+  "text_info_settings_5": "Quando você exclui sua conta, você perde acesso aos serviços da conta Front e nós excluímos permanentemente seus dados pessoais. Você pode cancelar a exclusão por 14 dias.",
+  "text_info_settings_6": "Confirme que desejo excluir minha conta.",
+
+  "no_user_team_data": "Você ainda não tem nenhuma equipe.",
+  "text_no_team_data_1": "Não há equipe!",
+  "text_no_team_data_2": "Você ainda não pertence a nenhuma equipe. Clique no ícone para encontrar sua equipe.",
+  "recommended": "Recomendado",
+  "industry": "Indústria:",
+  "public": "Público",
+  "private": "Privado",
+  "user_is_already_on_the_team": "Já está na equipe",
+
+  "team_status": "Status da Equipe: ",
+  "members": "Membros",
+  "join_the_team": "Junte-se à equipe",
+  "no_team_activity_data": "Nenhuma atividade de equipe ainda.",
+  "text_info_setiting_team_1": "Adicione novos membros ao seu projeto",
+  "text_info_setiting_team_2": "Pessoas convidadas serão adicionadas à sua equipe",
+  "text_info_setiting_team_3": "Membros do",
+  "text_info_setiting_team_4": "Alterando os papéis dos membros da equipe",
+  "guest": "Convidado",
+  "administrator": "Administrador",
+  "invite": "Convidar",
+
+  "add_comments": "Adicionar comentários",
+  "planning": "Planejamento",
+  "presentation": "Apresentação",
+  "text_info_no_comments_1": "Ainda não há comentários aqui.",
+  "text_info_no_comments_2": "Algo que gostaria de adicionar?",
+  "text_info_no_comments_3": "Para adicionar comentários",
+  "date_published": "Data de publicação: ",
+  "file_size": "Tamanho do arquivo: ",
+
+  "application": "Aplicativo",
+  "type": "Tipo",
+  "state": "Estado",
+  "about_the_App": "Sobre o App",
+  "link": "Link",
+  
+  "registration": "Registro",
+  "log_in": "Entrar",
+
+  "sign_in": "Entrar",
+  "email": "Email",
+  "password": "Senha",
+  "password_reset": "Esqueceu sua senha?",
+  "text_info_sign_in_1": "Ainda não tem uma conta?",
+  "text_info_sign_in_2": "Inscreva-se aqui",
+
+  "sign_up": "Inscrever-se",
+  "name": "Nome",
+  "confirm_password": "Confirmar senha",
+  "group": "Grupo",
+  "school": "Escola",
+  "text_info_sign_up_1": "Já tem uma conta?",
+  "text_info_sign_up_2": "Clique aqui",
+  
+  "text_info_send_email_1": "Esqueceu sua senha?",
+  "text_info_send_email_2": "Digite o endereço de email que você usou para se registrar e enviaremos instruções sobre como redefinir sua senha.",
+
+  "text_info_reset_password_1": "Erro ao verificar a validade do token!",
+  "text_info_reset_password_2": "Tente atualizar o site ou seguir o link enviado novamente",
+  "change_your_password": "Mude sua senha",
+  "new_password": "Nova senha",
+
+  "text_info_admin_page_1": "Base de usuários",
+  "text_info_admin_page_2": "Criar uma conta aleatória",
+  "text_info_admin_page_3": "Resto do banco de dados",
+  "text_info_admin_page_4": "Deve-se tomar cuidado ao criar um novo registro para evitar sobrescrever ou corromper dados. Também é importante levar em conta a estrutura da tabela e o formato dos dados para garantir que o novo registro se encaixe corretamente no contexto existente.",
+
+  "save": "Salvar",
+  "cancel": "Cancelar",
+  "download": "Baixar",
+  "edit": "Editar",
+  "delete": "Excluir",
+  "more": "Mais",
+  "confirm": "Confirmar",
+  "continue": "Continuar"
+}

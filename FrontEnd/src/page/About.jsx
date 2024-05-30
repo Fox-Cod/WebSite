@@ -1,44 +1,46 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function About() {
+    const { t, i18n } = useTranslation();
     return (
         <div className="container mt-5">
             <div className="row">
                 <div className="col-md-12">
                     <div className="p-3">
-                        <h1 className="display-4 text-center mb-4">Sobre Nós</h1>
-                        <p className="lead text-center">Bem-vindo ao nosso site!</p>
+                        <h1 className="display-4 text-center mb-4">{t('text_info_about_1')}</h1>
+                        <p className="lead text-center">{t('text_info_about_2')}</p>
                         <p>
-                            Nosso site é uma plataforma para comunicação entre professores, onde eles podem compartilhar suas atividades, arquivos, planos e apresentações para facilitar seu trabalho e melhorar o processo de ensino.
+                        {t('text_info_about_3')}
                         </p>
-                        <h3 className="mt-4">Funcionalidades</h3>
+                        <h3 className="mt-4">{t('text_info_about_4')}</h3>
                         <ul>
-                            <li>Compartilhamento de arquivos: os professores podem carregar e compartilhar documentos, apresentações e outros materiais.</li>
-                            <li>Planejamento colaborativo: possibilidade de criar e editar planos de aula e currículos em conjunto.</li>
-                            <li>Criação de equipes: qualquer usuário pode criar sua equipe para realizar projetos, desenvolver planos ou outras atividades com seus colegas.</li>
-                            <li>Integração com ferramentas: acesso a ferramentas de terceiros que facilitam o trabalho dos professores, com links diretos para elas.</li>
+                            <li>{t('text_info_about_5')}</li>
+                            <li>{t('text_info_about_6')}</li>
+                            <li>{t('text_info_about_7')}</li>
+                            <li>{t('text_info_about_8')}</li>
                         </ul>
-                        <h3 className="mt-4">Nossa Missão</h3>
+                        <h3 className="mt-4">{t('text_info_about_9')}</h3>
                         <p>
-                            Nossa missão é fornecer aos professores uma plataforma conveniente e eficaz para colaboração, compartilhamento de conhecimentos e recursos. Buscamos tornar o processo de ensino o mais produtivo e interessante possível, tanto para os professores quanto para os alunos.
+                        {t('text_info_about_10')}
                         </p>
-                        <h3 className="mt-4">Por Que Escolher-nos?</h3>
+                        <h3 className="mt-4">{t('text_info_about_11')}</h3>
                         <p>
-                            Entendemos a importância da colaboração e do compartilhamento de conhecimentos no ambiente educacional. Nossa plataforma oferece:
+                        {t('text_info_about_12')}
                         </p>
                         <ul>
-                            <li>Facilidade de uso: interface intuitiva que não requer longos treinamentos.</li>
-                            <li>Segurança de dados: garantimos um alto nível de proteção dos seus dados e materiais.</li>
-                            <li>Suporte comunitário: uma comunidade ativa de professores pronta para ajudar e compartilhar seus conhecimentos e experiências.</li>
+                            <li>{t('text_info_about_13')}</li>
+                            <li>{t('text_info_about_14')}</li>
+                            <li>{t('text_info_about_15')}</li>
                         </ul>
-                        <h3 className="mt-4">Contatos</h3>
+                        <h3 className="mt-4">{t('text_info_about_16')}</h3>
                         <p>
-                            Se você tiver dúvidas ou sugestões, não hesite em nos contatar:
+                        {t('text_info_about_17')}
                         </p>
                         <ul>
-                            <li>Email: support@yourwebsite.com</li>
-                            <li>Telefone: +1 (800) 123-4567</li>
-                            <li>Endereço: Rua Exemplo, 123, Cidade Exemplar</li>
+                            <li>{t('email')}: support@yourwebsite.com</li>
+                            <li>{t('phone')}: +1 (800) 123-4567</li>
+                            {/* <li>{t('text_info_about_1')}: Rua Exemplo, 123, Cidade Exemplar</li> */}
                         </ul>
                     </div>
                 </div>

@@ -7,7 +7,13 @@ const mimeTypes = require('mime-types');
 
 async function getAllData(req, res) {
   try {
-    const [schools, groups, years, educations, subjects] = await Promise.all([
+    const [teachers, schools, groups, years, educations, subjects] = await Promise.all([
+      Users.findAll({
+        include: [
+          { model: Schools, as: 'schools', attributes: ['idSchool', 'nameSchool'] },
+          { model: Groups, as: 'groups', attributes: ['idGroup', 'codGroup', 'nameGroup'] }
+        ]
+      }),
       Schools.findAll({ attributes: ['idSchool', 'nameSchool'] }),
       Groups.findAll({ attributes: ['idGroup', 'codGroup', 'nameGroup'] }),
       Years.findAll(),
@@ -16,6 +22,7 @@ async function getAllData(req, res) {
     ]);
 
     res.json({
+        teachers,
         schools,
         groups,
         years,

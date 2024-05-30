@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { registration } from '../../http/userAPI';
 import { getAllData } from '../../http/deviceAPI';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function SignUp() {
   const [schoolAndGroupData, setSchoolAndGroupData] = useState({});
@@ -15,6 +15,7 @@ export default function SignUp() {
     group: '',
     school: '',
   });
+  const { t, i18n } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -50,7 +51,7 @@ export default function SignUp() {
   };
 
   const handleChange = (e) => {
-    const {id, value } = e.target;
+    const { id, value } = e.target;
 
     const selectedGroup = schoolAndGroupData.groups.find((groups) => groups.nameGroup === value);
 
@@ -75,7 +76,7 @@ export default function SignUp() {
       console.log('Form validation failed.');
     }
   };
-  
+
   const fetchViewData = async () => {
     try {
       const response = await getAllData()
@@ -105,7 +106,7 @@ export default function SignUp() {
 
                   <div className="mb-4">
                     <label htmlFor="name" className="form-label">
-                      Nome
+                      {t('name')}
                     </label>
                     <input
                       type="text"
@@ -120,7 +121,7 @@ export default function SignUp() {
 
                   <div className="mb-4">
                     <label htmlFor="email" className="form-label">
-                      Seu e-mail
+                      {t('email')}
                     </label>
                     <input
                       type="text"
@@ -135,7 +136,7 @@ export default function SignUp() {
 
                   <div className="mb-4">
                     <label htmlFor="password" className="form-label">
-                      <span>Password</span>
+                      <span>{t('password')}</span>
                     </label>
                     <input
                       type="password"
@@ -150,7 +151,7 @@ export default function SignUp() {
 
                   <div className="mb-4">
                     <label htmlFor="confirmPassword" className="form-label">
-                      <span>Confirmar a password</span>
+                      <span>{t('confirm_password')}</span>
                     </label>
                     <input
                       type="password"
@@ -165,7 +166,7 @@ export default function SignUp() {
 
                   <div className="mb-4">
                     <label className="form-label">
-                      Grupo
+                      {t('group')}
                     </label>
                     <select
                       className={`form-control ${formErrors.group ? 'is-invalid' : ''}`}
@@ -185,7 +186,7 @@ export default function SignUp() {
 
                   <div className="mb-4">
                     <label className="form-label">
-                      Escola
+                      {t('school')}
                     </label>
                     <select
                       className={`form-control ${formErrors.school ? 'is-invalid' : ''}`}
@@ -203,11 +204,10 @@ export default function SignUp() {
                     <span className="invalid-feedback">{formErrors.school}</span>
                   </div>
 
-                  <p className="text-center">Já tem uma conta? <Link className="link" to="/sign-in">Clique aqui</Link></p>
+                  <p className="text-center">{t('text_info_sign_up_1')} <Link className="link" to="/sign-in">{t('text_info_sign_up_2')}</Link></p>
                   <div className="d-grid">
-                    <button type="submit" className="btn btn-primary btn-lg">Sign in</button>
+                    <button type="submit" className="btn btn-primary btn-lg">{t('sign_in')}</button>
                   </div>
-                  <p className="text-center mt-2">Está a faltar alguma coisa? <Link className="link" to="/">Diga-nos</Link></p>
                 </form>
               </div>
             </div>

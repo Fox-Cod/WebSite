@@ -5,6 +5,7 @@ import "react-quill/dist/quill.snow.css";
 import { AddActivityTeam } from '../component/Other';
 import { team, sendInvite, joinTeam, updateTeamActivityText, deleteActivityTeam, privacy } from '../../http/deviceAPI';
 import { Context } from '../../context';
+import { useTranslation } from 'react-i18next';
 
 export default function Team() {
     const auth = useContext(Context);
@@ -20,6 +21,7 @@ export default function Team() {
     });
 
     const { teamId } = useParams();
+    const { t, i18n } = useTranslation();
     const userId = auth.user._userId;
 
     useEffect(() => {
@@ -51,13 +53,20 @@ export default function Team() {
     const administrators = state.teamMembers ? state.teamMembers.filter(member => member.access === 'Administrador') : [];
 
     const handleInviteButtonClick = async () => {
-        try {
-            await sendInvite(teamId, state.inviteFormData);
-            window.location.reload();
-        } catch (error) {
-            console.error('Error sending invite:', error.message);
+        const { email } = state.inviteFormData;
+        if (!email.trim()) {
+          alert('Por favor, insira um endereço de e-mail válido.');
+          return;
         }
-    };
+      
+        try {
+          await sendInvite(teamId, state.inviteFormData);
+          window.location.reload();
+        } catch (error) {
+          console.error('Erro ao enviar o convite:', error.message);
+        }
+      };
+      
 
     const handleJoinTeamButtonClick = async () => {
         try {
@@ -139,13 +148,13 @@ export default function Team() {
     return (
         <div>
             <main id="content" role="main" className="container mt-4">
-                <div className="content container-fluid my-2 bg-body rounded shadow-sm">
+                <div className="content container-fluid my-2 card rounded shadow-sm">
                     <div className="row align-items-end">
                         <div className="col-sm">
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb breadcrumb-no-gutter pt-3">
                                     <li className="breadcrumb-item">
-                                        <Link to={`/team/${state.teamData.idTeam}`}>Equipa - {state.teamData.idTeam}</Link>
+                                        <Link to={`/${state.teamData.idTeam}`}>{t('teams')} - {state.teamData.idTeam}</Link>
                                     </li>
                                 </ol>
                             </nav>
@@ -153,12 +162,12 @@ export default function Team() {
                             <p>{state.teamData.descriptionTeam}</p>
                             <div className="d-flex justify-content-between align-items-center">
                                 <span className="text-dark pb-3">
-                                    O estado atual da sua equipa:
+                                    {t('team_status')}
                                     <div className={`form-text badge bg-soft-primary text-${state.teamData.privacy === 1 ? 'success' : 'danger'} rounded-pill me-1`}>
                                         {state.teamData.privacy === 1 ? 'Publico' : 'Privado'} <i className={`bi bi-${state.teamData.privacy === 1 ? 'globe2' : 'lock'}`}></i>
                                     </div>
                                 </span>
-                                <span className="card-subtitle pb-3">Indústria: <a className="form-text badge bg-soft-primary text-primary rounded-pill me-1" href="#">{state.teamData.areasWork}</a></span>
+                                <span className="card-subtitle pb-3">{t('industry')} <a className="form-text badge bg-soft-primary text-primary rounded-pill me-1" href="#">{state.teamData.areasWork}</a></span>
                             </div>
                         </div>
                     </div>
@@ -167,17 +176,17 @@ export default function Team() {
                     <div className="col-lg-4">
                         <div className="js-sticky-block card mb-3 mb-lg-5">
                             <div className="card-header d-flex justify-content-between align-items-center">
-                                <h4 className="card-header-title mb-0">Membros</h4>
+                                <h4 className="card-header-title mb-0">{t('members')}</h4>
                                 <div className="col-lg-auto">
                                     <div className="input-group">
                                         {isAdministrator && (
                                             <button type="button" className="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#settingsModal">
-                                                <i className="bi bi-plus"></i>Settings
+                                                <i className="bi bi-plus"></i>{t('settings')}
                                             </button>
                                         )}
                                         {!isCurrentUserInTeam && state.teamData.privacy === 1 && (
                                             <button type="button" className="btn btn-outline-primary btn-sm" onClick={handleJoinTeamButtonClick}>
-                                                Entrar
+                                                {t('join_the_team')}
                                             </button>
                                         )}
                                     </div>
@@ -185,7 +194,6 @@ export default function Team() {
                             </div>
                             <div className="card-body">
                                 <ul className="list-unstyled list-py-2 text-dark mb-0">
-                                    {/* Display administrators first */}
                                     {administrators.map(member => (
                                         <li key={member.users.idTeacher}>
                                             <div className="d-flex align-items-center">
@@ -203,7 +211,6 @@ export default function Team() {
                                             </div>
                                         </li>
                                     ))}
-                                    {/* Display other members */}
                                     {state.teamMembers.filter(member => member.access !== 'Administrador').map(member => (
                                         <li key={member.users.idTeacher}>
                                             <div className="d-flex align-items-center">
@@ -229,7 +236,7 @@ export default function Team() {
                         {isCurrentUserInTeam && <AddActivityTeam />}
                         <div className="card h-30">
                             <div className="card-header">
-                                <h4 className="card-header-title">Atividade</h4>
+                                <h4 className="card-header-title">{t('activity')}</h4>
                             </div>
                             <div className="card-body">
                                 <ul className="step step-icon-xs mb-3">
@@ -254,7 +261,7 @@ export default function Team() {
                                                                     <ReactQuill
                                                                         value={state.editedText}
                                                                         onChange={handleEditorChange}
-                                                                        placeholder="Text..."
+                                                                        placeholder="Text.."
                                                                         modules={{
                                                                             toolbar: {
                                                                                 container: [
@@ -267,8 +274,8 @@ export default function Team() {
                                                                         formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link']}
                                                                     />
                                                                 </div>
-                                                                <button className="btn btn-primary btn-xs ms-2 mt-2" onClick={() => handleSave(activity.idActivityTeam)}>Save</button>
-                                                                <button className="btn btn-ghost-secondary btn-xs ms-2 mt-2" onClick={() => handleCancel(index)}>Cancel</button>
+                                                                <button className="btn btn-primary btn-xs ms-2 mt-2" onClick={() => handleSave(activity.idActivityTeam)}>{t('save')}</button>
+                                                                <button className="btn btn-ghost-secondary btn-xs ms-2 mt-2" onClick={() => handleCancel(index)}>{t('cancel')}</button>
                                                             </>
                                                         ) : (
                                                             <>
@@ -285,7 +292,7 @@ export default function Team() {
                                                                                         <div className="flex-grow-1 text-truncate ms-2">
                                                                                             <span>{activity.fileName}
                                                                                                 <span className="d-block small text-muted">{formatBytes(activity.fileSize)}</span>
-                                                                                                <span><Link to={`http://localhost:8081/api/files/${activity.fileName}`} download> Download</Link></span>
+                                                                                                <span><Link to={`http://localhost:8081/api/files/${activity.fileName}`} download> {t('download')}</Link></span>
                                                                                             </span>
                                                                                         </div>
                                                                                     </div>
@@ -296,8 +303,8 @@ export default function Team() {
                                                                 )}
                                                                 {activity.users.idTeacher === auth.user._userId ? (
                                                                     <div className="d-flex justify-content-end">
-                                                                        <button type="button" className="btn btn-outline-primary btn-xs mt-2" onClick={() => handleEditClick(index, activity)}>Edit</button>
-                                                                        <button type="button" className="btn btn-outline-danger btn-xs ms-2 mt-2" onClick={() => handleDeleteClick(index, activity.idActivityTeam)}>Delete</button>
+                                                                        <button type="button" className="btn btn-outline-primary btn-xs mt-2" onClick={() => handleEditClick(index, activity)}>{t('edit')}</button>
+                                                                        <button type="button" className="btn btn-outline-danger btn-xs ms-2 mt-2" onClick={() => handleDeleteClick(index, activity.idActivityTeam)}>{t('delete')}</button>
                                                                     </div>
                                                                 ) : null}
 
@@ -307,7 +314,7 @@ export default function Team() {
                                                 </div>
                                             </div>
                                         </li>
-                                    )) : <p>No team activity yet.</p>}
+                                    )) : <p>{t('no_team_activity_data')}</p>}
                                 </ul>
                             </div>
                         </div>
@@ -319,31 +326,31 @@ export default function Team() {
                 <div className="modal-dialog modal-lg modal-dialog-centered" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h3 id="settingsModalTitle" className="modal-title">Settings</h3>
+                            <h3 id="settingsModalTitle" className="modal-title">{t('settings')}</h3>
                             <button type="button" className="btn btn-ghost-secondary btn-icon btn-sm" data-bs-dismiss="modal" aria-label="Close">
                                 <i className="bi-x-lg"></i>
                             </button>
                         </div>
                         <div className="modal-body">
-                            <h5>Adicionar novos membros ao seu projeto</h5>
-                            <p>As pessoas convidadas serão adicionadas à sua organização.</p>
+                            <h5>{t('text_info_setiting_team_1')}</h5>
+                            <p>{t('text_info_setiting_team_2')}</p>
                             <div className="mb-4">
                                 <div className="input-group mb-2 mb-sm-0">
-                                    <input className="form-control" type="email" id="email" value={state.inviteFormData.name} onChange={handleInputChange} placeholder="Procurar por e-mails" />
+                                    <input className="form-control" type="email" id="email" value={state.inviteFormData.name} onChange={handleInputChange} placeholder="Search for emails" />
                                     <div className="input-group-append input-group-append-last-sm-down-none">
                                         <div className="tom-select-custom tom-select-custom-end">
                                             <select className="js-select form-select tom-select-custom-form-select-invite-user" id="access" value={state.inviteFormData.access} onChange={handleInputChange} >
-                                                <option value="Convidado">Convidado</option>
-                                                <option value="Administrador">Administrador</option>
+                                                <option value="Convidado">{t('guest')}</option>
+                                                <option value="Administrador">{t('administrator')}</option>
                                             </select>
                                         </div>
-                                        <button className="btn btn-primary d-none d-sm-inline-block" onClick={handleInviteButtonClick}>Convidar</button>
+                                        <button className="btn btn-primary d-none d-sm-inline-block" onClick={handleInviteButtonClick}>{t('invite')}</button>
                                     </div>
                                 </div>
                             </div>
 
-                            <h5>Membros que fazem parte de {state.teamData.nameTeam}</h5>
-                            <p>Este equipa é público e pode ser acedido por qualquer utilizador.</p>
+                            <h5>{t('text_info_setiting_team_3')} {state.teamData.nameTeam}</h5>
+                            <p>{t('text_info_setiting_team_4')}</p>
 
                             <ul className="list-unstyled list-py-2">
                                 {state.teamMembers.map((member, index) => (
@@ -364,12 +371,12 @@ export default function Team() {
                                                         <div className="tom-select-custom tom-select-custom-sm-end">
                                                             <select className="js-select form-select" id="privacyNewProjectLabel" >
                                                                 {member.access === 'Administrador' ? (
-                                                                    <option value="Administrador" selected disabled>Administrador</option>
+                                                                    <option value="Administrador" selected disabled>{t('administrator')}</option>
                                                                 ) : (
                                                                     <>
-                                                                        <option value="Administrador">Administrador</option>
-                                                                        <option value="Convidado" selected>Convidado</option>
-                                                                        <option value="remove">Remover</option>
+                                                                        <option value="Administrador">{t('administrator')}</option>
+                                                                        <option value="Convidado" selected>{t('guest')}</option>
+                                                                        <option value="remove">{t('delete')}</option>
                                                                     </>
                                                                 )}
                                                             </select>
@@ -386,9 +393,9 @@ export default function Team() {
                                 <label className="row form-check form-switch" htmlFor="addTeamPreferencesNewProjectSwitch1">
                                     <span className="col-8 col-sm-9 ms-0">
                                         <i className="bi bi-gear text-primary me-2"></i>
-                                        <span className="text-dark">Sobre o estado da sua equipa:
+                                        <span className="text-dark">{t('team_status')}
                                             <div className={`form-text badge bg-soft-primary text-${state.teamData.privacy === 1 ? 'success' : 'danger'} rounded-pill me-1`}>
-                                                {state.teamData.privacy === 1 ? 'Publico' : 'Privado'} <i className={`bi bi-${state.teamData.privacy === 1 ? 'globe2' : 'lock'}`}></i>
+                                                {state.teamData.privacy === 1 ? `${t('public')}` : `${t('private')}`} <i className={`bi bi-${state.teamData.privacy === 1 ? 'globe2' : 'lock'}`}></i>
                                             </div>
                                         </span>
                                     </span>
@@ -405,8 +412,8 @@ export default function Team() {
                             ) : (null)}
                         </div>
                         <div className="modal-footer d-flex justify-content-end gap-3">
-                            <button type="button" className="btn btn-ghost-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Save</button>
+                            <button type="button" className="btn btn-ghost-secondary" data-bs-dismiss="modal" aria-label="Close">{t('cancel')}</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">{t('save')}</button>
                         </div>
                     </div>
                 </div>

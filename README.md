@@ -31,7 +31,7 @@ Import the table into our database MySQL (the name must be pepp).
 Open 2 terminals, one for BackEnd folder and the other for FrontEnd and write the following
 
 1. Frontend Terminal: npm run dev
-2. Backend terminal: npm start
+2. Backend Terminal: npm start
 
 PS:
 1. Clone the repository.

@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is developed using React.js, JSX, and a variety of additional libraries such as Express, Node.js, Sequelize, as well as cors, multer, cookieparser, and path.
+This project is developed using React.js, and a variety of additional libraries such as Express, Node.js, Sequelize, as well as cors, multer, cookieparser, and path.
 
 This website is a platform where users can publish posts related to education and lessons. Posts may include materials related to lesson plans, presentations, and other useful information. Users can view posts from other users and leave comments.
 
@@ -15,17 +15,30 @@ To facilitate collaboration, there is a "Teams" section where users can create b
 ## Technologies Used
 
 - React.js
-- JSX
 - Express
 - Node.js
 - Sequelize
+- MySQL
 
 ## How to Use
 
+Install Node.js to work with npm.
+
+Export the project to any folder
+
+Import the table into our database MySQL (the name must be pepp). 
+
+Open 2 terminals, one for BackEnd folder and the other for FrontEnd and write the following
+
+1. Frontend Terminal: npm run dev
+2. Backend terminal: npm start
+
+PS:
 1. Clone the repository.
 2. Install dependencies using npm.
-3. Start the server.
-4. Access the website and start using its functionality.
+4. Install the table in the database MySQL (the table should be called pepp).
+5. Start the server.
+6. Access the website and start using its functionality.
 
 ## Contributing to the Project
 

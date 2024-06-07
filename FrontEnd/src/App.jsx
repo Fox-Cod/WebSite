@@ -83,7 +83,7 @@ const App = () => {
 
           <Route path="/resource/view-resource/:resourceId" element={<ViewResources />} />
 
-          <Route path="*" element={<Navigate to="/error404" />} />
+          {/* <Route path="*" element={<Navigate to="/error404" />} /> */}
         </Routes>
       <Footer />
       </Suspense>

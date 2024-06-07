@@ -65,9 +65,15 @@ export const privacy = async (teamId, newPrivacy) => {
 
 // Resources
 export const resources = async () => {
-    const {data} = await $host.get('api/files')
+    const {data} = await $host.get('api/resources')
     return data
 }
+
+export const oneResource = async (resourceId) => {
+    const {data} = await $host.get(`api/resources/${resourceId}`)
+    return data
+}
+
 
 // Tool
 export const tool = async () => {

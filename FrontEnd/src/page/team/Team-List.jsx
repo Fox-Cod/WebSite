@@ -1,31 +1,25 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AddTeam } from '../component/Other';
 import { Link } from 'react-router-dom';
 import { profile, searchTeam } from '../../http/deviceAPI';
-import { Context } from '../../context';
 import { useTranslation } from 'react-i18next';
 
 export default function TeamList() {
-  const auth = useContext(Context);
   const [data, setTeams] = useState([]);
   const [userProfile, setUserProfile] = useState('');
   const [userTeams, setUserTeams] = useState([]);
   const [searchTeams, setSearchTeams] = useState([]);
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (auth.user._isAuth) {
-          const res = await profile();
-          setUserProfile(res.profile),
-            setTeams(res.teams)
-          setUserTeams(res.teams.map(team => team.teams.idTeam));
-          console.log("User is authenticated");
-        } else {
-          console.log("User is not authenticated");
-        }
+        const res = await profile();
+        setUserProfile(res.profile),
+          setTeams(res.teams)
+        setUserTeams(res.teams.map(team => team.teams.idTeam));
+        console.log("User is authenticated");
       } catch (err) {
         console.log(err);
       }
@@ -50,18 +44,17 @@ export default function TeamList() {
     const date = new Date(rawDate);
     const currentDate = new Date();
     if (date.toDateString() === currentDate.toDateString()) {
-        return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+      return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
     } else {
-        return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
+      return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
     }
-};
+  };
 
   const getRandomTeams = (arr, n) => {
     const shuffled = arr.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, n);
   };
 
-  // Выбираем 6 случайных записей
   const randomTeams = getRandomTeams(searchTeams, 12);
   return (
     <div>
@@ -163,19 +156,19 @@ export default function TeamList() {
               </div>
 
               {data.length === 0 ? (
-              <div class="alert alert-soft-dark mb-5 mb-lg-7" role="alert">
-                <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <img class="avatar avatar-xl" src="./assets/svg/illustrations/oc-megaphone.svg" alt="Image Description" data-hs-theme-appearance="default" />
-                  </div>
+                <div class="alert alert-soft-dark mb-5 mb-lg-7" role="alert">
+                  <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                      <img class="avatar avatar-xl" src="./assets/svg/illustrations/oc-megaphone.svg" alt="Image Description" data-hs-theme-appearance="default" />
+                    </div>
 
-                  <div class="flex-grow-1 ms-3">
-                    <h3 class="alert-heading mb-1">{t('text_no_team_data_1')}</h3>
-                    <p class="mb-0">{t('text_no_team_data_2')} <i className="bi-search"></i></p>
+                    <div class="flex-grow-1 ms-3">
+                      <h3 class="alert-heading mb-1">{t('text_no_team_data_1')}</h3>
+                      <p class="mb-0">{t('text_no_team_data_2')} <i className="bi-search"></i></p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              ) : ( null )}
+              ) : (null)}
 
               <div className="tab-content" id="profileTeamsTabContent">
                 <div className="tab-pane fade show active" id="grid" role="tabpanel" aria-labelledby="grid-tab">
@@ -187,7 +180,7 @@ export default function TeamList() {
                             <div className="row align-items-center mb-2">
                               <div className="col-9">
                                 <h4 className="mb-1">
-                                  <Link to={`/${team.teams.idTeam}`}>#{team.teams.nameTeam}</Link>
+                                  <Link to={`/team/${team.teams.idTeam}`}>#{team.teams.nameTeam}</Link>
                                 </h4>
                               </div>
                             </div>
@@ -262,7 +255,7 @@ export default function TeamList() {
                             <div className="row align-items-center mb-2">
                               <div className="col-9">
                                 <h4 className="mb-1">
-                                  <Link to={`/${teams.idTeam}`}>#{teams.nameTeam}</Link>
+                                  <Link to={`/team/${teams.idTeam}`}>#{teams.nameTeam}</Link>
                                 </h4>
                               </div>
                             </div>

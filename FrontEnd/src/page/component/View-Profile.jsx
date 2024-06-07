@@ -137,7 +137,7 @@ export default function UserProfile() {
                               <div className="step-content-wrapper">
                                 <span className="step-icon step-icon-pseudo step-icon-soft-dark"></span>
                                 <div className="step-content">
-                                  <Link className="text-dark" to={`/view-activity/${d.id}`}>{d.title}</Link>
+                                  <Link className="text-dark" to={`/activity/view-activity/${d.idActivity}`}>{d.title}</Link>
                                   <p className="fs-5 mb-1"> {d.description}<br />
                                     <span className="badge bg-soft-primary text-primary rounded-pill"><span className="legend-indicator bg-primary"></span>{d.subjects.nameSubject} </span>
                                     <span className="badge bg-soft-primary text-success rounded-pill"><span className="legend-indicator bg-success"></span>{d.educations.nameEducation} </span>

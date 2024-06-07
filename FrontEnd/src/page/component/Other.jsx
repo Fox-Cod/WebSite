@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useParams } from 'react-router-dom';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { getAllData, activity, editActivity, addActivity, deleteActivity, activityView, resources, uploadResources, addActivityToTeam, createTeam, addComment } from '../../http/deviceAPI';
-import { SearchComponentForActivities, SearchComponentForResources } from './Search';
+import { getAllData, activity, editActivity, addActivity, deleteActivity, activityView, uploadResources, addActivityToTeam, createTeam, addComment } from '../../http/deviceAPI';
 
 export const EditTextActivity = () => {
   const [viewActivityUser, setViewActivityUser] = useState({});
@@ -383,25 +382,16 @@ export const AddAndSearchActivity = () => {
 
   return (
     <div>
-      <div className="card">
-        <div className="card-header card-header-content-md-between">
-          <div className="mb-2 mb-md-0">
-            <SearchComponentForActivities posts={dataActivity} />
-          </div>
-          <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-            <div className="dropdown">
-              <button
-                type="button"
-                className="btn btn-white btn-sm w-100"
-                data-bs-toggle="modal"
-                data-bs-target="#addActivity"
-              >
-                <i className="bi-plus me-1"></i> Novas atividades
-                <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
-              </button>
-            </div>
-          </div>
-        </div>
+      <div className="dropdown">
+        <button
+          type="button"
+          className="btn btn-white btn-sm w-100"
+          data-bs-toggle="modal"
+          data-bs-target="#addActivity"
+        >
+          <i className="bi-plus me-1"></i> Novas atividades
+          <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
+        </button>
       </div>
 
       <div className="modal fade" id="addActivity" tabIndex="-1" role="dialog" aria-hidden="true">
@@ -566,99 +556,74 @@ export const AddAndSearchActivity = () => {
 };
 
 export const AddAndSearchResources = () => {
-  const [dataResources, setDataResources] = useState([]);
   const [file, setFile] = useState(null);
-  const [title, setTitle] = useState('');
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    link: '',
+    type: '',
+  });
   const [errorMessage, setErrorMessage] = useState('');
 
-  const onDrop = useCallback((acceptedFiles) => {
-    setFile(acceptedFiles[0]);
-  }, []);
-
+  const onDrop = useCallback((acceptedFiles) => setFile(acceptedFiles[0]), []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleDeleteFile = () => setFile(null);
 
-  const handleTitleChange = (e) => setTitle(e.target.value);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    if (name === 'type') {
+      setFile(null);
+      setFormData((prevData) => ({ ...prevData, link: '' }));
+    }
+  };
 
   const formatBytes = (bytes) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   };
-
-  const fileContent = file ? (
-    <div className="selected-file">
-      <div className="file-info">
-        <img src="../assets/svg/components/placeholder-img-format.svg" alt="File Icon" className="file-icon" width="58" height="58" />
-        <div className="file-details">
-          <p>{file.name}</p>
-          <p>{formatBytes(file.size)}</p>
-        </div>
-      </div>
-      <button type="button" className="btn btn-danger" onClick={handleDeleteFile}>
-        Eliminar
-      </button>
-    </div>
-  ) : (
-    <p>Arraste e largue alguns ficheiros aqui, ou clique para selecionar ficheiros</p>
-  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file || !title.trim()) {
+    const { title, type, link } = formData;
+
+    if (!title.trim() || (type === 'File' && !file) || (type !== 'File' && !link.trim())) {
       setErrorMessage('Preencha todos os campos obrigatórios.');
       return;
     }
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('title', title);
+    console.log(formData, file);
 
     try {
-      await uploadResources(formData);
-      alert('Ficheiro carregado com sucesso');
+      await uploadResources(formData, file);
+      alert('Recurso carregado com sucesso');
       setFile(null);
-      setTitle('');
+      setFormData({ title: '', description: '', link: '', type: 'Qualquer' });
       setErrorMessage('');
     } catch (error) {
-      console.error('Erro ao carregar o ficheiro: ', error);
-      alert('Error uploading file');
+      console.error('Erro ao carregar o recurso: ', error);
+      alert('Erro ao carregar o recurso');
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await resources();
-        setDataResources(res);
-      } catch (err) {
-        console.error('Erro ao obter recursos:', err);
-      }
-    };
-    fetchData();
-  }, []);
-
   return (
     <div>
-      <div className="card">
-        <div className="card-header card-header-content-md-between">
-          <div className="mb-2 mb-md-0">
-            <SearchComponentForResources posts={dataResources} />
-          </div>
-          <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-            <div className="dropdown">
-              <button type="button" className="btn btn-white btn-sm w-100" data-bs-toggle="modal" data-bs-target="#addActivity">
-                <i className="bi-plus me-1"></i> Novos recursos
-                <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
-              </button>
-            </div>
-          </div>
-        </div>
+      <div className="dropdown">
+        <button
+          type="button"
+          className="btn btn-white btn-sm w-100"
+          data-bs-toggle="modal"
+          data-bs-target="#addResource"
+        >
+          <i className="bi-plus me-1"></i> Novas recursos
+          <span className="badge bg-soft-dark text-dark rounded-circle ms-1"></span>
+        </button>
       </div>
-      <div className="modal fade" id="addActivity" tabIndex="-1" role="dialog" aria-hidden="true">
+
+      <div className="modal fade" id="addResource" tabIndex="-1" role="dialog" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-close">
@@ -667,30 +632,106 @@ export const AddAndSearchResources = () => {
             <form onSubmit={handleSubmit}>
               <div className="modal-body">
                 <label htmlFor="eventTitleLabel" className="visually-hidden form-label">Titulo</label>
-                <textarea
+                <input
                   id="title"
-                  className='form-control form-control-title'
-                  placeholder="Título (Não necessariamente)"
-                  value={title}
-                  onChange={handleTitleChange}
-                ></textarea>
-                <div {...getRootProps()} style={dropzoneStyles}>
-                  <input {...getInputProps()} />
-                  {fileContent}
+                  name="title"
+                  className="form-control form-control-title"
+                  placeholder="Add title"
+                  value={formData.title}
+                  onChange={handleChange}
+                />
+
+                <div className="row mb-4">
+                  <div className="col-sm-3 mb-2 mb-sm-0">
+                    <div className="d-flex align-items-center mt-2">
+                      <i className="bi-text-left nav-icon"></i>
+                      <div className="flex-grow-1">Descrição</div>
+                    </div>
+                  </div>
+                  <div className="col-sm">
+                    <label htmlFor="eventDescriptionLabel" className="visually-hidden form-label">Add description</label>
+                    <textarea
+                      id="description"
+                      name="description"
+                      className="form-control"
+                      placeholder="Add description"
+                      value={formData.description}
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
                 </div>
-                {errorMessage && <div className="alert alert-danger mt-2" role="alert">{errorMessage}</div>}
+
+                <div className="row mb-4">
+                  <div className="col-sm-3 mb-2 mb-sm-0">
+                    <div className="d-flex align-items-center mt-2">
+                      <i className="bi bi-book nav-icon"></i>
+                      <div className="flex-grow-1">Tipo de evento</div>
+                    </div>
+                  </div>
+                  <div className="col-sm">
+                    Tipo
+                    <select
+                      className="js-select form-select"
+                      id="type"
+                      name="type"
+                      value={formData.type}
+                      onChange={handleChange}
+                    >
+                      <option value="Qualquer">Qualquer</option>
+                      <option value="Video">Video</option>
+                      <option value="Ficheiro">Ficheiro</option>
+                      <option value="Audio">Audio</option>
+                      <option value="Outros">Outros</option>
+                    </select>
+                  </div>
+                </div>
+
+                {formData.type === 'Ficheiro' ? (
+                  <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>
+                    <input {...getInputProps()} />
+                    {file ? (
+                      <div className="selected-file">
+                        <div className="file-info">
+                          <img src="../assets/svg/components/placeholder-img-format.svg" alt="File Icon" className="file-icon" width="58" height="58" />
+                          <div className="file-details">
+                            <p>{file.name}</p>
+                            <p>{formatBytes(file.size)}</p>
+                          </div>
+                        </div>
+                        <button type="button" className="btn btn-danger" onClick={handleDeleteFile}>Eliminar</button>
+                      </div>
+                    ) : (
+                      <p>Arraste e largue alguns ficheiros aqui, ou clique para selecionar ficheiros</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="row mb-4">
+                    <div className="col-sm-3 mb-2 mb-sm-0">
+                      <div className="d-flex align-items-center mt-2">
+                        <i className="bi-link nav-icon"></i>
+                        <div className="flex-grow-1">Link</div>
+                      </div>
+                    </div>
+                    <div className="col-sm">
+                      <label htmlFor="eventLinkLabel" className="visually-hidden form-label">Add link</label>
+                      <input
+                        id="link"
+                        name="link"
+                        className="form-control"
+                        placeholder="Add link"
+                        value={formData.link}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="modal-footer gap-3">
-                <button
-                  type="button"
-                  id="discardFormt"
-                  className="btn btn-white"
-                  data-bs-dismiss="modal"
-                >
-                  Descartar
-                </button>
-                <button type="submit" className="btn btn-primary"> Adicionar ficheiro </button>
+
+              <div className="modal-footer">
+                <button type="button" id="discardForm" className="btn btn-white" data-bs-dismiss="modal">Descartar</button>
+                <button type="submit" className="btn btn-primary">Adicionar atividade</button>
               </div>
+              {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
             </form>
           </div>
         </div>
@@ -755,56 +796,53 @@ export const AddActivityTeam = () => {
 
   return (
     <div className="col mb-4">
-      <div className="card">
-        <div className="card-body">
-          <form onSubmit={handleFormSubmit}>
-            <input type="hidden" id="autor" name="autor" value="" />
-            <div className="modal-body">
-              <div className="row">
-                <div className="col">
-                  <div className="quill-custom rounded">
-                    <ReactQuill
-                      value={descricao}
-                      onChange={handleQuillChange}
-                      placeholder="Texto..."
-                      modules={{
-                        toolbar: {
-                          container: [
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{ list: 'ordered' }, { list: 'bullet' }],
-                            ['link'],
-                          ],
-                        },
-                      }}
-                      formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link']}
-                    />
-                  </div>
-                  {errorMessage && <div className="text-danger mt-2">{errorMessage}</div>}
+      <div className="card-body">
+        <form onSubmit={handleFormSubmit}>
+          <input type="hidden" id="autor" name="autor" value="" />
+          <div className="modal-body">
+            <div className="row">
+              <div className="col">
+                <div className="quill-custom rounded">
+                  <ReactQuill
+                    value={descricao}
+                    onChange={handleQuillChange}
+                    placeholder="Texto..."
+                    modules={{
+                      toolbar: {
+                        container: [
+                          ['bold', 'italic', 'underline', 'strike'],
+                          [{ list: 'ordered' }, { list: 'bullet' }],
+                          ['link'],
+                        ],
+                      },
+                    }}
+                    formats={['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link']}
+                  />
                 </div>
-              </div>
-              <div className="mt-3">
-                <span className="text-primary" onClick={handleToggleFileInput} style={{ cursor: 'pointer' }}>
-                  {showFileInput ? 'Fechar' : 'Adicionar ficheiro'}
-                </span>
-                {showFileInput && (
-                  <div>
-                    <label htmlFor="fileInput" className="form-label">Escolher ficheiro</label>
-                    <input
-                      id="fileInput"
-                      className="form-control"
-                      type="file"
-                      onChange={handleFileChange}
-                    />
-                    <div className="form-text">Não necessariamente.</div>
-                  </div>
-                )}
-              </div>
-              <div className="d-grid mt-3">
-                <button type="submit" className="btn btn-primary btn-lg">Enviar</button>
+                {errorMessage && <div className="text-danger mt-2">{errorMessage}</div>}
               </div>
             </div>
-          </form>
-        </div>
+            <div className="mt-3">
+              <span className="text-primary" onClick={handleToggleFileInput} style={{ cursor: 'pointer' }}>
+                {showFileInput ? 'Fechar' : 'Adicionar ficheiro'}
+              </span>
+              {showFileInput && (
+                <div>
+                  <input
+                    id="fileInput"
+                    className="form-control"
+                    type="file"
+                    onChange={handleFileChange}
+                  />
+                  <div className="form-text">Não necessariamente.</div>
+                </div>
+              )}
+            </div>
+            <div className="d-grid mt-3">
+              <button type="submit" className="btn btn-primary btn-lg">Enviar</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   );
@@ -1033,7 +1071,7 @@ export const Pagination = ({ dataPerPage, totalDatas, currentPage, paginate }) =
   const pageNumbers = [];
   const totalPages = Math.ceil(totalDatas / dataPerPage);
   const pagesToShow = 3;
-  
+
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
@@ -1042,7 +1080,7 @@ export const Pagination = ({ dataPerPage, totalDatas, currentPage, paginate }) =
     if (totalPages <= pagesToShow) {
       return pageNumbers;
     }
-    
+
     let startPage = currentPage - Math.floor(pagesToShow / 2);
     let endPage = currentPage + Math.floor(pagesToShow / 2);
 

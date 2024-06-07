@@ -4,6 +4,7 @@ import { EditTextActivity, AddComment } from './Other';
 import { activityView, getComment } from '../../http/deviceAPI';
 import { Context } from '../../context';
 import { useTranslation } from 'react-i18next';
+import Cookies from 'js-cookie';
 
 export default function ViewActivity() {
   const { user } = useContext(Context);
@@ -15,7 +16,31 @@ export default function ViewActivity() {
   const commentsPerPage = 10;
   const { activityId } = useParams();
 
-  const { t, i18n } = useTranslation();
+  console.log(dataActivity)
+
+  const { t } = useTranslation();
+
+  const [favorites, setFavorites] = useState([]);
+
+  const toggleFavorite = (id) => {
+    let updatedFavorites = [...favorites];
+    if (favorites.includes(id)) {
+      updatedFavorites = updatedFavorites.filter((favId) => favId !== id);
+    } else {
+      updatedFavorites.push(id);
+    }
+  
+    setFavorites(updatedFavorites);
+    Cookies.set('favorites', updatedFavorites.join(','), { expires: 365 });
+  };
+
+  useEffect(() => {
+    const favsFromCookie = Cookies.get('favorites');
+    if (favsFromCookie) {
+      setFavorites(favsFromCookie.split(',').map(Number));
+    }
+  }, []);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -116,7 +141,7 @@ export default function ViewActivity() {
             <div className="flex-grow-1">
               <div className="d-flex justify-content-between align-items-center">
                 <h5 className="mb-1">
-                  <small className="text-muted"><Link to={`/view-profile/${dataActivity.users.idTeacher}`}>{dataActivity.users.name}</Link> | {formatDate(dataActivity.publishDate)}</small>
+                  <small className="text-muted"><Link to={`/profile/view-profile/${dataActivity.users.idTeacher}`}>{dataActivity.users.name}</Link> | {formatDate(dataActivity.publishDate)} | <i className={`bi ${favorites.includes(dataActivity.idActivity) ? 'bi-bookmark-fill bookmark' : 'bi-bookmark bookmark'}`} role='button' onClick={() => toggleFavorite(dataActivity.idActivity)}></i></small> 
                 </h5>
                 {canEdit && <EditTextActivity />}
               </div>
@@ -167,7 +192,7 @@ export default function ViewActivity() {
                       </span>
                     </div>
                     <div className="step-content">
-                    <small className="text-muted"><Link className='link' to={`/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link> | {formatDate(d.created_at)}</small>
+                    <small className="text-muted"><Link className='link' to={`/profile/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link> | {formatDate(d.created_at)}</small>
                       <p className="fs-5">
                         <div dangerouslySetInnerHTML={{ __html: d.content }} />
                       </p>

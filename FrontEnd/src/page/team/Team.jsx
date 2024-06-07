@@ -21,7 +21,7 @@ export default function Team() {
     });
 
     const { teamId } = useParams();
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const userId = auth.user._userId;
 
     useEffect(() => {
@@ -40,33 +40,29 @@ export default function Team() {
                     setState(state => ({ ...state, loading: false }));
                 }
             } catch (err) {
-                setState(state => ({ ...state, error: err.message }));
+                setState(state => ({ ...state, error: err.message, loading: false }));
             }
         };
         fetchData();
     }, [auth.user._isAuth, teamId]);
 
-    // Sort activities by most recent first
     const sortedActivities = state.teamActivity ? [...state.teamActivity].sort((a, b) => new Date(b.CreateDate) - new Date(a.CreateDate)) : [];
-
-    // Filter administrators
     const administrators = state.teamMembers ? state.teamMembers.filter(member => member.access === 'Administrador') : [];
 
     const handleInviteButtonClick = async () => {
         const { email } = state.inviteFormData;
         if (!email.trim()) {
-          alert('Por favor, insira um endereço de e-mail válido.');
-          return;
+            alert('Por favor, insira um endereço de e-mail válido.');
+            return;
         }
-      
+
         try {
-          await sendInvite(teamId, state.inviteFormData);
-          window.location.reload();
+            await sendInvite(teamId, state.inviteFormData);
+            window.location.reload();
         } catch (error) {
-          console.error('Erro ao enviar o convite:', error.message);
+            console.error('Erro ao enviar o convite:', error.message);
         }
-      };
-      
+    };
 
     const handleJoinTeamButtonClick = async () => {
         try {
@@ -97,10 +93,10 @@ export default function Team() {
         editedText: activity.descriptionActivityTeam
     }));
 
-    const handleDeleteClick = async (index, idActivityTeam) => {
+    const handleDeleteClick = async (idActivityTeam) => {
         try {
-            await deleteActivityTeam(index, idActivityTeam);
-            alert('Mensagem eliminada com sucesso');
+            await deleteActivityTeam(idActivityTeam);
+            window.location.reload();
         } catch (error) {
             console.error('Erro ao eliminar membro da equipa:', error.message);
         }
@@ -111,7 +107,7 @@ export default function Team() {
             await updateTeamActivityText(idActivityTeam, state.editedText);
             window.location.reload();
         } catch (error) {
-            console.error('Erro ao guardar atividade actualizada:', error);
+            console.error('Erro ao guardar atividade actualizada:', error.message);
         }
     };
 
@@ -120,7 +116,6 @@ export default function Team() {
         const { id, value } = e.target;
         setState(state => ({ ...state, inviteFormData: { ...state.inviteFormData, [id]: value } }));
     };
-
 
     const formatDate = (rawDate) => {
         const date = new Date(rawDate);
@@ -132,7 +127,6 @@ export default function Team() {
         }
     };
 
-
     const formatBytes = (bytes) => {
         const units = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
         const i = Math.floor(Math.log(bytes) / Math.log(1024));
@@ -142,8 +136,8 @@ export default function Team() {
     if (state.loading) return <p>Loading...</p>;
     if (state.error) return <p>Error: {state.error}</p>;
 
-    const isCurrentUserInTeam = state.teamMembers.some(member => member.users.idTeacher === auth.user._userId);
-    const isAdministrator = state.teamMembers.some(member => member.users.idTeacher === auth.user._userId && member.access === 'Administrador');
+    const isCurrentUserInTeam = state.teamMembers && state.teamMembers.some(member => member.users.idTeacher === userId);
+    const isAdministrator = state.teamMembers && state.teamMembers.some(member => member.users.idTeacher === userId && member.access === 'Administrador');
 
     return (
         <div>
@@ -154,7 +148,7 @@ export default function Team() {
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb breadcrumb-no-gutter pt-3">
                                     <li className="breadcrumb-item">
-                                        <Link to={`/${state.teamData.idTeam}`}>{t('teams')} - {state.teamData.idTeam}</Link>
+                                        <Link to={`/team/${state.teamData.idTeam}`}>{t('teams')} - {state.teamData.idTeam}</Link>
                                     </li>
                                 </ol>
                             </nav>
@@ -197,7 +191,7 @@ export default function Team() {
                                     {administrators.map(member => (
                                         <li key={member.users.idTeacher}>
                                             <div className="d-flex align-items-center">
-                                                <Link className="d-flex align-items-center me-2" to={`/view-profile/${member.users.idTeacher}`}>
+                                                <Link className="d-flex align-items-center me-2" to={`/profile/view-profile/${member.users.idTeacher}`}>
                                                     <div className="flex-shrink-0">
                                                         <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={member.users.name}>
                                                             <span className="avatar-initials">{member.users.name.charAt(0).toUpperCase()}</span>
@@ -214,7 +208,7 @@ export default function Team() {
                                     {state.teamMembers.filter(member => member.access !== 'Administrador').map(member => (
                                         <li key={member.users.idTeacher}>
                                             <div className="d-flex align-items-center">
-                                                <Link className="d-flex align-items-center me-2" to={`/view-profile/${member.users.idTeacher}`}>
+                                                <Link className="d-flex align-items-center me-2" to={`/profile/view-profile/${member.users.idTeacher}`}>
                                                     <div className="flex-shrink-0">
                                                         <span className="avatar avatar-soft-dark" data-toggle="tooltip" data-placement="top" title={member.users.name}>
                                                             <span className="avatar-initials">{member.users.name.charAt(0).toUpperCase()}</span>
@@ -233,7 +227,18 @@ export default function Team() {
                         </div>
                     </div>
                     <div className="col-sm-8">
-                        {isCurrentUserInTeam && <AddActivityTeam />}
+                        <div class="card">
+                            <div class="accordion-header" id="headingOne">
+                                <button class="btn btn-white btn-sm w-100" role="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    Add Activity
+                                </button>
+                            </div>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                {isCurrentUserInTeam && <AddActivityTeam />}
+                                </div>
+                            </div>
+                        </div>
                         <div className="card h-30">
                             <div className="card-header">
                                 <h4 className="card-header-title">{t('activity')}</h4>
@@ -252,7 +257,7 @@ export default function Team() {
                                                 </span>
                                                 <div className="flex-grow-1 ms-3">
                                                     <h5 className="mb-1">
-                                                        <small className="text-muted"><Link className="text-dark" to={`/view-profile/${activity.users.idTeacher}`}>{activity.users.name}</Link> | {formatDate(activity.CreateDate)}</small>
+                                                        <small className="text-muted"><Link className="text-dark" to={`/profile/view-profile/${activity.users.idTeacher}`}>{activity.users.name}</Link> | {formatDate(activity.CreateDate)}</small>
                                                     </h5>
                                                     <div className="mt-1 text-dark">
                                                         {state.editModes[index] && activity.users.idTeacher === auth.user._userId ? (
@@ -321,7 +326,6 @@ export default function Team() {
                     </div>
                 </div>
             </main>
-            {/* Settings Modal */}
             <div className="modal fade" id="settingsModal" tabIndex="-1" role="dialog" aria-labelledby="settingsModalTitle" aria-hidden="true">
                 <div className="modal-dialog modal-lg modal-dialog-centered" role="document">
                     <div className="modal-content">
@@ -366,22 +370,7 @@ export default function Team() {
                                                     <div className="col-sm">
                                                         <h5 className="text-body mb-0">{member.users.name}</h5>
                                                         <span className="d-block fs-6">{member.users.email}</span>
-                                                    </div>
-                                                    <div className="col-sm-auto">
-                                                        <div className="tom-select-custom tom-select-custom-sm-end">
-                                                            <select className="js-select form-select" id="privacyNewProjectLabel" >
-                                                                {member.access === 'Administrador' ? (
-                                                                    <option value="Administrador" selected disabled>{t('administrator')}</option>
-                                                                ) : (
-                                                                    <>
-                                                                        <option value="Administrador">{t('administrator')}</option>
-                                                                        <option value="Convidado" selected>{t('guest')}</option>
-                                                                        <option value="remove">{t('delete')}</option>
-                                                                    </>
-                                                                )}
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                    </div>                           
                                                 </div>
                                             </div>
                                         </div>
@@ -410,10 +399,6 @@ export default function Team() {
                                     </span>
                                 </label>
                             ) : (null)}
-                        </div>
-                        <div className="modal-footer d-flex justify-content-end gap-3">
-                            <button type="button" className="btn btn-ghost-secondary" data-bs-dismiss="modal" aria-label="Close">{t('cancel')}</button>
-                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">{t('save')}</button>
                         </div>
                     </div>
                 </div>

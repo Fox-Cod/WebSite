@@ -2,19 +2,41 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { activity, resources } from "../../http/deviceAPI";
 import { useTranslation } from 'react-i18next';
+import Cookies from 'js-cookie';
 
 export default function Form() {
   const [data, setData] = useState([]);
   const [files, setFiles] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const { t } = useTranslation();
 
-  const { t, i18n } = useTranslation();
+  const toggleFavorite = (id) => {
+    let updatedFavorites = [...favorites];
+    if (favorites.includes(id)) {
+      updatedFavorites = updatedFavorites.filter((favId) => favId !== id);
+    } else {
+      updatedFavorites.push(id);
+    }
+  
+    setFavorites(updatedFavorites);
+    Cookies.set('favorites', updatedFavorites.join(','), { expires: 365 });
+  };
+
+  useEffect(() => {
+    const favsFromCookie = Cookies.get('favorites');
+    if (favsFromCookie) {
+      setFavorites(favsFromCookie.split(',').map(Number));
+    }
+  }, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [filesData, activityData] = await Promise.all([resources(), activity()]);
         const sortedActivityData = activityData.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
-        setFiles(filesData);
+        const sortedResourceData = filesData.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+        setFiles(sortedResourceData);
         setData(sortedActivityData);
       } catch (err) {
         console.log(err);
@@ -85,6 +107,7 @@ export default function Form() {
                   <h5 className="mb-1">
                   <small className="text-muted"><Link to={`/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link> | {formatDate(d.publishDate)}</small>
                   </h5>
+                  <i className={`bi ${favorites.includes(d.idActivity) ? 'bi-bookmark-fill bookmark' : 'bi-bookmark bookmark'}`} role='button' onClick={() => toggleFavorite(d.idActivity)}></i>
                 </div>
                 <div className="d-flex justify-content-between">
                   <strong className="text-gray-dark">{d.title}</strong>
@@ -100,14 +123,14 @@ export default function Form() {
                   <span className="badge bg-warning">{d.years.year}</span>
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
-                  <Link to={`/view-activity/${d.idActivity}`} className="link">{t('more')}</Link>
+                  <Link to={`/activity/view-activity/${d.idActivity}`} className="link">{t('more')}</Link>
                 </div>
               </div>
             </div>
           </div>
         ))}
-        {files.slice(0, 3).map((file, i) => (
-          <div className="my-3 p-3 rounded shadow-sm card" key={i} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+        {files.slice(0, 3).map((file) => (
+          <div className="my-3 p-3 rounded shadow-sm card" key={file.idResource} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
             <div className="d-flex align-items-start">
               <div className="avatar avatar-sm avatar-circle me-2">
                 <span className="avatar-soft-dark" title={file.users.name}>
@@ -115,28 +138,50 @@ export default function Form() {
                 </span>
               </div>
               <div className="flex-grow-1">
-                <h5 className="mb-1">
-                  <Link to={`/view-profile/${file.users.idTeacher}`} className="text-decoration-none">{file.users.name}</Link>
-                </h5>
-                <h6 className="fw-bold mt-2">{file.title}</h6>
-                <ul className="list-group">
-                  <li className="list-group-item">
-                    <div className="row align-items-center">
-                      <div className="col-auto">
-                        <img className="avatar avatar-xs avatar-4x3" src="../assets/svg/components/placeholder-img-format.svg" alt="Img" />
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-1">
+                    <small className="text-muted">
+                      <Link to={`/profile/view-profile/${file.users.idTeacher}`}>{file.users.name}</Link> | {formatDate(file.publishDate)}
+                    </small>
+                  </h5>
+                  <i className={`bi ${favorites.includes(file.idResource) ? 'bi-bookmark-fill bookmark' : 'bi-bookmark bookmark'}`} role='button' onClick={() => toggleFavorite(file.idResource)}></i>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <strong className="text-gray-dark">{file.title}</strong>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span className="text-gray-dark">
+                    {file.description.length > 200
+                      ? `${file.description.substring(0, 200)}...`
+                      : file.description}
+                  </span>
+                </div>
+                <span className="badge bg-secondary mb-2">{file.type}</span>
+                {file.type === 'Ficheiro' ? (
+                  <div className='card p-3'>
+                    <li className="list-group-item">
+                      <div className="row align-items-center">
+                        <div className="col-auto">
+                          <img className="avatar avatar-xs avatar-4x3" src="../assets/svg/illustrations/placeholder-img-format.svg" alt="Img" />
+                        </div>
+                        <div className="col">
+                          <h5 className="mb-0" title={t('download')}>
+                            <Link to={`http://localhost:8081/api/files/${file.fileName}`} download>{file.fileName}</Link>
+                          </h5>
+                          <ul className="list-inline list-separator small text-body">
+                            <li className="list-inline-item">{t('file_size')} {formatBytes(file.fileSize)}</li>
+                          </ul>
+                        </div>
                       </div>
-                      <div className="col">
-                        <h5 className="mb-0">
-                          <Link to={`http://localhost:8081/api/files/${file.fileName}`} download>{file.fileName}</Link>
-                        </h5>
-                        <ul className="list-inline list-separator small text-body">
-                          <li className="list-inline-item">Data de publicação: {formatDate(file.publishDate)}</li>
-                          <li className="list-inline-item">Tamanho do ficheiro: {formatBytes(file.fileSize)}</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
+                    </li>
+                  </div>
+                ) : (
+                  null
+                )}
+                <div className="mb-2"></div>
+                <div className="d-flex align-items-center">
+                  <Link to={`/resource/view-resource/${file.idResource}`} className="link">{t('more')}</Link>
+                </div>
               </div>
             </div>
           </div>

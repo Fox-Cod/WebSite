@@ -5,12 +5,14 @@ import { tool, addTool } from '../http/deviceAPI';
 import { SearchComponentForTools } from './component/Search';
 import { useTranslation } from 'react-i18next';
 import { Pagination } from './component/Other';
+import { FilterForTool } from './component/Search';
 
 export default function Tools() {
   const { user } = useContext(Context);
   const [toolsData, setToolsData] = useState([]);
+  const [filteredTools, setFilteredTools] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(8);
+  const [postsPerPage] = useState(10);
   const [formData, setFormData] = useState({
     title: '',
     link: '',
@@ -34,19 +36,24 @@ export default function Tools() {
     try {
       await addTool(formData);
       setErrorMessage('');
+      fetchData(); 
     } catch (error) {
       console.error(error);
+      setErrorMessage('Ocorreu um erro ao adicionar a ferramenta.');
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const data = await tool();
+      setToolsData(data);
+      setFilteredTools(data); 
+    } catch (err) {
+      console.log(err);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setToolsData(await tool());
-      } catch (err) {
-        console.log(err);
-      }
-    };
     fetchData();
   }, []);
 
@@ -66,52 +73,67 @@ export default function Tools() {
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = toolsData.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = filteredTools.slice(indexOfFirstPost, indexOfLastPost);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleFilter = (filters) => {
+    const { type, application } = filters;
+    const filtered = toolsData.filter(item =>
+      (!type.length || type.includes(item.type)) &&
+      (!application.length || application.includes(item.application))
+    );
+    setFilteredTools(filtered);
+    setCurrentPage(1);
+  };
 
   return (
     <div className='container mt-4'>
       <header id="header" className="navbar navbar-expand-lg navbar-spacer-y-0 flex-lg-column">
-          <nav className="js-mega-menu flex-grow-1">
-            <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
-              <ul className="nav nav-tabs align-items-center">
-                <li className='nav-item'>
-                  <Link className="nav-link" to="/form" data-placement="left">
-                    <i className="bi bi-house dropdown-item-icon"></i> {t('home')}
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link className="nav-link" to="/activity" data-placement="left">
-                    <i className="bi bi-activity dropdown-item-icon"></i> {t('activity')}
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link className="nav-link" to="/resources" data-placement="left">
-                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> {t('resources')}
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link className="nav-link active" to="/tools" data-placement="left">
-                    <i className="bi bi-tools dropdown-item-icon"></i> {t('tool')}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </nav>
+        <nav className="js-mega-menu flex-grow-1">
+          <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
+            <ul className="nav nav-tabs align-items-center">
+              <li className='nav-item'>
+                <Link className="nav-link" to="/form" data-placement="left">
+                  <i className="bi bi-house dropdown-item-icon"></i> {t('home')}
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link className="nav-link" to="/activity" data-placement="left">
+                  <i className="bi bi-activity dropdown-item-icon"></i> {t('activity')}
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link className="nav-link" to="/resources" data-placement="left">
+                  <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> {t('resources')}
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link className="nav-link active" to="/tools" data-placement="left">
+                  <i className="bi bi-tools dropdown-item-icon"></i> {t('tool')}
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </nav>
       </header>
 
       <main className='card card-body'>
+
         <div className="card">
           <div className="card-header card-header-content-md-between">
-            <SearchComponentForTools posts={toolsData} />
-            {user._defaultRole === "administrador" && (
-              <button type="button" className="btn btn-white btn-sm" data-bs-toggle="modal" data-bs-target="#addTools">
-                <i className="bi-plus-circle"></i> {t('tool')}
-              </button>
-            )}
+            <div className="mb-2">
+              <SearchComponentForTools posts={toolsData} />
+            </div>
+            <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center">
+              <FilterForTool onFilter={handleFilter} />
+              {user._defaultRole === "administrador" && (
+                <button type="button" className="btn btn-white btn-sm" data-bs-toggle="modal" data-bs-target="#addTools">
+                  <i className="bi-plus-circle"></i> {t('tool')}
+                </button>
+              )}
+            </div>
           </div>
-
           <div className="table-responsive">
             <table className="table table-lg table-borderless table-thead-bordered table-nowrap card-table">
               <thead className="thead-light">
@@ -139,7 +161,7 @@ export default function Tools() {
         </div>
         <Pagination
           dataPerPage={postsPerPage}
-          totalDatas={toolsData.length}
+          totalDatas={filteredTools.length}
           currentPage={currentPage}
           paginate={paginate}
         />
@@ -209,7 +231,7 @@ export default function Tools() {
 
                   <div className="col-sm">
                     <div className="tom-select-custom">
-                    {t('application')}
+                      {t('application')}
                       <select
                         className="js-select form-select"
                         autoComplete="off"
@@ -226,7 +248,7 @@ export default function Tools() {
 
                   <div className="col-sm">
                     <div className="tom-select-custom">
-                    {t('type')}
+                      {t('type')}
                       <select
                         className="js-select form-select"
                         autoComplete="off"
@@ -245,7 +267,7 @@ export default function Tools() {
 
                   <div className="col-sm">
                     <div className="tom-select-custom">
-                    {t('state')}
+                      {t('state')}
                       <select
                         className="js-select form-select"
                         autoComplete="off"

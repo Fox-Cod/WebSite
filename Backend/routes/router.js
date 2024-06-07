@@ -63,7 +63,8 @@ router.post('/reset-password/:token', authController.resetPassword)
 
 // Resources
 router.post('/upload', upload.single('file'), authenticateToken, dataController.postResourcesFiles)
-router.get('/files', dataController.getResourcesFiles)
+router.get('/resources', dataController.getAllResources)
+router.get('/resources/:resourceId', dataController.getOneResource)
 router.get('/files/:filename', dataController.downloadResourcesFiles);
 
 // Tools

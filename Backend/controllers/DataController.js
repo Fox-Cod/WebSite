@@ -59,26 +59,34 @@ async function getTools(req, res) {
 
 async function postResourcesFiles(req, res) {
   const { idTeacher } = req.userToken;
-  const { title } = req.body;
+  const { title, description, link, type } = req.body;
 
   try {
-    if (!req.file) {
-      return res.status(400).send({ message: 'Nenhum arquivo enviado' });
+    let newFileName = null;
+    let uploadPath = null;
+    let size = null;
+    let fileType = null;
+
+    if (req.file) {
+      const { originalname, path: tempPath, size: fileSize } = req.file;
+      newFileName = originalname;
+      uploadPath = path.resolve(__dirname, `../uploads/${newFileName}`);
+      fs.renameSync(tempPath, uploadPath);
+      const fileExtension = path.extname(originalname);
+      fileType = mimeTypes.lookup(fileExtension);
+      size = fileSize;
     }
 
-    const { originalname, path: tempPath, size } = req.file;
-    const newFileName = originalname;
-    const uploadPath = path.resolve(__dirname, `../uploads/${newFileName}`);
-    fs.renameSync(tempPath, uploadPath);
-    const fileExtension = path.extname(originalname);
-
     const uploadedFile = await Resources.create({
-      title: title,
-      idTeacher: idTeacher,
-      fileName: newFileName,
-      path: uploadPath,
-      fileSize: size,
-      fileType: mimeTypes.lookup(fileExtension),
+      title: title || null,
+      description: description || null,
+      link: link || null,
+      idTeacher: idTeacher || null,
+      fileName: newFileName || null,
+      path: uploadPath || null,
+      fileSize: size || null,
+      fileType: fileType || null,
+      type: type || null,
       publishDate: new Date(),
     });
 
@@ -88,7 +96,8 @@ async function postResourcesFiles(req, res) {
   }
 }
 
-async function getResourcesFiles(req, res) {
+
+async function getAllResources(req, res) {
   try {
     const files = await Resources.findAll({
       include: [
@@ -100,6 +109,29 @@ async function getResourcesFiles(req, res) {
     res.status(500).send({ message: 'Erro ao buscar arquivos', error });
   }
 }
+
+async function getOneResource(req, res) {
+  const resourceId = req.params.resourceId;
+  
+  try {
+    const resource = await Resources.findOne({
+      where: { idResource: resourceId },
+      include: [
+        { model: Users, as: 'users', attributes: ['idTeacher', 'name'] },
+      ]
+    });
+
+
+    if (!resource) {
+      return res.status(404).json({ error: 'Nenhuma atividade encontrada' });
+    }
+    res.json(resource);
+  } catch (error) {
+    console.error('Erro ao receber atividade:', error);
+    res.status(500).send('Erro interno do servidor');
+  }
+}
+
 
 async function downloadResourcesFiles(req, res) {
   try {
@@ -157,6 +189,6 @@ async function addComment(req, res) {
 }
 
 
-module.exports = { getAllData, postTools, getTools, postResourcesFiles, getResourcesFiles, downloadResourcesFiles, getData };
+module.exports = { getAllData, postTools, getTools, postResourcesFiles, getAllResources, downloadResourcesFiles, getData, getOneResource };
 
 

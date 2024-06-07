@@ -62,17 +62,11 @@ export default function Index() {
                 </div>
             </section>
 
-            <ScrollLink to="contact-section" smooth={true} duration={500}>
-                ...
-            </ScrollLink>
-
-
             <section className="bg-white py-10">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="text-center section-title mx-auto">
-                                <small className="pb-2 text-muted"> ?</small>
                                 <h1 className="mb-0 display-4">{t('text_info_home_2')}</h1>
                             </div>
                         </div>
@@ -166,7 +160,6 @@ export default function Index() {
                     <div className="row justify-content-center text-center">
                         <div className="col-lg-12">
                             <div className="text-center section-title mx-auto">
-                                <small className="pb-2 text-muted">?</small>
                                 <h3 className="mb-0 display-4">{t('contact_us')}</h3>
                             </div>
                         </div>

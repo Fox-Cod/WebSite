@@ -13,6 +13,7 @@ const Resources = lazy(() => import('./page/Resources'));
 const Tools = lazy(() => import('./page/Tools'));
 const About = lazy(() => import('./page/About'));
 const ViewActivity = lazy(() => import('./page/component/View-Activity'));
+const ViewResources = lazy(() => import('./page/component/View-Resources'));
 const ViewProfile = lazy(() => import('./page/component/View-Profile'));
 const PasswordResetEmail = lazy(() => import('./page/login/Password-Reset-Email'));
 const ResetPassword = lazy(() => import('./page/login/Reset-Password'));
@@ -57,7 +58,6 @@ const App = () => {
   }
 
   return (
-    <Router>
       <Suspense fallback={<div className="d-flex justify-content-center align-items-center vh-100"><Spinner animation="grow" /></div>}>
       <Nav />
         <Routes>
@@ -67,13 +67,13 @@ const App = () => {
           <Route path="/resources" element={<Resources />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/about-us" element={<About />} />
-          <Route path="/view-activity/:activityId" element={<ViewActivity />} />
-          <Route path="/view-profile/:userId" element={<ViewProfile />} />
+          <Route path="/activity/view-activity/:activityId" element={<ViewActivity />} />
+          <Route path="/profile/view-profile/:userId" element={<ViewProfile />} />
           <Route path="/password-reset-email" element={<PasswordResetEmail />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           {user._isAuth ? ( <Route path="/user-profile" element={<UserProfile />} /> ) : ( <Route path="/user-profile" element={<Navigate to="/error404" />} /> )}
           {user._isAuth ? ( <Route path="/team-list" element={<TeamList />} /> ) : ( <Route path="/team-list" element={<Navigate to="/error404" />} /> )}
-          {user._isAuth ? ( <Route path="/:teamId" element={<Team />} /> ) : ( <Route path="/:teamId" element={<Navigate to="/error404" />} /> )}
+          {user._isAuth ? ( <Route path="/team/:teamId" element={<Team />} /> ) : ( <Route path="/team/:teamId" element={<Navigate to="/error404" />} /> )}
           {user._isAuth ? ( <Route path="/user-profile-settings" element={<UserProfileSettings />} /> ) : ( <Route path="/user-profile-settings" element={<Navigate to="/error404" />} /> )}
           {user._isAuth && user._defaultRole === 'administrador' ? ( <Route path="/admin-page" element={<AdminPage />} /> ) : ( <Route path="/admin-page" element={<Navigate to="/" />} /> )}
           {user._isAuth === false ? ( <Route path="/sign-in" element={<SignIn />} /> ) : ( <Route path="/sign-in" element={<Navigate to="/" />} /> )}
@@ -81,11 +81,12 @@ const App = () => {
 
           <Route path="/error404" element={<NotFoundPage />} />
 
+          <Route path="/resource/view-resource/:resourceId" element={<ViewResources />} />
+
           <Route path="*" element={<Navigate to="/error404" />} />
         </Routes>
       <Footer />
       </Suspense>
-    </Router>
   );
 };
 

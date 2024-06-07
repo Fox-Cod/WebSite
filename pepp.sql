@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Апр 11 2024 г., 21:38
+-- Время создания: Май 30 2024 г., 17:18
 -- Версия сервера: 8.2.0
 -- Версия PHP: 8.2.13
 
@@ -24,114 +24,268 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `anos`
+-- Структура таблицы `activitys`
 --
 
-DROP TABLE IF EXISTS `anos`;
-CREATE TABLE IF NOT EXISTS `anos` (
-  `id_ano` int NOT NULL,
-  `ano` int NOT NULL,
-  `id_ensino` int NOT NULL,
-  PRIMARY KEY (`id_ano`),
-  KEY `id_ensino` (`id_ensino`)
+DROP TABLE IF EXISTS `activitys`;
+CREATE TABLE IF NOT EXISTS `activitys` (
+  `idActivity` int NOT NULL AUTO_INCREMENT,
+  `idTeacher` int DEFAULT NULL,
+  `planning` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `presentation` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `title` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `publishDate` datetime DEFAULT NULL,
+  `viewsCount` int DEFAULT '0',
+  `commentsCount` int DEFAULT '0',
+  `idSubject` int DEFAULT NULL,
+  `idYear` int DEFAULT NULL,
+  `idEducation` int DEFAULT NULL,
+  PRIMARY KEY (`idActivity`),
+  KEY `id_disciplina` (`idSubject`),
+  KEY `id_ano` (`idYear`),
+  KEY `id_ensino` (`idEducation`),
+  KEY `id_professor` (`idTeacher`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+--
+-- Дамп данных таблицы `activitys`
+--
+
+INSERT INTO `activitys` (`idActivity`, `idTeacher`, `planning`, `presentation`, `title`, `description`, `publishDate`, `viewsCount`, `commentsCount`, `idSubject`, `idYear`, `idEducation`) VALUES
+(1, 1, 'https://minhasviagensculinarias.blogspot.com/2014/07/receitas-de-chuck-e-monotonia.html', 'https://escolaamiga.pt/projetos/86cfb578-c485-4973-b96f-8fb0aaeab1a8?category=&school=&name=&offset=190&total=200', 'Explorando culturas através da culinária', ' Transforme sua sala de aula em um laboratório culinário! Os alunos irão explorar a cultura de diferentes países através da preparação de pratos nacionais. Esta é uma forma envolvente de estudar geografia, história e tradições de diversas nações, enquanto', '2024-05-29 15:31:53', 0, 0, 34, 4, 2),
+(2, 3, 'https://faveni.edu.br/curso/ecologia-e-desenvolvimento-sustentavel/', 'https://edukatu.org.br/uploads/EDKT/Plano_de_Aula_ODS17_Parcerias.pdf', 'Desenvolvimento sustentável e ecologia', 'Discuta com os alunos os problemas ambientais atuais e maneiras de solucioná-los. A aula incluirá a exibição de documentários, realização de experimentos e criação de projetos de preservação ambiental. Isso ajudará os alunos a entenderem melhor como suas ', '2024-05-29 15:34:04', 0, 0, 70, 6, 3),
+(3, 3, 'https://www.wook.pt/arvoretematica/livros-em-portugues-arte/8066x5839x18000/P', 'https://www.arte.tv/en/', 'Arte e Criatividade', 'Esta aula é dedicada à exploração de diferentes formas de arte e ao desenvolvimento de habilidades criativas. Os alunos serão apresentados a várias técnicas artísticas, como pintura, escultura e design gráfico, e criarão suas próprias obras de arte.', '2024-05-29 15:35:38', 0, 0, 3, 8, 3),
+(4, 2, 'https://www.slideshare.net/slideshow/planejamento-financeiro-na-prtica/64948704', 'https://novaescola.org.br/planos-de-aula/temas/educacao-financeira', 'Planejamento Financeiro: Preparando os Alunos para o Futuro', 'Ensine aos seus alunos a importância do planejamento financeiro pessoal. Esta aula abordará tópicos como orçamento, economia, investimento e gestão de dívidas. Os alunos sairão com uma compreensão sólida de como gerenciar suas finanças e tomar decisões fi', '2024-05-29 15:38:26', 0, 0, 10, 6, 3),
+(5, 2, ' Apresentação \"Explorando o Futuro Digital\"', 'Plano de aula para tecnologia e inovação', 'Explorando o Futuro Digital: Desenvolvendo Habilidades Tecnológicas', ' Prepare seus alunos para o mundo digital em constante mudança com esta aula sobre tecnologia e inovação. Eles explorarão tópicos como programação, inteligência artificial, realidade virtual e ética digital. Esta é uma oportunidade para os alunos desenvol', '2024-05-29 15:38:57', 0, 0, 16, 4, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `activity_team`
+--
+
+DROP TABLE IF EXISTS `activity_team`;
+CREATE TABLE IF NOT EXISTS `activity_team` (
+  `idActivityTeam` int NOT NULL AUTO_INCREMENT,
+  `idTeam` int DEFAULT NULL,
+  `idTeacher` int DEFAULT NULL,
+  `descriptionActivityTeam` text COLLATE utf32_unicode_ci,
+  `fileName` varchar(255) COLLATE utf32_unicode_ci DEFAULT NULL,
+  `path` varchar(255) COLLATE utf32_unicode_ci DEFAULT NULL,
+  `fileType` varchar(255) COLLATE utf32_unicode_ci DEFAULT NULL,
+  `fileSize` bigint DEFAULT NULL,
+  `CreateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`idActivityTeam`),
+  KEY `id_equipa` (`idTeam`),
+  KEY `equipa_atividades_ibfk_2` (`idTeacher`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
+
+--
+-- Дамп данных таблицы `activity_team`
+--
+
+INSERT INTO `activity_team` (`idActivityTeam`, `idTeam`, `idTeacher`, `descriptionActivityTeam`, `fileName`, `path`, `fileType`, `fileSize`, `CreateDate`) VALUES
+(1, 14, 1, '<p>Reactivate the token on 7d <a href=\"https://developers.google.com/oauthplayground/?code=4/0AeaYSHB9jAvLdm6uFaeAYuky2L_Qb8jPLXNbZxKgvomlqmzZjskZA2osAn9J4UGSZWQmKw&amp;scope=https://mail.google.com/\" rel=\"noopener noreferrer\" target=\"_blank\">Token</a></p><p><br></p><p>About this documentation</p><p><a href=\"https://nodejs.org/api/documentation.html#about-this-documentation\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>Welcome to the official API reference documentation for Node.js!</p><p>Node.js is a JavaScript runtime built on the&nbsp;<a href=\"https://v8.dev/\" rel=\"noopener noreferrer\" target=\"_blank\">V8 JavaScript engine</a>.</p><p>Contributing</p><p><a href=\"https://nodejs.org/api/documentation.html#contributing\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>Report errors in this documentation in&nbsp;<a href=\"https://github.com/nodejs/node/issues/new\" rel=\"noopener noreferrer\" target=\"_blank\">the issue tracker</a>. See&nbsp;<a href=\"https://github.com/nodejs/node/blob/HEAD/CONTRIBUTING.md\" rel=\"noopener noreferrer\" target=\"_blank\">the contributing guide</a>&nbsp;for directions on how to submit pull requests.</p><p>Stability index</p><p><a href=\"https://nodejs.org/api/documentation.html#stability-index\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>Throughout the documentation are indications of a section\'s stability. Some APIs are so proven and so relied upon that they are unlikely to ever change at all. Others are brand new and experimental, or known to be hazardous.</p><p>The stability indexes are as follows:</p><p>Stability: 0 - Deprecated. The feature may emit warnings. Backward compatibility is not guaranteed.</p><p>Stability: 1 - Experimental. The feature is not subject to&nbsp;<a href=\"https://semver.org/\" rel=\"noopener noreferrer\" target=\"_blank\">semantic versioning</a>&nbsp;rules. Non-backward compatible changes or removal may occur in any future release. Use of the feature is not recommended in production environments.</p><p>Experimental features are subdivided into stages:</p><ul><li>1.0 - Early development. Experimental features at this stage are unfinished and subject to substantial change.</li><li>1.1 - Active development. Experimental features at this stage are nearing minimum viability.</li><li>1.2 - Release candidate. Experimental features at this stage are hopefully ready to become stable. No further breaking changes are anticipated but may still occur in response to user feedback. We encourage user testing and feedback so that we can know that this feature is ready to be marked as stable.</li></ul><p>Stability: 2 - Stable. Compatibility with the npm ecosystem is a high priority.</p><p>Stability: 3 - Legacy. Although this feature is unlikely to be removed and is still covered by semantic versioning guarantees, it is no longer actively maintained, and other alternatives are available.</p><p>Features are marked as legacy rather than being deprecated if their use does no harm, and they are widely relied upon within the npm ecosystem. Bugs found in legacy features are unlikely to be fixed.</p><p>Use caution when making use of Experimental features, particularly when authoring libraries. Users may not be aware that experimental features are being used. Bugs or behavior changes may surprise users when Experimental API modifications occur. To avoid surprises, use of an Experimental feature may need a command-line flag. Experimental features may also emit a&nbsp;<a href=\"https://nodejs.org/api/process.html#event-warning\" rel=\"noopener noreferrer\" target=\"_blank\">warning</a>.</p><p>Stability overview</p><p><a href=\"https://nodejs.org/api/documentation.html#stability-overview\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>APIStability<a href=\"https://nodejs.org/api/assert.html\" rel=\"noopener noreferrer\" target=\"_blank\">Assert</a>(2) Stable<a href=\"https://nodejs.org/api/async_hooks.html\" rel=\"noopener noreferrer\" target=\"_blank\">Async hooks</a>(1) Experimental<a href=\"https://nodejs.org/api/async_context.html\" rel=\"noopener noreferrer\" target=\"_blank\">Asynchronous context tracking</a>(2) Stable<a href=\"https://nodejs.org/api/buffer.html\" rel=\"noopener noreferrer\" target=\"_blank\">Buffer</a>(2) Stable<a href=\"https://nodejs.org/api/child_process.html\" rel=\"noopener noreferrer\" target=\"_blank\">Child process</a>(2) Stable<a href=\"https://nodejs.org/api/cluster.html\" rel=\"noopener noreferrer\" target=\"_blank\">Cluster</a>(2) Stable<a href=\"https://nodejs.org/api/console.html\" rel=\"noopener noreferrer\" target=\"_blank\">Console</a>(2) Stable<a href=\"https://nodejs.org/api/crypto.html\" rel=\"noopener noreferrer\" target=\"_blank\">Crypto</a>(2) Stable<a href=\"https://nodejs.org/api/diagnostics_channel.html\" rel=\"noopener noreferrer\" target=\"_blank\">Diagnostics Channel</a>(2) Stable<a href=\"https://nodejs.org/api/dns.html\" rel=\"noopener noreferrer\" target=\"_blank\">DNS</a>(2) Stable<a href=\"https://nodejs.org/api/domain.html\" rel=\"noopener noreferrer\" target=\"_blank\">Domain</a>(0) Deprecated<a href=\"https://nodejs.org/api/fs.html\" rel=\"noopener noreferrer\" target=\"_blank\">File system</a>(2) Stable<a href=\"https://nodejs.org/api/http.html\" rel=\"noopener noreferrer\" target=\"_blank\">HTTP</a>(2) Stable<a href=\"https://nodejs.org/api/http2.html\" rel=\"noopener noreferrer\" target=\"_blank\">HTTP/2</a>(2) Stable<a href=\"https://nodejs.org/api/https.html\" rel=\"noopener noreferrer\" target=\"_blank\">HTTPS</a>(2) Stable<a href=\"https://nodejs.org/api/inspector.html\" rel=\"noopener noreferrer\" target=\"_blank\">Inspector</a>(2) Stable<a href=\"https://nodejs.org/api/module.html\" rel=\"noopener noreferrer\" target=\"_blank\">Modules:&nbsp;node:module&nbsp;API</a>(1) .2 - Release candidate<a href=\"https://nodejs.org/api/modules.html\" rel=\"noopener noreferrer\" target=\"_blank\">Modules: CommonJS modules</a>(2) Stable<a href=\"https://nodejs.org/api/os.html\" rel=\"noopener noreferrer\" target=\"_blank\">OS</a>(2) Stable<a href=\"https://nodejs.org/api/path.html\" rel=\"noopener noreferrer\" target=\"_blank\">Path</a>(2) Stable<a href=\"https://nodejs.org/api/perf_hooks.html\" rel=\"noopener noreferrer\" target=\"_blank\">Performance measurement APIs</a>(2) Stable<a href=\"https://nodejs.org/api/punycode.html\" rel=\"noopener noreferrer\" target=\"_blank\">Punycode</a>(0) Deprecated<a href=\"https://nodejs.org/api/querystring.html\" rel=\"noopener noreferrer\" target=\"_blank\">Query string</a>(2) Stable<a href=\"https://nodejs.org/api/readline.html\" rel=\"noopener noreferrer\" target=\"_blank\">Readline</a>(2) Stable<a href=\"https://nodejs.org/api/repl.html\" rel=\"noopener noreferrer\" target=\"_blank\">REPL</a>(2) Stable<a href=\"https://nodejs.org/api/single-executable-applications.html\" rel=\"noopener noreferrer\" target=\"_blank\">Single executable applications</a>(1) .1 - Active development<a href=\"https://nodejs.org/api/stream.html\" rel=\"noopener noreferrer\" target=\"_blank\">Stream</a>(2) Stable<a href=\"https://nodejs.org/api/string_decoder.html\" rel=\"noopener noreferrer\" target=\"_blank\">String decoder</a>(2) Stable<a href=\"https://nodejs.org/api/test.html\" rel=\"noopener noreferrer\" target=\"_blank\">Test runner</a>(2) Stable<a href=\"https://nodejs.org/api/timers.html\" rel=\"noopener noreferrer\" target=\"_blank\">Timers</a>(2) Stable<a href=\"https://nodejs.org/api/tls.html\" rel=\"noopener noreferrer\" target=\"_blank\">TLS (SSL)</a>(2) Stable<a href=\"https://nodejs.org/api/tracing.html\" rel=\"noopener noreferrer\" target=\"_blank\">Trace events</a>(1) Experimental<a href=\"https://nodejs.org/api/tty.html\" rel=\"noopener noreferrer\" target=\"_blank\">TTY</a>(2) Stable<a href=\"https://nodejs.org/api/dgram.html\" rel=\"noopener noreferrer\" target=\"_blank\">UDP/datagram sockets</a>(2) Stable<a href=\"https://nodejs.org/api/url.html\" rel=\"noopener noreferrer\" target=\"_blank\">URL</a>(2) Stable<a href=\"https://nodejs.org/api/util.html\" rel=\"noopener noreferrer\" target=\"_blank\">Util</a>(2) Stable<a href=\"https://nodejs.org/api/vm.html\" rel=\"noopener noreferrer\" target=\"_blank\">VM (executing JavaScript)</a>(2) Stable<a href=\"https://nodejs.org/api/webcrypto.html\" rel=\"noopener noreferrer\" target=\"_blank\">Web Crypto API</a>(2) Stable<a href=\"https://nodejs.org/api/webstreams.html\" rel=\"noopener noreferrer\" target=\"_blank\">Web Streams API</a>(2) Stable<a href=\"https://nodejs.org/api/wasi.html\" rel=\"noopener noreferrer\" target=\"_blank\">WebAssembly System Interface (WASI)</a>(1) Experimental<a href=\"https://nodejs.org/api/worker_threads.html\" rel=\"noopener noreferrer\" target=\"_blank\">Worker threads</a>(2) Stable<a href=\"https://nodejs.org/api/zlib.html\" rel=\"noopener noreferrer\" target=\"_blank\">Zlib</a>(2) Stable</p><p>JSON output</p><p><a href=\"https://nodejs.org/api/documentation.html#json-output\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>Added in: v0.6.12</p><p>Every&nbsp;.html&nbsp;document has a corresponding&nbsp;.json&nbsp;document. This is for IDEs and other utilities that consume the documentation.</p><p>System calls and man pages</p><p><a href=\"https://nodejs.org/api/documentation.html#system-calls-and-man-pages\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>Node.js functions which wrap a system call will document that. The docs link to the corresponding man pages which describe how the system call works.</p>', NULL, NULL, NULL, NULL, '2024-05-29 15:43:07');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `comments`
+--
+
+DROP TABLE IF EXISTS `comments`;
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `idActivity` int NOT NULL,
+  `idTeacher` int NOT NULL,
+  `content` text COLLATE utf8mb3_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idActivity` (`idActivity`),
+  KEY `idTeacher` (`idTeacher`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+--
+-- Дамп данных таблицы `comments`
+--
+
+INSERT INTO `comments` (`id`, `idActivity`, `idTeacher`, `content`, `created_at`, `updated_at`) VALUES
+(1, 5, 1, '<p>Hi world</p>', '2024-05-29 18:27:57', '2024-05-29 18:27:57'),
+(2, 5, 1, '<p>12</p>', '2024-05-29 18:31:34', '2024-05-29 18:31:34');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `educations`
+--
+
+DROP TABLE IF EXISTS `educations`;
+CREATE TABLE IF NOT EXISTS `educations` (
+  `idEducation` int NOT NULL AUTO_INCREMENT,
+  `nameEducation` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  PRIMARY KEY (`idEducation`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+--
+-- Дамп данных таблицы `educations`
+--
+
+INSERT INTO `educations` (`idEducation`, `nameEducation`) VALUES
+(1, '1.º Ciclo'),
+(2, '2.º Ciclo'),
+(3, '3.º Ciclo'),
+(4, 'Secundário Científico-Humanísticos'),
+(5, 'Secundário Profissionais'),
+(6, 'PIEF');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `ficheiros`
+--
+
+DROP TABLE IF EXISTS `ficheiros`;
+CREATE TABLE IF NOT EXISTS `ficheiros` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_file_team_activity` int DEFAULT NULL,
+  `id_file_resources` int DEFAULT NULL,
+  `filename` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `path` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `fileType` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `fileSize` bigint DEFAULT NULL,
+  `publishDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `id_file_team_activity` (`id_file_team_activity`),
+  KEY `id_file_resources` (`id_file_resources`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `groups`
+--
+
+DROP TABLE IF EXISTS `groups`;
+CREATE TABLE IF NOT EXISTS `groups` (
+  `idGroup` int NOT NULL,
+  `codGroup` int DEFAULT NULL,
+  `nameGroup` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`idGroup`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
--- Дамп данных таблицы `anos`
+-- Дамп данных таблицы `groups`
 --
 
-INSERT INTO `anos` (`id_ano`, `ano`, `id_ensino`) VALUES
-(1, 1, 1),
-(2, 2, 1),
-(3, 3, 1),
-(4, 4, 1),
-(5, 5, 2),
-(6, 6, 2),
-(7, 7, 3),
-(8, 8, 3),
-(9, 9, 3),
-(10, 10, 4),
-(11, 11, 4),
-(12, 12, 4);
+INSERT INTO `groups` (`idGroup`, `codGroup`, `nameGroup`) VALUES
+(1, 100, 'Educacao Pre-Escolar'),
+(2, 110, 'Ensino Basico - 1 Ciclo'),
+(3, 120, 'Ingles'),
+(4, 200, 'Portugues e Estudos Sociais/Historia'),
+(5, 210, 'Portugues e Frances'),
+(6, 220, 'Portugues e Ingles'),
+(7, 230, 'Matematicae Ciencias da Natureza'),
+(8, 240, 'Educacao Visual e Tecnologica'),
+(9, 250, 'Educacao Musical'),
+(10, 260, 'Educacao Fisica'),
+(11, 290, 'Educacao Moral e Religiosa'),
+(12, 300, 'Portugues'),
+(13, 310, 'Latim e Grego'),
+(14, 320, 'Frances'),
+(15, 330, 'Ingles'),
+(16, 340, 'Alemao'),
+(17, 350, 'Espanhol'),
+(18, 400, 'Historia'),
+(19, 410, 'Filosofia'),
+(20, 420, 'Geografia'),
+(21, 430, 'Economia e Contabilidade'),
+(22, 500, 'Matematica'),
+(23, 510, 'Fisica e Quimica'),
+(24, 520, 'Biologia e Geologia'),
+(25, 530, 'Educacao Tecnologia'),
+(26, 600, 'Artes Visuais'),
+(27, 620, 'Educacao Fisica'),
+(28, 540, 'Electrotecnica'),
+(29, 550, 'Informatica'),
+(30, 560, 'Ciencias Agro-pecuarias'),
+(31, 610, 'Musica'),
+(32, 360, 'Lingua Gestual Portguesa'),
+(33, 910, 'Educacao Especial 1'),
+(34, 920, 'Educacao Especial 2'),
+(35, 930, 'Educacao Especial 3');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `atividades`
+-- Структура таблицы `resources`
 --
 
-DROP TABLE IF EXISTS `atividades`;
-CREATE TABLE IF NOT EXISTS `atividades` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `id_professor` int DEFAULT NULL,
-  `planificacao` text COLLATE utf8mb3_unicode_ci,
-  `presentacao` text COLLATE utf8mb3_unicode_ci,
-  `titulo` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `descricao` text COLLATE utf8mb3_unicode_ci,
-  `data_criacao` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `id_disciplina` int DEFAULT NULL,
-  `id_ano` int DEFAULT NULL,
-  `id_ensino` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_disciplina` (`id_disciplina`),
-  KEY `id_ano` (`id_ano`),
-  KEY `id_ensino` (`id_ensino`),
-  KEY `id_professor` (`id_professor`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+DROP TABLE IF EXISTS `resources`;
+CREATE TABLE IF NOT EXISTS `resources` (
+  `idResource` int NOT NULL AUTO_INCREMENT,
+  `idTeacher` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `fileName` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `path` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `fileType` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `fileSize` bigint DEFAULT NULL,
+  `publishDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`idResource`),
+  KEY `id_professor` (`idTeacher`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
--- Дамп данных таблицы `atividades`
+-- Дамп данных таблицы `resources`
 --
 
-INSERT INTO `atividades` (`id`, `id_professor`, `planificacao`, `presentacao`, `titulo`, `descricao`, `data_criacao`, `id_disciplina`, `id_ano`, `id_ensino`) VALUES
-(1, 1, 'https://science.nasa.gov/moon/', 'https://science.nasa.gov/moon/', 'Viagem à Lua\nExploração da Lua: Novos Horizontes da Humanidade', 'Explore o fascinante mundo da pesquisa espacial, embarcando em uma incrível jornada até nosso satélite natural', '2024-04-09 19:32:18', 8, 12, 6),
-(2, 1, 'https://eventhorizontelescope.org', 'https://bhi.fas.harvard.edu', 'Investigação de Buracos Negros\nA Grandeza e os Mistérios dos Buracos Negros: Adentrando as Profundezas do Espaço', 'Descubra os segredos dos buracos negros, os objetos mais misteriosos do universo, e explore seu impacto no mundo ao nosso redor', '2024-04-09 19:33:33', 70, 10, 6),
-(3, 1, 'https://kepler.nasa.gov', 'https://exoplanets.nasa.gov', 'Explorando Exoplanetas À Beira da Descoberta: Em Busca de Vida em Exoplanetas', 'Prepare-se para uma jornada emocionante até novos mundos potenciais, onde formas de vida além do nosso sistema solar podem habitar', '2024-04-09 19:35:06', 3, 8, 3),
-(4, 2, 'https://www.noao.edu', 'https://aas.org', 'Observação de Estrelas', 'Maravilhe-se com a beleza do céu noturno enquanto explora as estrelas, constelações e fenômenos cósmicos que pontuam o universo', '2024-04-09 19:41:03', 70, 7, 2);
+INSERT INTO `resources` (`idResource`, `idTeacher`, `title`, `fileName`, `path`, `fileType`, `fileSize`, `publishDate`) VALUES
+(1, 1, 'The old database', 'pepp (5).sql', 'C:\\TeamTeach\\WebSite\\backend\\uploads\\pepp (5).sql', 'application/x-sql', 242070, '2024-05-29 15:45:54');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `convites`
+-- Структура таблицы `schools`
 --
 
-DROP TABLE IF EXISTS `convites`;
-CREATE TABLE IF NOT EXISTS `convites` (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_equipa` int DEFAULT NULL,
-  `id_professor` int DEFAULT NULL,
-  `nivel_de_acesso` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `status` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT 'pending',
-  `data_criacao` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+DROP TABLE IF EXISTS `schools`;
+CREATE TABLE IF NOT EXISTS `schools` (
+  `idSchool` int NOT NULL AUTO_INCREMENT,
+  `nameSchool` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`idSchool`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
--- Дамп данных таблицы `convites`
+-- Дамп данных таблицы `schools`
 --
 
-INSERT INTO `convites` (`id`, `id_equipa`, `id_professor`, `nivel_de_acesso`, `status`, `data_criacao`) VALUES
-(1, 2, 1, 'can edit', 'pending', '2024-01-11 21:03:58'),
-(2, 2, 6, 'can edit', 'pending', '2024-01-11 21:15:42');
+INSERT INTO `schools` (`idSchool`, `nameSchool`) VALUES
+(1, 'AE Bemposta'),
+(2, 'AE Monchique'),
+(3, 'AE Nuno Mergulhão'),
+(4, 'AE Júdice Fialho'),
+(5, 'AE Poeta António Aleixo'),
+(6, 'AE Manuel Teixeira Gomes');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `disciplinas`
+-- Структура таблицы `subjects`
 --
 
-DROP TABLE IF EXISTS `disciplinas`;
-CREATE TABLE IF NOT EXISTS `disciplinas` (
-  `id_disciplina` int NOT NULL AUTO_INCREMENT,
-  `nome_disciplina` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_disciplina`)
+DROP TABLE IF EXISTS `subjects`;
+CREATE TABLE IF NOT EXISTS `subjects` (
+  `idSubject` int NOT NULL AUTO_INCREMENT,
+  `nameSubject` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  PRIMARY KEY (`idSubject`)
 ) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
--- Дамп данных таблицы `disciplinas`
+-- Дамп данных таблицы `subjects`
 --
 
-INSERT INTO `disciplinas` (`id_disciplina`, `nome_disciplina`) VALUES
+INSERT INTO `subjects` (`idSubject`, `nameSubject`) VALUES
 (1, 'Português'),
 (2, 'Matematica'),
 (3, 'Artes Visuais'),
@@ -206,594 +360,1275 @@ INSERT INTO `disciplinas` (`id_disciplina`, `nome_disciplina`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `disciplina_ano`
+-- Структура таблицы `teams`
 --
 
-DROP TABLE IF EXISTS `disciplina_ano`;
-CREATE TABLE IF NOT EXISTS `disciplina_ano` (
-  `id_disciplina_ano` int NOT NULL AUTO_INCREMENT,
-  `id_disciplina` int DEFAULT NULL,
-  `id_ano` int DEFAULT NULL,
-  `id_ensino` int DEFAULT NULL,
-  PRIMARY KEY (`id_disciplina_ano`),
-  KEY `id_disciplina` (`id_disciplina`),
-  KEY `id_ano` (`id_ano`),
-  KEY `id_ensino` (`id_ensino`)
-) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+DROP TABLE IF EXISTS `teams`;
+CREATE TABLE IF NOT EXISTS `teams` (
+  `idTeam` int NOT NULL AUTO_INCREMENT,
+  `idTeacher` int DEFAULT NULL,
+  `nameTeam` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `descriptionTeam` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `areasWork` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `CreateDate` datetime DEFAULT NULL,
+  `privacy` int DEFAULT '0',
+  PRIMARY KEY (`idTeam`),
+  KEY `fk_id_professor` (`idTeacher`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
--- Дамп данных таблицы `disciplina_ano`
+-- Дамп данных таблицы `teams`
 --
 
-INSERT INTO `disciplina_ano` (`id_disciplina_ano`, `id_disciplina`, `id_ano`, `id_ensino`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 1),
-(3, 1, 3, 1),
-(4, 1, 4, 1),
-(5, 1, 5, 2),
-(6, 1, 6, 2),
-(7, 1, 7, 3),
-(8, 1, 8, 3),
-(9, 1, 9, 3),
-(10, 1, 10, 4),
-(11, 1, 11, 4),
-(12, 1, 12, 4),
-(13, 2, 1, 1),
-(14, 2, 2, 1),
-(15, 2, 3, 1),
-(16, 2, 4, 1),
-(17, 2, 5, 2),
-(18, 2, 6, 2),
-(19, 2, 7, 3),
-(20, 2, 8, 3),
-(21, 2, 9, 3),
-(22, 3, 1, 1),
-(23, 3, 2, 1),
-(24, 3, 3, 1),
-(25, 3, 4, 1),
-(26, 4, 1, 1),
-(27, 4, 2, 1),
-(28, 4, 3, 1),
-(29, 4, 4, 1),
-(30, 5, 1, 1),
-(31, 5, 2, 1),
-(32, 5, 3, 1),
-(33, 5, 4, 1),
-(34, 6, 1, 1),
-(35, 6, 2, 1),
-(36, 6, 3, 1),
-(37, 6, 4, 1),
-(38, 7, 1, 1),
-(39, 7, 2, 1),
-(40, 7, 3, 1),
-(41, 7, 4, 1),
-(42, 7, 5, 2),
-(43, 7, 6, 2),
-(44, 7, 7, 3),
-(45, 7, 8, 3),
-(46, 7, 9, 3),
-(47, 8, 1, 1),
-(48, 8, 2, 1),
-(49, 8, 3, 1),
-(50, 8, 4, 1),
-(51, 8, 5, 2),
-(52, 8, 6, 2),
-(53, 8, 7, 3),
-(54, 8, 8, 3),
-(55, 8, 9, 3),
-(56, 8, 10, 4),
-(57, 8, 11, 4),
-(58, 8, 12, 4),
-(59, 9, 3, 1),
-(60, 9, 4, 1),
-(61, 9, 5, 2),
-(62, 9, 6, 2),
-(63, 9, 7, 3),
-(64, 9, 8, 3),
-(65, 9, 9, 3),
-(66, 10, 1, 1),
-(67, 10, 2, 1),
-(68, 10, 3, 1),
-(69, 10, 4, 1),
-(70, 10, 5, 2),
-(71, 10, 6, 2),
-(72, 10, 7, 3),
-(73, 10, 8, 3),
-(74, 10, 9, 3),
-(75, 11, 5, 2),
-(76, 11, 6, 2),
-(77, 12, 5, 2),
-(78, 12, 6, 2),
-(79, 12, 7, 3),
-(80, 12, 8, 3),
-(81, 12, 9, 3),
-(82, 13, 5, 2),
-(83, 13, 6, 2),
-(84, 13, 7, 3),
-(85, 13, 8, 3),
-(86, 13, 9, 3),
-(87, 14, 5, 2),
-(88, 14, 6, 2),
-(89, 14, 7, 3),
-(90, 14, 8, 3),
-(91, 14, 9, 3),
-(92, 15, 5, 2),
-(93, 15, 6, 2),
-(94, 15, 7, 3),
-(95, 15, 8, 3),
-(96, 15, 9, 3),
-(97, 16, 7, 3),
-(98, 16, 8, 3),
-(99, 16, 9, 3),
-(100, 17, 7, 3),
-(101, 17, 8, 3),
-(102, 17, 9, 3),
-(103, 18, 7, 3),
-(104, 18, 8, 3),
-(105, 18, 9, 3),
-(106, 19, 7, 3),
-(107, 19, 8, 3),
-(108, 19, 9, 3),
-(109, 20, 7, 3),
-(110, 20, 8, 3),
-(111, 20, 9, 3),
-(112, 21, 1, 1),
-(113, 21, 2, 1),
-(114, 21, 3, 1),
-(115, 21, 4, 1),
-(116, 21, 5, 2),
-(117, 21, 6, 2),
-(118, 21, 7, 3),
-(119, 21, 8, 3),
-(120, 21, 9, 3),
-(121, 22, 10, 4),
-(122, 22, 11, 4),
-(123, 22, 12, 4),
-(124, 23, 10, 4),
-(125, 23, 11, 4),
-(126, 24, 10, 4),
-(127, 24, 11, 4),
-(128, 24, 12, 4),
-(129, 25, 10, 4),
-(130, 25, 11, 4),
-(131, 25, 12, 4),
-(132, 26, 10, 4),
-(133, 26, 11, 4),
-(134, 26, 12, 4),
-(135, 27, 10, 4),
-(136, 27, 11, 4),
-(137, 27, 12, 4),
-(138, 28, 10, 4),
-(139, 28, 11, 4),
-(140, 28, 12, 4),
-(141, 29, 10, 4),
-(142, 29, 11, 4),
-(143, 29, 12, 4),
-(144, 30, 10, 4),
-(145, 30, 11, 4),
-(146, 30, 12, 4),
-(147, 31, 10, 4),
-(148, 31, 11, 4),
-(149, 31, 12, 4),
-(150, 32, 10, 4),
-(151, 32, 11, 4),
-(152, 32, 12, 4),
-(153, 33, 10, 4),
-(154, 33, 11, 4),
-(155, 33, 12, 4),
-(156, 34, 10, 4),
-(157, 34, 11, 4),
-(158, 35, 10, 4),
-(159, 35, 11, 4),
-(160, 36, 10, 4),
-(161, 36, 11, 4),
-(162, 37, 10, 4),
-(163, 37, 11, 4),
-(164, 38, 10, 4),
-(165, 38, 11, 4),
-(166, 39, 10, 4),
-(167, 39, 11, 4),
-(168, 40, 10, 4),
-(169, 40, 11, 4),
-(170, 41, 10, 4),
-(171, 41, 11, 4),
-(172, 42, 10, 4),
-(173, 42, 11, 4),
-(174, 43, 10, 4),
-(175, 43, 11, 4),
-(176, 44, 10, 4),
-(177, 44, 11, 4),
-(178, 45, 12, 4),
-(179, 46, 12, 4),
-(180, 47, 12, 4),
-(181, 48, 12, 4),
-(182, 49, 12, 4),
-(183, 50, 12, 4),
-(184, 51, 12, 4),
-(185, 52, 12, 4),
-(186, 53, 12, 4),
-(187, 54, 12, 4),
-(188, 55, 12, 4),
-(189, 56, 12, 4),
-(190, 57, 12, 4),
-(191, 58, 12, 4),
-(192, 59, 12, 4),
-(193, 60, 12, 4),
-(194, 61, 12, 4),
-(195, 62, 1, 1),
-(196, 62, 2, 1),
-(197, 62, 3, 1),
-(198, 62, 4, 1),
-(199, 63, 1, 1),
-(200, 63, 2, 1),
-(201, 63, 3, 1),
-(202, 63, 4, 1),
-(203, 63, 5, 2),
-(204, 63, 6, 2),
-(205, 63, 7, 3),
-(206, 63, 8, 3),
-(207, 63, 9, 3),
-(208, 63, 10, 4),
-(209, 63, 11, 4),
-(210, 63, 12, 4),
-(211, 64, 12, 4),
-(212, 65, 12, 4),
-(213, 66, 12, 4),
-(214, 67, 12, 4),
-(215, 68, 12, 4),
-(216, 69, 12, 4);
+INSERT INTO `teams` (`idTeam`, `idTeacher`, `nameTeam`, `descriptionTeam`, `areasWork`, `CreateDate`, `privacy`) VALUES
+(14, 1, 'XYZ', 'Somos uma equipa de entusiastas que está pronta para criar algo novo e conquistar o topo!', 'XYZ', '2024-05-29 15:40:48', 0);
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `equipa`
+-- Структура таблицы `team_list`
 --
 
-DROP TABLE IF EXISTS `equipa`;
-CREATE TABLE IF NOT EXISTS `equipa` (
-  `id_equipa` int NOT NULL AUTO_INCREMENT,
-  `id_professor` int DEFAULT NULL,
-  `nome_equipa` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `descricao_equipa` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `industria` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_equipa`),
-  KEY `fk_id_professor` (`id_professor`)
+DROP TABLE IF EXISTS `team_list`;
+CREATE TABLE IF NOT EXISTS `team_list` (
+  `idTeamList` int NOT NULL AUTO_INCREMENT,
+  `idTeam` int DEFAULT NULL,
+  `idTeacher` int DEFAULT NULL,
+  `access` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT 'guest',
+  PRIMARY KEY (`idTeamList`),
+  KEY `id_equipa` (`idTeam`),
+  KEY `id_professor` (`idTeacher`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
--- Дамп данных таблицы `equipa`
+-- Дамп данных таблицы `team_list`
 --
 
-INSERT INTO `equipa` (`id_equipa`, `id_professor`, `nome_equipa`, `descricao_equipa`, `industria`) VALUES
-(1, 1, 'TestDrive', 'Somos uma equipa de entusiastas que está pronta para criar algo novo e conquistar o topo!', 'XYZ');
+INSERT INTO `team_list` (`idTeamList`, `idTeam`, `idTeacher`, `access`) VALUES
+(1, 14, 1, 'Administrador');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `equipa_atividades`
+-- Структура таблицы `tools`
 --
 
-DROP TABLE IF EXISTS `equipa_atividades`;
-CREATE TABLE IF NOT EXISTS `equipa_atividades` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `id_equipa` int DEFAULT NULL,
-  `id_professor` int DEFAULT NULL,
-  `descricao` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
-  `filename` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `path` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `fileType` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `fileSize` bigint DEFAULT NULL,
-  `data_criacao` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `id_equipa` (`id_equipa`),
-  KEY `equipa_atividades_ibfk_2` (`id_professor`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
-
---
--- Дамп данных таблицы `equipa_atividades`
---
-
-INSERT INTO `equipa_atividades` (`id`, `id_equipa`, `id_professor`, `descricao`, `filename`, `path`, `fileType`, `fileSize`, `data_criacao`) VALUES
-(1, 1, 1, '<p><strong>123</strong> <em>456</em> <u>789</u> <s>012</s></p><ol><li>345</li></ol><ul><li>678</li></ul><p><a href=\"https://console.cloud.google.com/apis/credentials/oauthclient/41978584350-7q77ll8c23fktgf7ehes1piaq5q18jc5.apps.googleusercontent.com?project=papvite\" rel=\"noopener noreferrer\" target=\"_blank\"><strong><em><s><u>Google</u></s></em></strong></a></p><p><a href=\"https://developers.google.com/oauthplayground/?code=4/0AeaYSHA-RapEtMMzI41SGPpb819FkH-wLLyZC29g_jaKRRvBSxFkr79vins_3hLneqYGqA&amp;scope=https://mail.google.com/\" rel=\"noopener noreferrer\" target=\"_blank\"><strong><em><s><u>Google 2</u></s></em></strong></a></p>', NULL, NULL, NULL, NULL, '2024-04-09 19:28:05'),
-(2, 1, 1, '<p><a href=\"https://onedrive.live.com/personal/35e7d717dd1e661d/_layouts/15/doc2.aspx?resid=dd1e661d-d717-20e7-8035-160100000000&amp;cid=35e7d717dd1e661d&amp;ct=1712861672100&amp;wdOrigin=OFFICECOM-WEB.START.EDGEWORTH&amp;wdPreviousSessionSrc=HarmonyWeb&amp;wdPreviousSession=d9dda1f1-984a-4f3f-8a62-0c126fdc2d23\" rel=\"noopener noreferrer\" target=\"_blank\">Relatório</a></p>', 'RelatÃ³rio TeamTeach.docx', 'C:\\TeamTeach\\WebSite\\backend\\uploads\\RelatÃ³rio TeamTeach.docx', '.docx', 483449, '2024-04-11 18:56:34');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `escola`
---
-
-DROP TABLE IF EXISTS `escola`;
-CREATE TABLE IF NOT EXISTS `escola` (
-  `id_escola` int NOT NULL AUTO_INCREMENT,
-  `nome_escola` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_escola`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
---
--- Дамп данных таблицы `escola`
---
-
-INSERT INTO `escola` (`id_escola`, `nome_escola`) VALUES
-(1, 'AE Bemposta'),
-(2, 'AE Monchique'),
-(3, 'AE Nuno Mergulhão'),
-(4, 'AE Júdice Fialho'),
-(5, 'AE Poeta António Aleixo'),
-(6, 'AE Manuel Teixeira Gomes');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `ferramentos`
---
-
-DROP TABLE IF EXISTS `ferramentos`;
-CREATE TABLE IF NOT EXISTS `ferramentos` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `titulo` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+DROP TABLE IF EXISTS `tools`;
+CREATE TABLE IF NOT EXISTS `tools` (
+  `idTool` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
   `link` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `sobre` text COLLATE utf8mb3_unicode_ci,
-  `aplicacao` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `tipo` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `estado` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `iconeURL` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `about` text COLLATE utf8mb3_unicode_ci,
+  `application` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `state` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`idTool`)
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
--- Дамп данных таблицы `ferramentos`
+-- Дамп данных таблицы `tools`
 --
 
-INSERT INTO `ferramentos` (`id`, `titulo`, `link`, `sobre`, `aplicacao`, `tipo`, `estado`, `iconeURL`) VALUES
-(1, 'Word', 'https://www.office.com/launch/word', 'O Word permite-lhe criar documentos com um design profissional, tais como currículos, cartas, relatórios e muito mais. É amplamente utilizado em ambientes de escritório e para fins educativos.', 'Redes sociais e plataformas de ligação em rede', 'Apresentações e documentos', 'Está a funcionar', 'http://localhost:8081/uploads/icone-1707671665127'),
-(2, 'PowerPoint', 'https://www.office.com/launch/PowerPoint', 'Crie diaporamas informativos ou apresentações invulgares e expresse as suas ideias com o Microsoft PowerPoint.', 'Redes sociais e plataformas de ligação em rede', 'Apresentações e documentos', 'Está a funcionar', 'http://localhost:8081/uploads/icone-1709146940219');
+INSERT INTO `tools` (`idTool`, `title`, `link`, `about`, `application`, `type`, `state`) VALUES
+(1, 'Word', 'https://www.office.com/launch/word', 'Word allows you to create professionally designed documents such as CVs, letters, reports and much more. It is widely used in office environments and for educational purposes.', 'Redes sociais e plataformas de ligação em rede', 'Apresentações e documentos', 'Está a funcionar'),
+(2, 'PowerPoint', 'https://www.office.com/launch/PowerPoint', 'Create informative slideshows or unusual presentations and express your ideas with Microsoft PowerPoint.', 'Redes sociais e plataformas de ligação em rede', 'Apresentações e documentos', 'Está a funcionar'),
+(3, 'Canva', 'https://www.canva.com', 'A graphic design platform used to create social media graphics, presentations, posters, documents and other visual content.', 'Design gráfico e edição de imagens', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(4, 'Figma', 'https://www.figma.com', 'A web-based UI/UX design tool, known for its real-time collaboration capabilities.', 'Colaboração em linha e gestão de projectos', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(5, 'Google Drive', 'https://www.google.com/drive/', 'A file storage and synchronization service created by Google.', 'Computação em nuvem e armazenamento de dados', 'Apresentações e documentos', 'Está a funcionar'),
+(6, 'Trello', 'https://trello.com', 'A collaboration tool that organizes your projects into boards.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(7, 'Zoom', 'https://zoom.us', 'A cloud-based video conferencing service used for virtual meetings.', 'Educação e formação em linha', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(8, 'Slack', 'https://slack.com', 'A messaging app for teams that brings all your communication together.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(9, 'Dropbox', 'https://www.dropbox.com', 'A cloud storage service that lets you save files online and sync them to your devices.', 'Computação em nuvem e armazenamento de dados', 'Apresentações e documentos', 'Está a funcionar'),
+(10, 'Notion', 'https://www.notion.so', 'An all-in-one workspace where you can write, plan, collaborate, and get organized.', 'Colaboração em linha e gestão de projectos', 'Apresentações e documentos', 'Está a funcionar'),
+(11, 'Asana', 'https://asana.com', 'A web and mobile application designed to help teams organize, track, and manage their work.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(12, 'Airtable', 'https://airtable.com', 'A cloud collaboration service that is a hybrid of a spreadsheet and a database.', 'Computação em nuvem e armazenamento de dados', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(13, 'Microsoft Teams', 'https://www.microsoft.com/en-us/microsoft-teams/group-chat-software', 'A collaboration app that helps your team stay organized and has conversations all in one place.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(14, 'Adobe Photoshop', 'https://www.adobe.com/products/photoshop.html', 'A software for photo editing and graphic design.', 'Design gráfico e edição de imagens', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(15, 'InVision', 'https://www.invisionapp.com', 'A digital product design platform powering the world’s best user experiences.', 'Colaboração em linha e gestão de projectos', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(16, 'Basecamp', 'https://basecamp.com', 'A project management tool that helps you keep track of tasks, deadlines, files, discussions, and more.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(17, 'Jira', 'https://www.atlassian.com/software/jira', 'A tool developed by Atlassian for bug tracking, issue tracking, and project management.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(18, 'Evernote', 'https://evernote.com', 'An app designed for note taking, organizing, task management, and archiving.', 'Colaboração em linha e gestão de projectos', 'Apresentações e documentos', 'Está a funcionar'),
+(19, 'Google Docs', 'https://docs.google.com', 'A web-based word processor in which documents can be created, edited, and stored online.', 'Educação e formação em linha', 'Apresentações e documentos', 'Está a funcionar'),
+(20, 'Hootsuite', 'https://hootsuite.com', 'A social media management platform that allows you to schedule posts, track social media engagement, and analyze results.', 'Redes sociais e plataformas de ligação em rede', 'Redes sociais e plataformas de ligação em rede', 'Está a funcionar'),
+(21, 'Buffer', 'https://buffer.com', 'A software application for the web and mobile, designed to manage accounts in social networks.', 'Redes sociais e plataformas de ligação em rede', 'Redes sociais e plataformas de ligação em rede', 'Está a funcionar'),
+(22, 'Loom', 'https://www.loom.com', 'A video messaging tool that helps you get your message across through instantly shareable videos.', 'Educação e formação em linha', 'Vídeo e montagem', 'Está a funcionar'),
+(23, 'Grammarly', 'https://www.grammarly.com', 'An AI-powered writing assistant that helps people with spelling, grammar, and more.', 'Educação e formação em linha', 'Apresentações e documentos', 'Está a funcionar'),
+(25, 'Prezi', 'https://prezi.com', 'A presentation software that uses motion, zoom, and spatial relationships to bring your ideas to life and make you a great presenter.', 'Educação e formação em linha', 'Apresentações e documentos', 'Está a funcionar'),
+(26, 'Miro', 'https://miro.com', 'A collaborative online whiteboard platform designed for remote and distributed teams.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(27, 'SoundCloud', 'https://soundcloud.com', 'An online audio distribution platform and music sharing website.', 'Áudio e Podcasting', 'Áudio e Podcasting', 'Está a funcionar'),
+(28, 'Toggl', 'https://toggl.com', 'A time tracking app that allows you to track your time spent on various projects and analyze productivity.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(29, 'ClickUp', 'https://clickup.com', 'An all-in-one productivity platform to manage tasks, docs, goals, and teams.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(30, 'Sketch', 'https://www.sketch.com', 'A digital design toolkit for app prototyping and collaboration.', 'Design gráfico e edição de imagens', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(31, 'Bitbucket', 'https://bitbucket.org', 'A Git repository management solution designed for professional teams.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(32, 'GitHub', 'https://github.com', 'A provider of Internet hosting for software development and version control using Git.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(33, 'Quip', 'https://quip.com', 'A collaborative productivity software suite for mobile and the Web.', 'Colaboração em linha e gestão de projectos', 'Apresentações e documentos', 'Está a funcionar'),
+(34, 'SurveyMonkey', 'https://www.surveymonkey.com', 'A cloud-based software that allows you to create, send and analyze surveys.', 'Educação e formação em linha', 'Apresentações e documentos', 'Está a funcionar'),
+(35, 'Typeform', 'https://www.typeform.com', 'A web-based platform for collecting and sharing information in conversational, human ways.', 'Educação e formação em linha', 'Apresentações e documentos', 'Está a funcionar'),
+(36, 'Zendesk', 'https://www.zendesk.com', 'A customer service software and support ticketing system.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(37, 'Salesforce', 'https://www.salesforce.com', 'A cloud-based software company providing customer relationship management service.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(38, 'Mailchimp', 'https://mailchimp.com', 'A marketing automation platform and email marketing service.', 'Redes sociais e plataformas de ligação em rede', 'Redes sociais e plataformas de ligação em rede', 'Está a funcionar'),
+(40, 'HubSpot', 'https://www.hubspot.com', 'A CRM platform that provides software and support to help businesses grow.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(41, 'Monday.com', 'https://monday.com', 'A Work OS that powers teams to run projects and workflows with confidence.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(42, 'WeTransfer', 'https://wetransfer.com', 'A cloud-based file transfer service.', 'Computação em nuvem e armazenamento de dados', 'Computação em nuvem e armazenamento de dados', 'Está a funcionar'),
+(43, 'Dropbox Paper', 'https://www.dropbox.com/paper', 'A collaborative document-editing service developed by Dropbox.', 'Colaboração em linha e gestão de projectos', 'Apresentações e documentos', 'Está a funcionar'),
+(45, 'Confluence', 'https://www.atlassian.com/software/confluence', 'A collaboration tool used to help teams collaborate and share knowledge efficiently.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(46, 'Lucidchart', 'https://www.lucidchart.com', 'An intelligent diagramming application that brings teams together to make better decisions and build the future.', 'Colaboração em linha e gestão de projectos', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(47, 'ZoomInfo', 'https://www.zoominfo.com', 'A subscription-based software as a service (SaaS) company that sells access to its database of information about business people and companies.', 'Redes sociais e plataformas de ligação em rede', 'Redes sociais e plataformas de ligação em rede', 'Está a funcionar'),
+(49, 'WordPress', 'https://wordpress.org', 'A free and open-source content management system (CMS) written in PHP and paired with a MySQL or MariaDB database.', 'Educação e formação em linha', 'Apresentações e documentos', 'Está a funcionar'),
+(50, 'Medium', 'https://medium.com', 'An online publishing platform developed by Evan Williams, and launched in August 2012.', 'Educação e formação em linha', 'Apresentações e documentos', 'Está a funcionar'),
+(51, 'Squarespace', 'https://squarespace.com', 'A website building and hosting service which allows users to create and manage their own websites.', 'Educação e formação em linha', 'Apresentações e documentos', 'Está a funcionar'),
+(52, 'Wix', 'https://wix.com', 'A cloud-based web development platform that allows users to create HTML5 websites and mobile sites through the use of online drag and drop tools.', 'Educação e formação em linha', 'Apresentações e documentos', 'Está a funcionar'),
+(53, 'Adobe Illustrator', 'https://www.adobe.com/products/illustrator.html', 'A vector graphics editor and design program developed and marketed by Adobe Inc.', 'Design gráfico e edição de imagens', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(54, 'Affinity Designer', 'https://affinity.serif.com/en-us/designer/', 'A vector graphics editor developed by Serif for macOS, iOS, and Microsoft Windows.', 'Design gráfico e edição de imagens', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(55, 'Inkscape', 'https://inkscape.org', 'A free and open-source vector graphics editor used to create vector images, primarily in Scalable Vector Graphics (SVG) format.', 'Design gráfico e edição de imagens', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(56, 'Krita', 'https://krita.org', 'A free and open-source raster graphics editor designed primarily for digital painting and animation purposes.', 'Design gráfico e edição de imagens', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(57, 'Blender', 'https://blender.org', 'A free and open-source 3D computer graphics software toolset used for creating animated films, visual effects, art, 3D-printed models, motion graphics, and more.', 'Design gráfico e edição de imagens', 'Vídeo e montagem', 'Está a funcionar'),
+(58, 'Maya', 'https://www.autodesk.com/products/maya/overview', 'A 3D computer graphics application that runs on Windows, macOS and Linux, originally developed by Alias Systems Corporation and currently owned and developed by Autodesk, Inc.', 'Design gráfico e edição de imagens', 'Vídeo e montagem', 'Está a funcionar'),
+(59, 'Cinema 4D', 'https://www.maxon.net/en/cinema-4d', 'A 3D software suite developed by the German company Maxon.', 'Design gráfico e edição de imagens', 'Vídeo e montagem', 'Está a funcionar'),
+(60, 'Tinkercad', 'https://www.tinkercad.com', 'A free, online 3D modeling and CAD tool designed for beginners.', 'Educação e formação em linha', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(61, 'SketchUp', 'https://www.sketchup.com', 'A 3D modeling computer program for a wide range of drawing applications such as architectural, interior design, landscape architecture, civil and mechanical engineering, film, and video game design.', 'Educação e formação em linha', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(62, 'Procreate', 'https://procreate.art', 'A raster graphics editor app for digital painting developed and published by Savage Interactive for iOS and iPadOS.', 'Design gráfico e edição de imagens', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(63, 'ArtRage', 'https://www.artrage.com', 'A bitmap graphics editor for digital painting created by Ambient Design Ltd.', 'Design gráfico e edição de imagens', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(64, 'GarageBand', 'https://www.apple.com/mac/garageband/', 'A line of digital audio workstations for macOS and iOS devices that allows users to create music or podcasts.', 'Áudio e Podcasting', 'Áudio e Podcasting', 'Está a funcionar'),
+(65, 'Ableton Live', 'https://www.ableton.com/en/live/', 'A digital audio workstation for macOS and Windows developed by Ableton.', 'Áudio e Podcasting', 'Áudio e Podcasting', 'Está a funcionar'),
+(66, 'FL Studio', 'https://www.image-line.com/flstudio/', 'A digital audio workstation developed by the Belgian company Image-Line.', 'Áudio e Podcasting', 'Áudio e Podcasting', 'Está a funcionar'),
+(67, 'Logic Pro', 'https://www.apple.com/logic-pro/', 'A digital audio workstation and MIDI sequencer software application for the macOS platform.', 'Áudio e Podcasting', 'Áudio e Podcasting', 'Está a funcionar'),
+(68, 'Pro Tools', 'https://www.avid.com/pro-tools', 'A digital audio workstation developed and released by Avid Technology for Microsoft Windows and macOS which can be used for a wide range of sound recording and sound production purposes.', 'Áudio e Podcasting', 'Áudio e Podcasting', 'Está a funcionar'),
+(69, 'Reaper', 'https://www.reaper.fm', 'A digital audio production application for Windows and macOS, offering multitrack audio and MIDI recording, editing, processing, mixing, and mastering toolset.', 'Áudio e Podcasting', 'Áudio e Podcasting', 'Está a funcionar'),
+(70, 'Cubase', 'https://new.steinberg.net/cubase/', 'A digital audio workstation developed by Steinberg for music and MIDI recording, arranging, and editing.', 'Áudio e Podcasting', 'Áudio e Podcasting', 'Está a funcionar'),
+(71, 'Audacity', 'https://www.audacityteam.org', 'A free and open-source digital audio editor and recording application software.', 'Áudio e Podcasting', 'Áudio e Podcasting', 'Está a funcionar'),
+(72, 'DaVinci Resolve', 'https://www.blackmagicdesign.com/products/davinciresolve/', 'A color correction and non-linear video editing application for macOS, Windows, and Linux, originally developed by da Vinci Systems, and now developed by Blackmagic Design.', 'Vídeo e montagem', 'Vídeo e montagem', 'Está a funcionar'),
+(73, 'Final Cut Pro', 'https://www.apple.com/final-cut-pro/', 'A series of non-linear video editing software programs first developed by Macromedia Inc. and later Apple Inc.', 'Vídeo e montagem', 'Vídeo e montagem', 'Está a funcionar'),
+(74, 'Adobe Premiere Pro', 'https://www.adobe.com/products/premiere.html', 'A timeline-based and non-linear video editing software application developed by Adobe Inc.', 'Vídeo e montagem', 'Vídeo e montagem', 'Está a funcionar'),
+(75, 'iMovie', 'https://www.apple.com/imovie/', 'A video editing software application developed by Apple Inc. for macOS and iOS devices.', 'Vídeo e montagem', 'Vídeo e montagem', 'Está a funcionar'),
+(76, 'Sony Vegas', 'https://www.vegascreativesoftware.com/us/vegas-pro/', 'A video editing software package for non-linear editing (NLE) originally published by Sonic Foundry, then by Sony Creative Software, and now by Magix.', 'Vídeo e montagem', 'Vídeo e montagem', 'Está a funcionar'),
+(77, 'HitFilm Express', 'https://fxhome.com/product/hitfilm-express', 'A free video editing and visual effects software with professional-grade VFX tools and everything you need to make awesome content, films, or gaming videos.', 'Vídeo e montagem', 'Vídeo e montagem', 'Está a funcionar'),
+(78, 'Camtasia', 'https://www.techsmith.com/video-editor.html', 'A software suite, created and published by TechSmith, for creating video tutorials and presentations directly via screencast, or via a direct recording plug-in to Microsoft PowerPoint.', 'Educação e formação em linha', 'Vídeo e montagem', 'Está a funcionar'),
+(79, 'OBS Studio', 'https://obsproject.com', 'A free and open-source software for video recording and live streaming.', 'Educação e formação em linha', 'Vídeo e montagem', 'Está a funcionar'),
+(80, 'Screencast-O-Matic', 'https://screencast-o-matic.com', 'A simple and intuitive screen recorder and video editor tool.', 'Educação e formação em linha', 'Vídeo e montagem', 'Está a funcionar'),
+(82, 'Cisco Webex', 'https://www.webex.com', 'A video conferencing and online meeting software.', 'Educação e formação em linha', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(84, 'Google Meet', 'https://meet.google.com', 'A video-communication service developed by Google.', 'Educação e formação em linha', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(85, 'GoToMeeting', 'https://www.gotomeeting.com', 'A web-hosted service created and marketed by LogMeIn.', 'Educação e formação em linha', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(86, 'BlueJeans', 'https://www.bluejeans.com', 'A company that provides an interoperable cloud-based video conferencing service.', 'Educação e formação em linha', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(87, 'Whereby', 'https://whereby.com', 'A flexible work video meeting tool.', 'Educação e formação em linha', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(88, 'Jitsi Meet', 'https://meet.jit.si', 'A free and open-source multiplatform voice (VoIP), videoconferencing and instant messaging application.', 'Educação e formação em linha', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(89, 'Mural', 'https://mural.co', 'A digital workspace for visual collaboration.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(91, 'Stormboard', 'https://stormboard.com', 'A shared workspace for brainstorming, collaboration and innovation.', 'Colaboração em linha e gestão de projectos', 'Colaboração em linha e gestão de projectos', 'Está a funcionar'),
+(92, 'Milanote', 'https://milanote.com', 'A tool for organizing your creative projects into beautiful visual boards.', 'Colaboração em linha e gestão de projectos', 'Design gráfico e edição de imagens', 'Está a funcionar'),
+(93, 'Conceptboard', 'https://conceptboard.com', 'A collaborative online whiteboard used by teams worldwide.', 'Colaboração em linha e gestão de projectos', 'Design gráfico e edição de imagens', 'Está a funcionar');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `ficheiros`
+-- Структура таблицы `users`
 --
 
-DROP TABLE IF EXISTS `ficheiros`;
-CREATE TABLE IF NOT EXISTS `ficheiros` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `id_file_team_activity` int DEFAULT NULL,
-  `id_file_resources` int DEFAULT NULL,
-  `filename` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `path` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `fileType` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `fileSize` bigint DEFAULT NULL,
-  `publishDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `id_file_team_activity` (`id_file_team_activity`),
-  KEY `id_file_resources` (`id_file_resources`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `idTeacher` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `password` varchar(500) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `resetToken` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `idSchool` int DEFAULT NULL,
+  `idGroup` int DEFAULT NULL,
+  `role` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT 'utilizador',
+  `СreateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`idTeacher`),
+  KEY `id_escola` (`idSchool`),
+  KEY `id_grupo` (`idGroup`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+--
+-- Дамп данных таблицы `users`
+--
+
+INSERT INTO `users` (`idTeacher`, `name`, `email`, `password`, `resetToken`, `idSchool`, `idGroup`, `role`, `СreateDate`) VALUES
+(1, 'Admin', 'admin@gmail.com', '$2b$10$.xhNdktxpHmWj.fvrklWKeU0GHooYYGleQ6KP2lvdy8zfMlynWd9C', NULL, 6, 1, 'administrador', '2024-05-29 15:24:33'),
+(2, 'Sofia', 'sofia@gmail.com', '$2b$10$pin6zbD.J75pW1XAgeg4JugoDWTIMmbrmoemgOY6x7NcFGnGG31RW', NULL, 2, 17, 'utilizador', '2024-05-29 15:32:28'),
+(3, 'Alexander', 'alex@gmail.com', '$2b$10$sg056VRg/1vghGOgb6qmFeLgMGvz8fnR/.mi5TOSPQsEwosqs2MjO', NULL, 4, 21, 'utilizador', '2024-05-29 15:32:46'),
+(4, 'Miguel', 'mig@gmail.com', '$2b$10$BVIc4qqcUnujccy7Wk8KJOc8jBOSIkatgq6/nExbV/rWljXUUouGy', NULL, 2, 14, 'utilizador', '2024-05-30 08:04:32');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `grupo`
+-- Структура таблицы `years`
 --
 
-DROP TABLE IF EXISTS `grupo`;
-CREATE TABLE IF NOT EXISTS `grupo` (
-  `id_grupo` int NOT NULL,
-  `cod_grupo` int DEFAULT NULL,
-  `nome_grupo` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id_grupo`)
+DROP TABLE IF EXISTS `years`;
+CREATE TABLE IF NOT EXISTS `years` (
+  `idYear` int NOT NULL,
+  `year` int NOT NULL,
+  `idEducation` int NOT NULL,
+  PRIMARY KEY (`idYear`),
+  KEY `id_ensino` (`idEducation`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
--- Дамп данных таблицы `grupo`
+-- Дамп данных таблицы `years`
 --
 
-INSERT INTO `grupo` (`id_grupo`, `cod_grupo`, `nome_grupo`) VALUES
-(1, 100, 'Educacao Pre-Escolar'),
-(2, 110, 'Ensino Basico - 1 Ciclo'),
-(3, 120, 'Ingles'),
-(4, 200, 'Portugues e Estudos Sociais/Historia'),
-(5, 210, 'Portugues e Frances'),
-(6, 220, 'Portugues e Ingles'),
-(7, 230, 'Matematicae Ciencias da Natureza'),
-(8, 240, 'Educacao Visual e Tecnologica'),
-(9, 250, 'Educacao Musical'),
-(10, 260, 'Educacao Fisica'),
-(11, 290, 'Educacao Moral e Religiosa'),
-(12, 300, 'Portugues'),
-(13, 310, 'Latim e Grego'),
-(14, 320, 'Frances'),
-(15, 330, 'Ingles'),
-(16, 340, 'Alemao'),
-(17, 350, 'Espanhol'),
-(18, 400, 'Historia'),
-(19, 410, 'Filosofia'),
-(20, 420, 'Geografia'),
-(21, 430, 'Economia e Contabilidade'),
-(22, 500, 'Matematica'),
-(23, 510, 'Fisica e Quimica'),
-(24, 520, 'Biologia e Geologia'),
-(25, 530, 'Educacao Tecnologia'),
-(26, 600, 'Artes Visuais'),
-(27, 620, 'Educacao Fisica'),
-(28, 540, 'Electrotecnica'),
-(29, 550, 'Informatica'),
-(30, 560, 'Ciencias Agro-pecuarias'),
-(31, 610, 'Musica'),
-(32, 360, 'Lingua Gestual Portguesa'),
-(33, 910, 'Educacao Especial 1'),
-(34, 920, 'Educacao Especial 2'),
-(35, 930, 'Educacao Especial 3');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `nivel_ensino`
---
-
-DROP TABLE IF EXISTS `nivel_ensino`;
-CREATE TABLE IF NOT EXISTS `nivel_ensino` (
-  `id_ensino` int NOT NULL AUTO_INCREMENT,
-  `nome_ensino` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_ensino`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
---
--- Дамп данных таблицы `nivel_ensino`
---
-
-INSERT INTO `nivel_ensino` (`id_ensino`, `nome_ensino`) VALUES
-(1, '1.º Ciclo'),
-(2, '2.º Ciclo'),
-(3, '3.º Ciclo'),
-(4, 'Secundário Científico-Humanísticos'),
-(5, 'Secundário Profissionais'),
-(6, 'PIEF');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `professores`
---
-
-DROP TABLE IF EXISTS `professores`;
-CREATE TABLE IF NOT EXISTS `professores` (
-  `id_professor` int NOT NULL AUTO_INCREMENT,
-  `nome_professor` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `email_professor` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `password_professor` varchar(3000) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `resetToken` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `resetTokenExpires` date DEFAULT NULL,
-  `data_registro` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `id_escola` int DEFAULT NULL,
-  `id_grupo` int DEFAULT NULL,
-  `role` varchar(50) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'utilizador',
-  PRIMARY KEY (`id_professor`),
-  KEY `id_escola` (`id_escola`),
-  KEY `id_grupo` (`id_grupo`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
---
--- Дамп данных таблицы `professores`
---
-
-INSERT INTO `professores` (`id_professor`, `nome_professor`, `email_professor`, `password_professor`, `resetToken`, `resetTokenExpires`, `data_registro`, `id_escola`, `id_grupo`, `role`) VALUES
-(1, 'XYZ', 'mrzerox228@gmail.com', '$2b$10$UzI1PL6LywjVTVo.Vlq2E.jaRMbPRA210TZx0On74CuV/cylT.iqy', NULL, NULL, '2024-04-09 19:18:27', 6, 16, 'administrador'),
-(2, 'Sofia', 'sofia@gmail.com', '$2b$10$F5pVc2ThPEvE2GkgKu/g.ea0vRjPvgcAcnFXTt885JFlNlkkMHl3u', NULL, NULL, '2024-04-09 19:39:54', 3, 15, 'utilizador');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `recursos`
---
-
-DROP TABLE IF EXISTS `recursos`;
-CREATE TABLE IF NOT EXISTS `recursos` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `id_professor` int NOT NULL,
-  `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `filename` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `path` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `fileType` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `fileSize` bigint DEFAULT NULL,
-  `iconPath` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `publishDate` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_professor` (`id_professor`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
---
--- Дамп данных таблицы `recursos`
---
-
-INSERT INTO `recursos` (`id`, `id_professor`, `title`, `filename`, `path`, `fileType`, `fileSize`, `iconPath`, `publishDate`) VALUES
-(4, 1, 'Green Steam', 'Cyberpunk-2077.torrent', 'C:\\TeamTeach\\website\\backend\\uploads\\Cyberpunk-2077.torrent', 'application/x-bittorrent', 390986, NULL, '2024-04-09 19:35:49'),
-(5, 2, 'More democracies', 'HellDrivers2.jpg', 'C:\\TeamTeach\\website\\backend\\uploads\\HellDrivers2.jpg', 'image/jpeg', 9881, NULL, '2024-04-09 19:42:35');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `relacao_equipa_utilizador`
---
-
-DROP TABLE IF EXISTS `relacao_equipa_utilizador`;
-CREATE TABLE IF NOT EXISTS `relacao_equipa_utilizador` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `id_equipa` int DEFAULT NULL,
-  `id_professor` int DEFAULT NULL,
-  `nivel_de_acesso` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT 'guest',
-  PRIMARY KEY (`id`),
-  KEY `id_equipa` (`id_equipa`),
-  KEY `id_professor` (`id_professor`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
---
--- Дамп данных таблицы `relacao_equipa_utilizador`
---
-
-INSERT INTO `relacao_equipa_utilizador` (`id`, `id_equipa`, `id_professor`, `nivel_de_acesso`) VALUES
-(1, 1, 1, 'Administrator'),
-(2, 1, 2, 'Guest');
+INSERT INTO `years` (`idYear`, `year`, `idEducation`) VALUES
+(1, 1, 1),
+(2, 2, 1),
+(3, 3, 1),
+(4, 4, 1),
+(5, 5, 2),
+(6, 6, 2),
+(7, 7, 3),
+(8, 8, 3),
+(9, 9, 3),
+(10, 10, 4),
+(11, 11, 4),
+(12, 12, 4);
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
 
 --
--- Ограничения внешнего ключа таблицы `anos`
+-- Ограничения внешнего ключа таблицы `activitys`
 --
-ALTER TABLE `anos`
-  ADD CONSTRAINT `anos_ibfk_1` FOREIGN KEY (`id_ensino`) REFERENCES `nivel_ensino` (`id_ensino`);
+ALTER TABLE `activitys`
+  ADD CONSTRAINT `activitys_ibfk_1` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`),
+  ADD CONSTRAINT `activitys_ibfk_100` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1001` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1003` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1005` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1007` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1009` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1011` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1013` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1015` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1017` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1019` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_102` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1021` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1023` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1025` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1027` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1029` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1031` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1033` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1035` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1037` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1039` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_104` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1041` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1043` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1045` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1047` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1049` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1051` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1053` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1055` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1057` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1059` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_106` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1061` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1063` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1065` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1067` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1069` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1071` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1073` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1075` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1077` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1079` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_108` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1081` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1083` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1085` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1087` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1089` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1091` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1093` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1095` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1097` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1099` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_11` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_110` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1101` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1103` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1105` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1107` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1109` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1111` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1113` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1115` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1117` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1119` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_112` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1121` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1123` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1125` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1127` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1129` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1131` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1133` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1135` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1137` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1139` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_114` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1141` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1143` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1145` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1147` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1149` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1151` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1153` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1155` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1157` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_116` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1160` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1162` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1164` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1166` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1168` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1170` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1172` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1174` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1176` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1178` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_118` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1180` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1182` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1184` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1186` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1188` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1190` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1192` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1194` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1196` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1198` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_120` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1200` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1202` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1204` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1206` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1208` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1210` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1212` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1214` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1216` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1218` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_122` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1220` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1222` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1224` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1226` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1228` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1230` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1232` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1234` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1236` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1238` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_124` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1240` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1242` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1244` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1246` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1248` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1250` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1252` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1254` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1256` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1258` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_126` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1260` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1262` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1264` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1266` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1268` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1270` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1272` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1274` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1276` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1278` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_128` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1280` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1282` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1284` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1286` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1288` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1290` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1292` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1294` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1296` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1298` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_13` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_130` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1300` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1302` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1304` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1306` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1308` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1310` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1312` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1314` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1316` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1318` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1320` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1322` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1324` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1326` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1328` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_133` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1330` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1332` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1334` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1336` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1338` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1340` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1342` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1344` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1346` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1348` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_135` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1350` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1352` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1354` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1356` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1358` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1360` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1362` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1364` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1366` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1368` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_137` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1370` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1372` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1374` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1376` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1378` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1380` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1382` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1384` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1386` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1388` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_139` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1390` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1392` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1394` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1396` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1398` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1400` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1402` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1404` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1406` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1408` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_141` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1410` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1412` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1414` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1416` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1418` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1420` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1422` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1424` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1426` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1428` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_143` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1430` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1432` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1434` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1436` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1438` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1440` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1442` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1444` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1446` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1448` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_145` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1450` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1452` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1454` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1456` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1458` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1460` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1462` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1464` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1466` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1468` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_147` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1470` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1472` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1474` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1476` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1478` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1480` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1482` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1484` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1486` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1488` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_149` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1490` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1492` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1494` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1496` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1498` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_15` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1500` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1502` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1504` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1506` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1508` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_151` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1510` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1512` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1514` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1516` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1518` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1520` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1522` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1524` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1526` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1528` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_153` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1530` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1532` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1534` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1536` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1538` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1540` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1542` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1544` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1546` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1548` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_155` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1550` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1552` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1554` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1556` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1558` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1560` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1562` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1564` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1566` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1568` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_157` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1570` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1572` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1574` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1576` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1578` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1580` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1582` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1584` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1586` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1588` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_159` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1590` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1592` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1594` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1596` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1598` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1600` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1602` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1604` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1606` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1608` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_161` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1610` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1612` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1614` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1616` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1618` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1620` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1622` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1624` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1626` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1628` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_163` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1630` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1632` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1634` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1636` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1638` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1640` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1642` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1644` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1646` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1648` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_165` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1650` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1652` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1654` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1656` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1658` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1660` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1662` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1664` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1666` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1668` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_167` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1670` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1672` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1674` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1676` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1678` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1680` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1682` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1684` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1686` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1688` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_169` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1690` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1692` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1694` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1696` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1698` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_17` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1700` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1702` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1704` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1706` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1708` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_171` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1710` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1712` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1714` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1716` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1718` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1720` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1722` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1725` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1727` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1729` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_173` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1731` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1733` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1735` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1737` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1739` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1741` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1743` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1745` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1747` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1749` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_175` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1751` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1753` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1755` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1757` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1759` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1761` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1763` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1765` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1767` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1769` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_177` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1771` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1773` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1775` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1777` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1779` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1781` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1783` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1785` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1787` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1789` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_179` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1791` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1793` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1795` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1797` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1799` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1801` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1803` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1805` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1807` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1809` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_181` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1811` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1813` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1815` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1817` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1819` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1821` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1823` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1825` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1827` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1829` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_183` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1831` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1833` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1835` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1837` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1839` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1841` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1843` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1845` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1847` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1849` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_185` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1851` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1853` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1855` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1857` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1859` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1861` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1863` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1865` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1867` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1869` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_187` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1871` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1873` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1875` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1877` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1879` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1881` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1884` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1886` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1888` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_189` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1890` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1892` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1894` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1896` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1898` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_19` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1900` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1902` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1904` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1906` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1908` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_191` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1910` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1912` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1914` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1916` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1918` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1920` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1922` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1924` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1926` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1928` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_193` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1930` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1932` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1934` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1936` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1938` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1940` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1942` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1944` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1946` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1948` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_195` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1950` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1952` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1954` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1956` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1958` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1960` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1962` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1964` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1966` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1968` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_197` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1970` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1972` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1974` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1976` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1978` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1980` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1982` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1984` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1986` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1988` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_199` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1990` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1992` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1994` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1996` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1998` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_2000` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_2001` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idTeacher`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_2002` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_2003` FOREIGN KEY (`idYear`) REFERENCES `years` (`idYear`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_2004` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_201` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_203` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_205` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_207` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_21` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_210` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_212` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_214` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_216` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_218` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_220` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_222` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_224` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_226` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_228` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_23` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_230` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_232` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_234` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_236` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_238` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_240` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_242` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_244` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_246` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_248` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_25` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_250` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_252` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_254` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_256` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_258` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_261` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_263` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_265` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_267` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_269` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_27` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_271` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_273` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_275` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_277` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_279` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_281` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_283` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_285` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_287` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_289` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_29` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_291` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_293` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_295` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_297` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_299` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_3` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`),
+  ADD CONSTRAINT `activitys_ibfk_301` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_303` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_305` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_307` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_309` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_31` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_311` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_313` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_315` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_317` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_319` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_321` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_323` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_325` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_327` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_329` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_33` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_331` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_333` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_335` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_337` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_339` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_341` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_343` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_345` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_347` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_35` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_350` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_352` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_354` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_356` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_358` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_360` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_362` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_364` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_366` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_368` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_37` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_370` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_372` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_374` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_376` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_378` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_380` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_382` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_384` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_386` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_388` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_39` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_390` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_392` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_394` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_396` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_398` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_400` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_402` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_404` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_406` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_408` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_41` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_410` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_412` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_414` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_416` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_418` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_420` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_422` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_424` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_426` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_428` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_43` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_430` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_432` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_434` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_436` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_438` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_440` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_442` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_444` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_446` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_448` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_45` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_450` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_452` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_454` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_456` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_458` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_460` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_462` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_464` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_466` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_468` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_47` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_470` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_472` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_474` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_476` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_478` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_480` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_482` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_484` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_486` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_488` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_49` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_490` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_492` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_494` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_496` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_498` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_5` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_500` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_502` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_504` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_506` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_508` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_51` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_510` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_512` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_514` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_516` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_518` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_520` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_522` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_524` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_526` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_528` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_530` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_532` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_534` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_536` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_538` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_54` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_540` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_542` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_544` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_546` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_548` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_550` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_552` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_554` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_556` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_558` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_56` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_560` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_562` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_564` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_566` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_568` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_570` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_572` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_574` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_576` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_578` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_58` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_580` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_582` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_584` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_586` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_588` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_590` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_592` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_594` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_596` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_598` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_60` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_600` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_602` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_604` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_606` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_608` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_610` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_612` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_614` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_616` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_618` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_62` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_620` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_622` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_624` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_626` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_629` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_631` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_633` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_635` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_637` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_639` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_64` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_641` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_643` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_645` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_647` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_649` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_651` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_653` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_655` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_657` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_659` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_66` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_661` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_663` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_665` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_667` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_669` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_671` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_673` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_675` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_677` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_679` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_68` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_681` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_683` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_685` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_687` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_689` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_691` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_693` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_695` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_697` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_699` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_7` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_70` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_701` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_703` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_705` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_707` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_709` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_711` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_713` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_715` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_717` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_719` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_72` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_721` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_723` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_725` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_727` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_729` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_731` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_733` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_735` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_737` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_739` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_74` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_741` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_743` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_745` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_747` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_749` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_751` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_753` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_755` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_757` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_759` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_76` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_761` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_763` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_765` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_767` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_769` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_771` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_773` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_775` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_777` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_779` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_78` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_781` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_783` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_785` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_787` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_789` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_791` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_793` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_795` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_797` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_799` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_80` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_801` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_803` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_805` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_807` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_809` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_811` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_813` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_815` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_817` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_819` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_82` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_821` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_823` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_825` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_827` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_829` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_831` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_833` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_835` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_837` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_839` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_84` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_841` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_843` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_845` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_847` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_849` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_851` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_853` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_855` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_857` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_859` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_86` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_861` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_863` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_865` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_867` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_869` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_871` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_873` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_875` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_877` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_879` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_88` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_881` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_883` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_885` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_887` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_889` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_891` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_893` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_895` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_897` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_899` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_9` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_90` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_901` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_903` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_905` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_907` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_909` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_911` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_913` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_915` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_917` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_919` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_92` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_921` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_923` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_925` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_927` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_929` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_931` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_933` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_935` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_937` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_939` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_94` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_941` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_943` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_945` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_947` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_949` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_951` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_953` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_955` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_957` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_959` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_96` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_961` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_963` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_965` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_967` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_969` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_971` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_973` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_975` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_977` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_979` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_98` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_981` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_983` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_985` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_987` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_989` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_991` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_993` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_995` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_997` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_999` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `atividades`
+-- Ограничения внешнего ключа таблицы `activity_team`
 --
-ALTER TABLE `atividades`
-  ADD CONSTRAINT `atividades_ibfk_1` FOREIGN KEY (`id_disciplina`) REFERENCES `disciplinas` (`id_disciplina`),
-  ADD CONSTRAINT `atividades_ibfk_2` FOREIGN KEY (`id_ano`) REFERENCES `anos` (`id_ano`),
-  ADD CONSTRAINT `atividades_ibfk_3` FOREIGN KEY (`id_ensino`) REFERENCES `nivel_ensino` (`id_ensino`),
-  ADD CONSTRAINT `atividades_ibfk_4` FOREIGN KEY (`id_professor`) REFERENCES `professores` (`id_professor`);
+ALTER TABLE `activity_team`
+  ADD CONSTRAINT `activity_team_ibfk_933` FOREIGN KEY (`idTeam`) REFERENCES `teams` (`idTeam`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activity_team_ibfk_934` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idTeacher`) ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `disciplina_ano`
+-- Ограничения внешнего ключа таблицы `resources`
 --
-ALTER TABLE `disciplina_ano`
-  ADD CONSTRAINT `disciplina_ano_ibfk_1` FOREIGN KEY (`id_disciplina`) REFERENCES `disciplinas` (`id_disciplina`),
-  ADD CONSTRAINT `disciplina_ano_ibfk_2` FOREIGN KEY (`id_ano`) REFERENCES `anos` (`id_ano`),
-  ADD CONSTRAINT `disciplina_ano_ibfk_3` FOREIGN KEY (`id_ensino`) REFERENCES `nivel_ensino` (`id_ensino`);
+ALTER TABLE `resources`
+  ADD CONSTRAINT `resources_ibfk_1` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idTeacher`) ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `equipa`
+-- Ограничения внешнего ключа таблицы `teams`
 --
-ALTER TABLE `equipa`
-  ADD CONSTRAINT `fk_id_professor` FOREIGN KEY (`id_professor`) REFERENCES `professores` (`id_professor`);
+ALTER TABLE `teams`
+  ADD CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idTeacher`) ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `equipa_atividades`
+-- Ограничения внешнего ключа таблицы `team_list`
 --
-ALTER TABLE `equipa_atividades`
-  ADD CONSTRAINT `equipa_atividades_ibfk_1` FOREIGN KEY (`id_equipa`) REFERENCES `equipa` (`id_equipa`),
-  ADD CONSTRAINT `equipa_atividades_ibfk_2` FOREIGN KEY (`id_professor`) REFERENCES `professores` (`id_professor`);
+ALTER TABLE `team_list`
+  ADD CONSTRAINT `team_list_ibfk_911` FOREIGN KEY (`idTeam`) REFERENCES `teams` (`idTeam`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `team_list_ibfk_912` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idTeacher`) ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `professores`
+-- Ограничения внешнего ключа таблицы `users`
 --
-ALTER TABLE `professores`
-  ADD CONSTRAINT `professores_ibfk_1` FOREIGN KEY (`id_escola`) REFERENCES `escola` (`id_escola`),
-  ADD CONSTRAINT `professores_ibfk_2` FOREIGN KEY (`id_grupo`) REFERENCES `grupo` (`id_grupo`);
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_207` FOREIGN KEY (`idSchool`) REFERENCES `schools` (`idSchool`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `users_ibfk_208` FOREIGN KEY (`idGroup`) REFERENCES `groups` (`idGroup`) ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `recursos`
+-- Ограничения внешнего ключа таблицы `years`
 --
-ALTER TABLE `recursos`
-  ADD CONSTRAINT `recursos_ibfk_1` FOREIGN KEY (`id_professor`) REFERENCES `professores` (`id_professor`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
---
--- Ограничения внешнего ключа таблицы `relacao_equipa_utilizador`
---
-ALTER TABLE `relacao_equipa_utilizador`
-  ADD CONSTRAINT `relacao_equipa_utilizador_ibfk_1` FOREIGN KEY (`id_equipa`) REFERENCES `equipa` (`id_equipa`),
-  ADD CONSTRAINT `relacao_equipa_utilizador_ibfk_2` FOREIGN KEY (`id_professor`) REFERENCES `professores` (`id_professor`);
+ALTER TABLE `years`
+  ADD CONSTRAINT `years_ibfk_1` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

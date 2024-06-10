@@ -29,7 +29,8 @@ const emailController = require('../controllers/EmailController');
 // Auth
 router.post('/user/registration', authController.registration)
 router.post('/user/login', authController.login);
-router.get('/user/auth', authenticateToken, authController.check)
+router.post('/user/auth/google', authController.authGoogle)
+router.get('/user/auth/check', authenticateToken, authController.check)
 
 // Profile
 router.get('/user/profile', authenticateToken, profileController.getProfileUser);
@@ -76,6 +77,8 @@ router.get('/getData', authenticateToken, dataController.getData, (req, res) => 
   if (req.user.role === 'administrador') return res.json({ message: 'Добро пожаловать на страницу администратора!' });
     return res.status(403).json({ message: 'Доступ запрещен: Только администраторы имеют доступ' });
 });
+
+router.post('/admin-add-note-bd', authenticateToken, dataController.postDataTable)
 
 router.post('/admin-update-data-user/:idTeacher', authenticateToken, profileController.adminUpdateProfile)
 router.post('/admin-delete-data-user/:idTeacher', authenticateToken, profileController.deleteUser)

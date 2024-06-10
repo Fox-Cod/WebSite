@@ -1,4 +1,4 @@
-const { Schools, Groups, Users, Activitys, Resources, Subjects, Years, Educations, Team_List, Teams } = require('../models/model')
+const { Schools, Groups, Users, Activitys, Comments, Resources, Subjects, Years, Educations, Team_List, Teams } = require('../models/model')
 
 async function getProfileUser(req, res) {
   const { idTeacher } = req.userToken;
@@ -14,11 +14,17 @@ async function getProfileUser(req, res) {
 
     if (!teacher) return res.status(404).json({ Message: 'Not Found: Utilizador não encontrado' });
 
-    const { schools, groups, ...profile } = teacher.toJSON();
-    const { nameSchool } = schools, { codGroup, nameGroup } = groups;
+    const teacherData = teacher.toJSON();
+    const nameSchool = teacherData.schools?.nameSchool ?? null;
+    const codGroup = teacherData.groups?.codGroup ?? null;
+    const nameGroup = teacherData.groups?.nameGroup ?? null;
+
+    // Удаление ненужных свойств для сохранения профиля
+    delete teacherData.schools;
+    delete teacherData.groups;
 
     const userActivity = await Activitys.findAll({
-      where: { idTeacher: idTeacher },
+      where: { idTeacher },
       include: [
         { model: Users, as: 'users', attributes: ['name'] },
         { model: Subjects, as: 'subjects', attributes: ['nameSubject'] },
@@ -44,7 +50,7 @@ async function getProfileUser(req, res) {
 
     res.json({
       Status: 'Success',
-      profile: { ...profile, nameSchool, codGroup, nameGroup },
+      profile: { ...teacherData, nameSchool, codGroup, nameGroup },
       activity: userActivity,
       resources: userResources,
       teams,
@@ -54,6 +60,7 @@ async function getProfileUser(req, res) {
     return res.status(500).json({ Message: 'Erro interno do servidor' });
   }
 }
+
 
 async function updateProfile(req, res) {
   try {
@@ -149,6 +156,7 @@ async function adminUpdateProfile(req, res) {
 const deleteUser = async (req, res) => {
   const { idTeacher } = req.params;
   try {
+      await Comments.destroy({ where: {idTeacher: idTeacher } });
       await Team_List.destroy({ where: { idTeacher: idTeacher } });
       await Activitys.destroy({ where: { idTeacher: idTeacher } });
       await Teams.destroy({ where: { idTeacher: idTeacher } });

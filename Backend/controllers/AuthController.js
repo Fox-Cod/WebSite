@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { Op } = require('sequelize');
-
+const { OAuth2Client } = require('google-auth-library');
 const { Users } = require('../models/model')
+const client = new OAuth2Client('41978584350-7q77ll8c23fktgf7ehes1piaq5q18jc5.apps.googleusercontent.com');
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY || 'default-secret-key';
 
@@ -13,6 +13,35 @@ const generateJwt = (idTeacher, role) => {
       {expiresIn: '24h'}
   )
 }
+
+async function authGoogle(req, res) {
+  const { token } = req.body;
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: '41978584350-7q77ll8c23fktgf7ehes1piaq5q18jc5.apps.googleusercontent.com',
+    });
+    const payload = ticket.getPayload();
+    const { name, email } = payload;
+
+    // Дополнительно: Найдите или создайте пользователя в своей базе данных
+    const user = await Users.findOne({ where: { email: email } });
+    if (!user) {
+      // Создайте нового пользователя, если его нет в базе данных
+      user = await Users.create({ name, email, role: 'utilizador' }); // Пример создания пользователя
+    }
+
+    const jwtToken = generateJwt(user.idTeacher, user.role);
+    res.cookie('token', jwtToken, { httpOnly: true });
+
+    res.json({ status: 'Success', userId: user.idTeacher, role: user.role });
+  } catch (error) {
+    console.error('Ошибка аутентификации через Google:', error);
+    res.status(500).json({ message: 'Ошибка аутентификации через Google' });
+  }
+};
+
 
 async function login(req, res) {
   const { email, password } = req.body;
@@ -95,7 +124,8 @@ async function check(req, res, next) {
   if (!req.userToken) {
     return res.status(401).json({ error: "Unauthorized" });
   }
+  console.log(req.userToken)
   return res.json({ success: true, token: req.userToken });
 }
 
-module.exports = { login, registration, tokenValidation, resetPassword, check };
+module.exports = { authGoogle, login, registration, tokenValidation, resetPassword, check };

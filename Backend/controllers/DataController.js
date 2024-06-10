@@ -188,7 +188,49 @@ async function addComment(req, res) {
   }
 }
 
+async function postDataTable(req, res) {
+  const { selectedTable, formData } = req.body;
 
-module.exports = { getAllData, postTools, getTools, postResourcesFiles, getAllResources, downloadResourcesFiles, getData, getOneResource };
+  try {
+    let result;
+    switch (selectedTable) {
+      case '_Years':
+        ex = await Years.findOne({ where: { year: formData.year }})
+        if(ex) { return res.status(409).json({ Message: 'O ano já existe' }) }
+        result = await Years.create({ year: formData.year });
+        break;
+      case '_Schools':
+        ex = await Schools.findOne({ where: { nameSchool: formData.schoolName }})
+        if(ex) { return res.status(409).json({ Message: 'A escola já existe' }) }
+        result = await Schools.create({ nameSchool: formData.schoolName });
+        break;
+      case '_Educations':
+        ex = await Educations.findOne({ where: { nameEducation: formData.educationLevel }})
+        if(ex) { return res.status(409).json({ Message: 'O nível de escolaridade já existe' }) }
+        result = await Educations.create({ nameEducation: formData.educationLevel });
+        break;
+      case '_Subjects':
+        ex = await Subjects.findOne({ where: { nameSubject: formData.nameSubject }})
+        if(ex) { return res.status(409).json({ Message: 'O assunto já existe' }) }
+        result = await Subjects.create({ nameSubject: formData.nameSubject });
+        break;
+      case '_Groups':
+        ex = await Groups.findOne({ where: { nameGroup: formData.nameGroup }})
+        if(ex) { return res.status(409).json({ Message: 'Group already exists' }) }
+        result = await Groups.create({ codGroup: formData.codGroup, nameGroup: formData.nameGroup });
+        break;
+      default:
+        return res.status(400).json({ error: 'Nome de tabela inválido' });
+    }
+    res.status(201).json(result);
+  } catch (error) {
+    console.error('Error saving data:', error);
+    res.status(500).json({ error: 'Erro ao salvar dados' });
+  }
+}
+
+
+
+module.exports = { getAllData, postTools, getTools, postResourcesFiles, getAllResources, downloadResourcesFiles, getData, getOneResource, postDataTable };
 
 

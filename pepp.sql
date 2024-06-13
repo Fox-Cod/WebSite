@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июн 12 2024 г., 19:33
+-- Время создания: Июн 13 2024 г., 17:47
 -- Версия сервера: 8.2.0
 -- Версия PHP: 8.2.13
 
@@ -36,8 +36,6 @@ CREATE TABLE IF NOT EXISTS `activitys` (
   `title` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `description` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `publishDate` datetime DEFAULT NULL,
-  `viewsCount` int DEFAULT '0',
-  `commentsCount` int DEFAULT '0',
   `idSubject` int DEFAULT NULL,
   `idYear` int DEFAULT NULL,
   `idEducation` int DEFAULT NULL,
@@ -52,12 +50,12 @@ CREATE TABLE IF NOT EXISTS `activitys` (
 -- Дамп данных таблицы `activitys`
 --
 
-INSERT INTO `activitys` (`idActivity`, `idTeacher`, `planning`, `presentation`, `title`, `description`, `publishDate`, `viewsCount`, `commentsCount`, `idSubject`, `idYear`, `idEducation`) VALUES
-(1, 1, 'https://minhasviagensculinarias.blogspot.com/2014/07/receitas-de-chuck-e-monotonia.html', 'https://escolaamiga.pt/projetos/86cfb578-c485-4973-b96f-8fb0aaeab1a8?category=&school=&name=&offset=190&total=200', 'Explorando culturas através da culinária', ' Transforme sua sala de aula em um laboratório culinário! Os alunos irão explorar a cultura de diferentes países através da preparação de pratos nacionais. Esta é uma forma envolvente de estudar geografia, história e tradições de diversas nações, enquanto', '2024-05-29 15:31:53', 0, 0, 34, 4, 2),
-(2, 3, 'https://faveni.edu.br/curso/ecologia-e-desenvolvimento-sustentavel/', 'https://edukatu.org.br/uploads/EDKT/Plano_de_Aula_ODS17_Parcerias.pdf', 'Desenvolvimento sustentável e ecologia', 'Discuta com os alunos os problemas ambientais atuais e maneiras de solucioná-los. A aula incluirá a exibição de documentários, realização de experimentos e criação de projetos de preservação ambiental. Isso ajudará os alunos a entenderem melhor como suas ', '2024-05-29 15:34:04', 0, 0, 70, 6, 3),
-(3, 3, 'https://www.wook.pt/arvoretematica/livros-em-portugues-arte/8066x5839x18000/P', 'https://www.arte.tv/en/', 'Arte e Criatividade', 'Esta aula é dedicada à exploração de diferentes formas de arte e ao desenvolvimento de habilidades criativas. Os alunos serão apresentados a várias técnicas artísticas, como pintura, escultura e design gráfico, e criarão suas próprias obras de arte.', '2024-05-29 15:35:38', 0, 0, 3, 8, 3),
-(4, 2, 'https://www.slideshare.net/slideshow/planejamento-financeiro-na-prtica/64948704', 'https://novaescola.org.br/planos-de-aula/temas/educacao-financeira', 'Planejamento Financeiro: Preparando os Alunos para o Futuro', 'Ensine aos seus alunos a importância do planejamento financeiro pessoal. Esta aula abordará tópicos como orçamento, economia, investimento e gestão de dívidas. Os alunos sairão com uma compreensão sólida de como gerenciar suas finanças e tomar decisões fi', '2024-05-29 15:38:26', 0, 0, 10, 6, 3),
-(5, 2, ' Apresentação \"Explorando o Futuro Digital\"', 'Plano de aula para tecnologia e inovação', 'Explorando o Futuro Digital: Desenvolvendo Habilidades Tecnológicas', ' Prepare seus alunos para o mundo digital em constante mudança com esta aula sobre tecnologia e inovação. Eles explorarão tópicos como programação, inteligência artificial, realidade virtual e ética digital. Esta é uma oportunidade para os alunos desenvol', '2024-05-29 15:38:57', 0, 0, 16, 4, 3);
+INSERT INTO `activitys` (`idActivity`, `idTeacher`, `planning`, `presentation`, `title`, `description`, `publishDate`, `idSubject`, `idYear`, `idEducation`) VALUES
+(1, 1, 'https://minhasviagensculinarias.blogspot.com/2014/07/receitas-de-chuck-e-monotonia.html', 'https://escolaamiga.pt/projetos/86cfb578-c485-4973-b96f-8fb0aaeab1a8?category=&school=&name=&offset=190&total=200', 'Explorando culturas através da culinária', ' Transforme sua sala de aula em um laboratório culinário! Os alunos irão explorar a cultura de diferentes países através da preparação de pratos nacionais. Esta é uma forma envolvente de estudar geografia, história e tradições de diversas nações, enquanto', '2024-05-29 15:31:53', 16, 4, 2),
+(2, 3, 'https://faveni.edu.br/curso/ecologia-e-desenvolvimento-sustentavel/', 'https://edukatu.org.br/uploads/EDKT/Plano_de_Aula_ODS17_Parcerias.pdf', 'Desenvolvimento sustentável e ecologia', 'Discuta com os alunos os problemas ambientais atuais e maneiras de solucioná-los. A aula incluirá a exibição de documentários, realização de experimentos e criação de projetos de preservação ambiental. Isso ajudará os alunos a entenderem melhor como suas ', '2024-05-29 15:34:04', 70, 6, 3),
+(3, 3, 'https://www.wook.pt/arvoretematica/livros-em-portugues-arte/8066x5839x18000/P', 'https://www.arte.tv/en/', 'Arte e Criatividade', 'Esta aula é dedicada à exploração de diferentes formas de arte e ao desenvolvimento de habilidades criativas. Os alunos serão apresentados a várias técnicas artísticas, como pintura, escultura e design gráfico, e criarão suas próprias obras de arte.', '2024-05-29 15:35:38', 3, 8, 3),
+(4, 2, 'https://www.slideshare.net/slideshow/planejamento-financeiro-na-prtica/64948704', 'https://novaescola.org.br/planos-de-aula/temas/educacao-financeira', 'Planejamento Financeiro: Preparando os Alunos para o Futuro', 'Ensine aos seus alunos a importância do planejamento financeiro pessoal. Esta aula abordará tópicos como orçamento, economia, investimento e gestão de dívidas. Os alunos sairão com uma compreensão sólida de como gerenciar suas finanças e tomar decisões fi', '2024-05-29 15:38:26', 10, 6, 3),
+(5, 2, ' Apresentação \"Explorando o Futuro Digital\"', 'Plano de aula para tecnologia e inovação', 'Explorando o Futuro Digital: Desenvolvendo Habilidades Tecnológicas', ' Prepare seus alunos para o mundo digital em constante mudança com esta aula sobre tecnologia e inovação. Eles explorarão tópicos como programação, inteligência artificial, realidade virtual e ética digital. Esta é uma oportunidade para os alunos desenvol', '2024-05-29 15:38:57', 16, 4, 3);
 
 -- --------------------------------------------------------
 
@@ -79,15 +77,14 @@ CREATE TABLE IF NOT EXISTS `activity_team` (
   PRIMARY KEY (`idActivityTeam`),
   KEY `id_equipa` (`idTeam`),
   KEY `equipa_atividades_ibfk_2` (`idTeacher`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
 
 --
 -- Дамп данных таблицы `activity_team`
 --
 
 INSERT INTO `activity_team` (`idActivityTeam`, `idTeam`, `idTeacher`, `descriptionActivityTeam`, `fileName`, `path`, `fileType`, `fileSize`, `CreateDate`) VALUES
-(1, 14, 1, '<p>Reactivate the token on 7d <a href=\"https://developers.google.com/oauthplayground/?code=4/0AeaYSHB9jAvLdm6uFaeAYuky2L_Qb8jPLXNbZxKgvomlqmzZjskZA2osAn9J4UGSZWQmKw&amp;scope=https://mail.google.com/\" rel=\"noopener noreferrer\" target=\"_blank\">Token</a></p><p><br></p><p>About this documentation</p><p><a href=\"https://nodejs.org/api/documentation.html#about-this-documentation\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>Welcome to the official API reference documentation for Node.js!</p><p>Node.js is a JavaScript runtime built on the&nbsp;<a href=\"https://v8.dev/\" rel=\"noopener noreferrer\" target=\"_blank\">V8 JavaScript engine</a>.</p><p>Contributing</p><p><a href=\"https://nodejs.org/api/documentation.html#contributing\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>Report errors in this documentation in&nbsp;<a href=\"https://github.com/nodejs/node/issues/new\" rel=\"noopener noreferrer\" target=\"_blank\">the issue tracker</a>. See&nbsp;<a href=\"https://github.com/nodejs/node/blob/HEAD/CONTRIBUTING.md\" rel=\"noopener noreferrer\" target=\"_blank\">the contributing guide</a>&nbsp;for directions on how to submit pull requests.</p><p>Stability index</p><p><a href=\"https://nodejs.org/api/documentation.html#stability-index\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>Throughout the documentation are indications of a section\'s stability. Some APIs are so proven and so relied upon that they are unlikely to ever change at all. Others are brand new and experimental, or known to be hazardous.</p><p>The stability indexes are as follows:</p><p>Stability: 0 - Deprecated. The feature may emit warnings. Backward compatibility is not guaranteed.</p><p>Stability: 1 - Experimental. The feature is not subject to&nbsp;<a href=\"https://semver.org/\" rel=\"noopener noreferrer\" target=\"_blank\">semantic versioning</a>&nbsp;rules. Non-backward compatible changes or removal may occur in any future release. Use of the feature is not recommended in production environments.</p><p>Experimental features are subdivided into stages:</p><ul><li>1.0 - Early development. Experimental features at this stage are unfinished and subject to substantial change.</li><li>1.1 - Active development. Experimental features at this stage are nearing minimum viability.</li><li>1.2 - Release candidate. Experimental features at this stage are hopefully ready to become stable. No further breaking changes are anticipated but may still occur in response to user feedback. We encourage user testing and feedback so that we can know that this feature is ready to be marked as stable.</li></ul><p>Stability: 2 - Stable. Compatibility with the npm ecosystem is a high priority.</p><p>Stability: 3 - Legacy. Although this feature is unlikely to be removed and is still covered by semantic versioning guarantees, it is no longer actively maintained, and other alternatives are available.</p><p>Features are marked as legacy rather than being deprecated if their use does no harm, and they are widely relied upon within the npm ecosystem. Bugs found in legacy features are unlikely to be fixed.</p><p>Use caution when making use of Experimental features, particularly when authoring libraries. Users may not be aware that experimental features are being used. Bugs or behavior changes may surprise users when Experimental API modifications occur. To avoid surprises, use of an Experimental feature may need a command-line flag. Experimental features may also emit a&nbsp;<a href=\"https://nodejs.org/api/process.html#event-warning\" rel=\"noopener noreferrer\" target=\"_blank\">warning</a>.</p><p>Stability overview</p><p><a href=\"https://nodejs.org/api/documentation.html#stability-overview\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>APIStability<a href=\"https://nodejs.org/api/assert.html\" rel=\"noopener noreferrer\" target=\"_blank\">Assert</a>(2) Stable<a href=\"https://nodejs.org/api/async_hooks.html\" rel=\"noopener noreferrer\" target=\"_blank\">Async hooks</a>(1) Experimental<a href=\"https://nodejs.org/api/async_context.html\" rel=\"noopener noreferrer\" target=\"_blank\">Asynchronous context tracking</a>(2) Stable<a href=\"https://nodejs.org/api/buffer.html\" rel=\"noopener noreferrer\" target=\"_blank\">Buffer</a>(2) Stable<a href=\"https://nodejs.org/api/child_process.html\" rel=\"noopener noreferrer\" target=\"_blank\">Child process</a>(2) Stable<a href=\"https://nodejs.org/api/cluster.html\" rel=\"noopener noreferrer\" target=\"_blank\">Cluster</a>(2) Stable<a href=\"https://nodejs.org/api/console.html\" rel=\"noopener noreferrer\" target=\"_blank\">Console</a>(2) Stable<a href=\"https://nodejs.org/api/crypto.html\" rel=\"noopener noreferrer\" target=\"_blank\">Crypto</a>(2) Stable<a href=\"https://nodejs.org/api/diagnostics_channel.html\" rel=\"noopener noreferrer\" target=\"_blank\">Diagnostics Channel</a>(2) Stable<a href=\"https://nodejs.org/api/dns.html\" rel=\"noopener noreferrer\" target=\"_blank\">DNS</a>(2) Stable<a href=\"https://nodejs.org/api/domain.html\" rel=\"noopener noreferrer\" target=\"_blank\">Domain</a>(0) Deprecated<a href=\"https://nodejs.org/api/fs.html\" rel=\"noopener noreferrer\" target=\"_blank\">File system</a>(2) Stable<a href=\"https://nodejs.org/api/http.html\" rel=\"noopener noreferrer\" target=\"_blank\">HTTP</a>(2) Stable<a href=\"https://nodejs.org/api/http2.html\" rel=\"noopener noreferrer\" target=\"_blank\">HTTP/2</a>(2) Stable<a href=\"https://nodejs.org/api/https.html\" rel=\"noopener noreferrer\" target=\"_blank\">HTTPS</a>(2) Stable<a href=\"https://nodejs.org/api/inspector.html\" rel=\"noopener noreferrer\" target=\"_blank\">Inspector</a>(2) Stable<a href=\"https://nodejs.org/api/module.html\" rel=\"noopener noreferrer\" target=\"_blank\">Modules:&nbsp;node:module&nbsp;API</a>(1) .2 - Release candidate<a href=\"https://nodejs.org/api/modules.html\" rel=\"noopener noreferrer\" target=\"_blank\">Modules: CommonJS modules</a>(2) Stable<a href=\"https://nodejs.org/api/os.html\" rel=\"noopener noreferrer\" target=\"_blank\">OS</a>(2) Stable<a href=\"https://nodejs.org/api/path.html\" rel=\"noopener noreferrer\" target=\"_blank\">Path</a>(2) Stable<a href=\"https://nodejs.org/api/perf_hooks.html\" rel=\"noopener noreferrer\" target=\"_blank\">Performance measurement APIs</a>(2) Stable<a href=\"https://nodejs.org/api/punycode.html\" rel=\"noopener noreferrer\" target=\"_blank\">Punycode</a>(0) Deprecated<a href=\"https://nodejs.org/api/querystring.html\" rel=\"noopener noreferrer\" target=\"_blank\">Query string</a>(2) Stable<a href=\"https://nodejs.org/api/readline.html\" rel=\"noopener noreferrer\" target=\"_blank\">Readline</a>(2) Stable<a href=\"https://nodejs.org/api/repl.html\" rel=\"noopener noreferrer\" target=\"_blank\">REPL</a>(2) Stable<a href=\"https://nodejs.org/api/single-executable-applications.html\" rel=\"noopener noreferrer\" target=\"_blank\">Single executable applications</a>(1) .1 - Active development<a href=\"https://nodejs.org/api/stream.html\" rel=\"noopener noreferrer\" target=\"_blank\">Stream</a>(2) Stable<a href=\"https://nodejs.org/api/string_decoder.html\" rel=\"noopener noreferrer\" target=\"_blank\">String decoder</a>(2) Stable<a href=\"https://nodejs.org/api/test.html\" rel=\"noopener noreferrer\" target=\"_blank\">Test runner</a>(2) Stable<a href=\"https://nodejs.org/api/timers.html\" rel=\"noopener noreferrer\" target=\"_blank\">Timers</a>(2) Stable<a href=\"https://nodejs.org/api/tls.html\" rel=\"noopener noreferrer\" target=\"_blank\">TLS (SSL)</a>(2) Stable<a href=\"https://nodejs.org/api/tracing.html\" rel=\"noopener noreferrer\" target=\"_blank\">Trace events</a>(1) Experimental<a href=\"https://nodejs.org/api/tty.html\" rel=\"noopener noreferrer\" target=\"_blank\">TTY</a>(2) Stable<a href=\"https://nodejs.org/api/dgram.html\" rel=\"noopener noreferrer\" target=\"_blank\">UDP/datagram sockets</a>(2) Stable<a href=\"https://nodejs.org/api/url.html\" rel=\"noopener noreferrer\" target=\"_blank\">URL</a>(2) Stable<a href=\"https://nodejs.org/api/util.html\" rel=\"noopener noreferrer\" target=\"_blank\">Util</a>(2) Stable<a href=\"https://nodejs.org/api/vm.html\" rel=\"noopener noreferrer\" target=\"_blank\">VM (executing JavaScript)</a>(2) Stable<a href=\"https://nodejs.org/api/webcrypto.html\" rel=\"noopener noreferrer\" target=\"_blank\">Web Crypto API</a>(2) Stable<a href=\"https://nodejs.org/api/webstreams.html\" rel=\"noopener noreferrer\" target=\"_blank\">Web Streams API</a>(2) Stable<a href=\"https://nodejs.org/api/wasi.html\" rel=\"noopener noreferrer\" target=\"_blank\">WebAssembly System Interface (WASI)</a>(1) Experimental<a href=\"https://nodejs.org/api/worker_threads.html\" rel=\"noopener noreferrer\" target=\"_blank\">Worker threads</a>(2) Stable<a href=\"https://nodejs.org/api/zlib.html\" rel=\"noopener noreferrer\" target=\"_blank\">Zlib</a>(2) Stable</p><p>JSON output</p><p><a href=\"https://nodejs.org/api/documentation.html#json-output\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>Added in: v0.6.12</p><p>Every&nbsp;.html&nbsp;document has a corresponding&nbsp;.json&nbsp;document. This is for IDEs and other utilities that consume the documentation.</p><p>System calls and man pages</p><p><a href=\"https://nodejs.org/api/documentation.html#system-calls-and-man-pages\" rel=\"noopener noreferrer\" target=\"_blank\">#</a></p><p>Node.js functions which wrap a system call will document that. The docs link to the corresponding man pages which describe how the system call works.</p>', NULL, NULL, NULL, NULL, '2024-05-29 15:43:07'),
-(2, 15, 5, '<p>Temos o prazer de o acolher na nossa equipa de programadores web talentosos. As suas competências e experiência serão um contributo inestimável para os nossos projectos e ajudar-nos-ão a alcançar novos patamares.</p><p><br></p><p><strong>A nossa equipa</strong></p><p>Somos um grupo de profissionais apaixonados, unidos por um objetivo comum de construir aplicações Web de alta qualidade, intuitivas e funcionais. Valorizamos o trabalho em equipa, a partilha de conhecimentos e a procura constante de melhorias.</p><p><br></p><p><strong>As nossas expectativas</strong></p><p>Como parte da nossa equipa, esperamos de si</p><p><br></p><p>Profissionalismo e Responsabilidade: Liderar projectos com atenção aos detalhes e cumprir prazos.</p><p>Criatividade: Gerar novas ideias e soluções para melhorar os nossos produtos.</p><ol><li>Trabalho de equipa: Participar ativamente nas discussões e trabalhar em estreita colaboração com os outros membros da equipa.</li><li>Aprendizagem contínua: Desenvolver continuamente as suas competências e aprender novas tecnologias.</li></ol><p><strong>O que oferecemos</strong></p><p>Em troca, oferecemos-lhe:</p><p><br></p><p>Projectos interessantes: Participar no desenvolvimento de projectos diversos e interessantes que o desafiam e o ajudam a crescer.</p><p><br></p><p>Atmosfera amigável: Trabalhar num ambiente de apoio e inspirador onde todas as contribuições são valorizadas.</p><p>Oportunidades de crescimento: Formação, workshops e acesso a recursos para o ajudar a desenvolver-se profissionalmente.</p><p>Horário flexível: A possibilidade de adaptar o seu horário de trabalho às suas necessidades pessoais.</p><p>Os nossos valores</p>', NULL, NULL, NULL, NULL, '2024-06-06 20:04:45');
+(1, 1, 1, '<p><strong>Sobre nós</strong></p><p>Somos uma equipa de desenvolvedores entusiastas que criaram um site com as mais recentes tecnologias e lidamos com sucesso com todos os desafios. A nossa equipa é composta por especialistas experientes, cada um trazendo uma contribuição única para o desenvolvimento do projeto. Acompanhamos as últimas tendências no mundo do desenvolvimento web e aprimoramos constantemente as nossas habilidades para oferecer as soluções mais modernas e eficazes.</p><p><br></p><p><strong>Contactos</strong></p><p>No entanto, apesar de todos os nossos esforços, às vezes podem ocorrer erros ou problemas. Se encontrar quaisquer dificuldades ao utilizar o nosso site, por favor, não hesite em contactar-nos através deste e-mail: <a href=\"https://mail.google.com\" rel=\"noopener noreferrer\" target=\"_blank\">a30600@aemtg.pt.</a> Analisaremos o seu pedido rapidamente e faremos o possível para resolver o problema o mais rápido possível.</p><p><br></p><p><strong>Novas tecnologias</strong></p><p>Estamos continuamente integrando mais e mais novas tecnologias para facilitar o nosso trabalho e tornar a sua experiência no nosso site mais conveniente e agradável. Os nossos especialistas trabalham na melhoria da interface do usuário, na otimização da velocidade de carregamento das páginas e na garantia da máxima segurança dos seus dados. Esforçamo-nos para que possa navegar facilmente no nosso site e encontrar todas as informações necessárias sem esforço.</p><p><br></p><p>Agradecemos por escolher o nosso site e esperamos que fique satisfeito com o nosso serviço.</p>', NULL, NULL, NULL, NULL, '2024-06-13 15:53:54');
 
 -- --------------------------------------------------------
 
@@ -141,27 +138,6 @@ INSERT INTO `educations` (`idEducation`, `nameEducation`) VALUES
 (4, 'Secundário Científico-Humanísticos'),
 (5, 'Secundário Profissionais'),
 (6, 'PIEF');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `ficheiros`
---
-
-DROP TABLE IF EXISTS `ficheiros`;
-CREATE TABLE IF NOT EXISTS `ficheiros` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `id_file_team_activity` int DEFAULT NULL,
-  `id_file_resources` int DEFAULT NULL,
-  `filename` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `path` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `fileType` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `fileSize` bigint DEFAULT NULL,
-  `publishDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `id_file_team_activity` (`id_file_team_activity`),
-  KEY `id_file_resources` (`id_file_resources`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -239,18 +215,15 @@ CREATE TABLE IF NOT EXISTS `resources` (
   `publishDate` datetime DEFAULT NULL,
   PRIMARY KEY (`idResource`),
   KEY `id_professor` (`idTeacher`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Дамп данных таблицы `resources`
 --
 
 INSERT INTO `resources` (`idResource`, `idTeacher`, `title`, `description`, `link`, `fileName`, `path`, `fileType`, `fileSize`, `type`, `publishDate`) VALUES
-(1, 1, 'The old database', 'Description', NULL, 'pepp (5).sql', 'C:\\TeamTeach\\WebSite\\backend\\uploads\\pepp (5).sql', 'application/x-sql', 242070, 'Ficheiro', '2024-05-29 15:45:54'),
-(2, 1, 'Hi wrold', '`', NULL, 'pepp 3.7.sql', 'C:\\TeamTeach\\WebSite\\backend\\uploads\\pepp 3.7.sql', 'application/x-sql', 173467, NULL, '2024-06-02 15:13:55'),
-(3, 1, '123213123', '123133321', 'https://www.youtube.com/watch?v=Q3tN73Jfg_o', NULL, NULL, NULL, NULL, 'Video', '2024-06-02 15:26:29'),
-(4, 1, '123321', '123123213', NULL, NULL, NULL, NULL, NULL, 'Qualquer', '2024-06-05 12:44:32'),
-(5, 1, '123213', '123123', 'adssadads', NULL, NULL, NULL, NULL, 'Qualquer', '2024-06-05 12:48:30');
+(1, 1, 'DER_BD', 'Um Diagrama Entidade-Relacionamento (ER) é uma representação visual das entidades de dados e dos relacionamentos entre elas em um sistema de banco de dados. ', NULL, 'DER02.drawio (1).png', 'C:\\TeamTeach\\WebSite\\backend\\uploads\\DER02.drawio (1).png', 'image/png', 429927, 'Ficheiro', '2024-06-13 16:46:56'),
+(2, 1, 'Fluxograma_BD', 'Um Fluxograma de Banco de Dados é uma representação gráfica do processo ou das operações envolvidas na gestão de uma base de dados. Inclui os passos e etapas necessários para criar, modificar, atualizar ou administrar uma base de dados.', NULL, 'FluxogramaPAP.drawio.png', 'C:\\TeamTeach\\WebSite\\backend\\uploads\\FluxogramaPAP.drawio.png', 'image/png', 269909, 'Ficheiro', '2024-06-13 16:48:57');
 
 -- --------------------------------------------------------
 
@@ -383,15 +356,14 @@ CREATE TABLE IF NOT EXISTS `teams` (
   `privacy` int DEFAULT '0',
   PRIMARY KEY (`idTeam`),
   KEY `fk_id_professor` (`idTeacher`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Дамп данных таблицы `teams`
 --
 
 INSERT INTO `teams` (`idTeam`, `idTeacher`, `nameTeam`, `descriptionTeam`, `areasWork`, `CreateDate`, `privacy`) VALUES
-(14, 1, 'XYZ', 'Somos uma equipa de entusiastas que está pronta para criar algo novo e conquistar o topo!', 'XYZ', '2024-05-29 15:40:48', 0),
-(15, 5, 'TestDrive', 'Somos uma equipa de entusiastas que está pronta para criar algo novo e conquistar o topo!', 'Web Developer', '2024-06-06 20:01:45', 1);
+(1, 1, 'TestDrive', 'Somos uma equipa de profissionais apaixonados pela criação de soluções web inovadoras. A nossa missão é dar vida às ideias mais arrojadas, utilizando tecnologias avançadas e uma abordagem criativa.', 'Web Developers', '2024-06-13 15:46:20', 1);
 
 -- --------------------------------------------------------
 
@@ -408,17 +380,18 @@ CREATE TABLE IF NOT EXISTS `team_list` (
   PRIMARY KEY (`idTeamList`),
   KEY `id_equipa` (`idTeam`),
   KEY `id_professor` (`idTeacher`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Дамп данных таблицы `team_list`
 --
 
 INSERT INTO `team_list` (`idTeamList`, `idTeam`, `idTeacher`, `access`) VALUES
-(1, 14, 1, 'Administrador'),
-(2, 14, 2, 'Administrador'),
-(3, 15, 5, 'Administrador'),
-(4, 15, 1, 'Convidado');
+(1, 1, 1, 'Administrador'),
+(2, 1, 2, 'Convidado'),
+(3, 1, 3, 'Convidado'),
+(4, 1, 4, 'Convidado'),
+(5, 1, 5, 'Convidado');
 
 -- --------------------------------------------------------
 
@@ -550,7 +523,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`idTeacher`),
   KEY `id_escola` (`idSchool`),
   KEY `id_grupo` (`idGroup`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Дамп данных таблицы `users`
@@ -562,7 +535,7 @@ INSERT INTO `users` (`idTeacher`, `name`, `email`, `password`, `resetToken`, `id
 (3, 'Alexander', 'alex@gmail.com', '$2b$10$sg056VRg/1vghGOgb6qmFeLgMGvz8fnR/.mi5TOSPQsEwosqs2MjO', NULL, 4, 21, 'utilizador', '2024-05-29 15:32:46'),
 (4, 'Miguel', 'mig@gmail.com', '$2b$10$BVIc4qqcUnujccy7Wk8KJOc8jBOSIkatgq6/nExbV/rWljXUUouGy', NULL, 2, 14, 'utilizador', '2024-05-30 08:04:32'),
 (5, 'Tony', 'tony@gmail.com', '$2b$10$9t4SofRPJD.W/k88qXuTSOV5aP0jU7hLlqai/Mn/jGKQkbVP61u6q', NULL, 2, 16, 'utilizador', '2024-06-06 19:45:01'),
-(6, 'Fox Wer', 'mrzerox228@gmail.com', NULL, NULL, 5, 6, 'utilizador', '2024-06-08 11:49:34');
+(6, 'Fox Wer', 'mrzerox228@gmail.com', NULL, NULL, 5, 6, 'administrador', '2024-06-08 11:49:34');
 
 -- --------------------------------------------------------
 
@@ -603,47 +576,15 @@ INSERT INTO `years` (`idYear`, `year`) VALUES
 -- Ограничения внешнего ключа таблицы `activitys`
 --
 ALTER TABLE `activitys`
-  ADD CONSTRAINT `activitys_ibfk_10` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_12` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_14` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_16` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_18` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_2` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_20` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_22` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_24` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_26` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_28` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_30` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_32` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_34` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_36` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_38` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_4` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_40` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_42` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_44` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_46` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_48` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_50` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_52` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_54` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_56` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_58` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_6` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_60` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_61` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idTeacher`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_62` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_63` FOREIGN KEY (`idYear`) REFERENCES `years` (`idYear`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_64` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activitys_ibfk_8` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE;
-
+  ADD CONSTRAINT `activitys_ibfk_1` FOREIGN KEY (`idSubject`) REFERENCES `subjects` (`idSubject`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1` FOREIGN KEY (`idEducation`) REFERENCES `educations` (`idEducation`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activitys_ibfk_1` FOREIGN KEY (`idYear`) REFERENCES `years` (`idYear`) ON UPDATE CASCADE,
 --
 -- Ограничения внешнего ключа таблицы `activity_team`
 --
 ALTER TABLE `activity_team`
-  ADD CONSTRAINT `activity_team_ibfk_33` FOREIGN KEY (`idTeam`) REFERENCES `teams` (`idTeam`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `activity_team_ibfk_34` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idTeacher`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `activity_team_ibfk_1` FOREIGN KEY (`idTeam`) REFERENCES `teams` (`idTeam`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `activity_team_ibfk_1` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idTeacher`) ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `resources`
@@ -661,15 +602,15 @@ ALTER TABLE `teams`
 -- Ограничения внешнего ключа таблицы `team_list`
 --
 ALTER TABLE `team_list`
-  ADD CONSTRAINT `team_list_ibfk_33` FOREIGN KEY (`idTeam`) REFERENCES `teams` (`idTeam`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `team_list_ibfk_34` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idTeacher`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `team_list_ibfk_1` FOREIGN KEY (`idTeam`) REFERENCES `teams` (`idTeam`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `team_list_ibfk_1` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idTeacher`) ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_31` FOREIGN KEY (`idSchool`) REFERENCES `schools` (`idSchool`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `users_ibfk_32` FOREIGN KEY (`idGroup`) REFERENCES `groups` (`idGroup`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`idSchool`) REFERENCES `schools` (`idSchool`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`idGroup`) REFERENCES `groups` (`idGroup`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

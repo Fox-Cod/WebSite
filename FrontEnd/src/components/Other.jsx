@@ -65,14 +65,14 @@ export const EditTextActivity = () => {
         console.error('Erro ao editar atividade:', err);
       }
     } else {
-      console.log('O formulário não passou na validação. Não enviando dados para o servidor.');
+      alert('O formulário não passou na validação. Não enviando dados para o servidor.');
     }
   };
 
   const handleSubmitDelete = async (e) => {
     e.preventDefault();
     try {
-      const res = await deleteActivity(activityId);
+      await deleteActivity(activityId);
       window.location.href = '/activity';
 
     } catch (err) {
@@ -270,10 +270,10 @@ export const EditTextActivity = () => {
                   className="btn btn-white"
                   data-bs-dismiss="modal"
                 >
-                  Abolir
+                  Cancelar
                 </button>
                 <button type="button" id="processEvent" className="btn btn-primary" onClick={handleSubmitEdit}>
-                  Atualização
+                  Confirmar
                 </button>
               </div>
 
@@ -541,7 +541,7 @@ export const AddAndSearchActivity = () => {
                   className="btn btn-white"
                   data-bs-dismiss="modal"
                 >
-                  Descartar
+                  Cancelar
                 </button>
                 <button type="submit" className="btn btn-primary" data-bs-toggle="tooltip" title="Salve a nova atividade após preencher todos os campos obrigatórios.">
                   Adicionar atividade
@@ -573,6 +573,7 @@ export const AddAndSearchResources = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+
     if (name === 'type') {
       setFile(null);
       setFormData((prevData) => ({ ...prevData, link: '' }));
@@ -591,14 +592,22 @@ export const AddAndSearchResources = () => {
     e.preventDefault();
     const { title, type, link } = formData;
 
-    if (!title.trim() || (type === 'File' && !file) || (type !== 'File' && !link.trim())) {
+    if (!title.trim() || (type === 'Ficheiro' && !file) || (type !== 'Ficheiro' && !link.trim())) {
       setErrorMessage('Preencha todos os campos obrigatórios.');
       return;
     }
-    console.log(formData, file);
+
+    const payload = new FormData();
+    payload.append('title', formData.title);
+    payload.append('description', formData.description);
+    payload.append('link', formData.link);
+    payload.append('type', formData.type);
+    if (file) {
+      payload.append('file', file);
+    }
 
     try {
-      await uploadResources(formData, file);
+      await uploadResources(payload);
       alert('Recurso carregado com sucesso');
       setFile(null);
       setFormData({ title: '', description: '', link: '', type: 'Qualquer' });
@@ -701,7 +710,7 @@ export const AddAndSearchResources = () => {
                         <button type="button" className="btn btn-danger" onClick={handleDeleteFile}>Eliminar</button>
                       </div>
                     ) : (
-                      <p>Arraste e largue alguns ficheiros aqui, ou clique para selecionar ficheiros</p>
+                      <p className='text-center'>Arraste e largue alguns ficheiros aqui, ou clique para selecionar ficheiros <br /> <br /> <h6 className='small'>Limite: 5.00 MB</h6></p>
                     )}
                   </div>
                 ) : (
@@ -728,7 +737,7 @@ export const AddAndSearchResources = () => {
               </div>
 
               <div className="modal-footer">
-                <button type="button" id="discardForm" className="btn btn-white" data-bs-dismiss="modal">Descartar</button>
+                <button type="button" id="discardForm" className="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
                 <button type="submit" className="btn btn-primary">Adicionar atividade</button>
               </div>
               {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
@@ -1010,7 +1019,7 @@ export const AddTeam = () => {
 
               <div className="modal-footer gap-3">
                 <button type="button" id="discardFormt" className="btn btn-white" data-bs-dismiss="modal">
-                  Descartar
+                  Cancelar
                 </button>
                 <button type="button" id="processEvent" className="btn btn-primary" onClick={handleCreateTeam}>
                   Criar equipa
@@ -1061,7 +1070,7 @@ export const AddComment = ({ activityId }) => {
           </div>
         </div>
         {errorMessage && <div className="text-danger">{errorMessage}</div>}
-        <button type="submit" className="btn btn-primary btn-xs ms-2 mt-2">Save</button>
+        <button type="submit" className="btn btn-primary btn-xs ms-2 mt-2">Salvar</button>
       </form>
     </div>
   );

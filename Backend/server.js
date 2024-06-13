@@ -40,9 +40,19 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.post('/upload', upload.single('file'), (req, res) => {
-  console.log('Arquivo enviado:', req.file);
-  res.json({ message: 'Arquivo enviado com sucesso!' });
+app.post('/upload', (req, res) => {
+  upload(req, res, async function (err) {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).json({ message: 'Размер файла превышает допустимый лимит в 5MB.' });
+      }
+      return res.status(500).json({ message: 'Ошибка загрузки файла.', error: err.message });
+    } else if (err) {
+      return res.status(500).json({ message: 'Произошла ошибка.', error: err.message });
+    }
+
+    await postResourcesFiles(req, res);
+  });
 });
 
 (async () => {

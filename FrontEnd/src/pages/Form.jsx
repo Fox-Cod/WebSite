@@ -2,33 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { activity, resources } from "../api/deviceAPI";
 import { useTranslation } from 'react-i18next';
-import Cookies from 'js-cookie';
 
 export default function Form() {
   const [data, setData] = useState([]);
   const [files, setFiles] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation();
-
-  const toggleFavorite = (id) => {
-    let updatedFavorites = [...favorites];
-    if (favorites.includes(id)) {
-      updatedFavorites = updatedFavorites.filter((favId) => favId !== id);
-    } else {
-      updatedFavorites.push(id);
-    }
-  
-    setFavorites(updatedFavorites);
-    Cookies.set('favorites', updatedFavorites.join(','), { expires: 365 });
-  };
-
-  useEffect(() => {
-    const favsFromCookie = Cookies.get('favorites');
-    if (favsFromCookie) {
-      setFavorites(favsFromCookie.split(',').map(Number));
-    }
-  }, []);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,20 +20,22 @@ export default function Form() {
         setData(sortedActivityData);
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
   }, []);
-  
+
   const formatDate = (rawDate) => {
     const date = new Date(rawDate);
     const currentDate = new Date();
     if (date.toDateString() === currentDate.toDateString()) {
-        return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+      return date.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
     } else {
-        return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
+      return date.toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' });
     }
-};
+  };
 
   const formatBytes = (bytes) => {
     if (bytes === 0) return '0 Bytes';
@@ -63,37 +45,51 @@ export default function Form() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  if (isLoading) {
+    return (
+      <div className="container text-center mt-9">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="container mt-4">
       <header id="header" className="navbar navbar-expand-lg navbar-spacer-y-0 flex-lg-column">
-          <nav className="js-mega-menu flex-grow-1">
-            <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
-              <ul className="nav nav-tabs align-items-center">
-                <li className='nav-item'>
-                  <Link className="nav-link active" to="/form" data-placement="left">
-                    <i className="bi bi-house dropdown-item-icon"></i> {t('home')}
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link className="nav-link" to="/activity" data-placement="left">
-                    <i className="bi bi-activity dropdown-item-icon"></i> {t('activity')}
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link className="nav-link" to="/resources" data-placement="left">
-                    <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> {t('resources')}
-                  </Link>
-                </li>
-                <li className='nav-item'>
-                  <Link className="nav-link" to="/tools" data-placement="left">
-                    <i className="bi bi-tools dropdown-item-icon"></i> {t('tool')}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </nav>
+        <nav className="js-mega-menu flex-grow-1">
+          <div className="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
+            <ul className="nav nav-tabs align-items-center">
+              <li className='nav-item'>
+                <Link className="nav-link active" to="/form" data-placement="left">
+                  <i className="bi bi-house dropdown-item-icon"></i> {t('home')}
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link className="nav-link" to="/activity" data-placement="left">
+                  <i className="bi bi-activity dropdown-item-icon"></i> {t('activity')}
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link className="nav-link" to="/resources" data-placement="left">
+                  <i className="bi bi-file-earmark-arrow-down dropdown-item-icon"></i> {t('resources')}
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link className="nav-link" to="/tools" data-placement="left">
+                  <i className="bi bi-tools dropdown-item-icon"></i> {t('tool')}
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </nav>
       </header>
       <main className="card card-body">
+        {data.length === 0 && files.length === 0 && (
+          <div className="container text-center mt-9">
+            <img src="../assets/svg/illustrations/oc-browse-file.svg" alt="Image Description" style={{ height: '15rem' }} />
+            <p>Ainda não há dados.</p>
+          </div>
+        )}
         {data.slice(0, 3).map((d, i) => (
           <div className="my-3 p-3 rounded shadow-sm card" key={i} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
             <div className="d-flex align-items-start">
@@ -105,9 +101,8 @@ export default function Form() {
               <div className="flex-grow-1">
                 <div className="d-flex justify-content-between align-items-center">
                   <h5 className="mb-1">
-                  <small className="text-muted"><Link to={`/profile/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link> | {formatDate(d.publishDate)}</small>
+                    <small className="text-muted"><Link to={`/profile/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link> | {formatDate(d.publishDate)}</small>
                   </h5>
-                  <i className={`bi ${favorites.includes(d.idActivity) ? 'bi-bookmark-fill bookmark' : 'bi-bookmark bookmark'}`} role='button' onClick={() => toggleFavorite(d.idActivity)}></i>
                 </div>
                 <div className="d-flex justify-content-between">
                   <strong className="text-gray-dark">{d.title}</strong>
@@ -144,7 +139,6 @@ export default function Form() {
                       <Link to={`/profile/view-profile/${file.users.idTeacher}`}>{file.users.name}</Link> | {formatDate(file.publishDate)}
                     </small>
                   </h5>
-                  <i className={`bi ${favorites.includes(file.idResource) ? 'bi-bookmark-fill bookmark' : 'bi-bookmark bookmark'}`} role='button' onClick={() => toggleFavorite(file.idResource)}></i>
                 </div>
                 <div className="d-flex justify-content-between">
                   <strong className="text-gray-dark">{file.title}</strong>
@@ -157,7 +151,7 @@ export default function Form() {
                   </span>
                 </div>
                 <span className="badge bg-secondary mb-2">{file.type}</span>
-                {file.type === 'Ficheiro' ? (
+                {file.type === 'Ficheiro' && (
                   <div className='card p-3'>
                     <li className="list-group-item">
                       <div className="row align-items-center">
@@ -175,8 +169,6 @@ export default function Form() {
                       </div>
                     </li>
                   </div>
-                ) : (
-                  null
                 )}
                 <div className="mb-2"></div>
                 <div className="d-flex align-items-center">

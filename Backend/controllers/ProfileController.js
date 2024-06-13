@@ -1,4 +1,4 @@
-const { Schools, Groups, Users, Activitys, Comments, Resources, Subjects, Years, Educations, Team_List, Teams } = require('../models/model')
+const { Schools, Groups, Users, Activitys, Comments, Resources, Subjects, Years, Educations, Team_List, Teams, Activity_Team } = require('../models/model')
 
 async function getProfileUser(req, res) {
   const { idTeacher } = req.userToken;
@@ -157,13 +157,12 @@ const deleteUser = async (req, res) => {
   const { idTeacher } = req.params;
   try {
       await Comments.destroy({ where: {idTeacher: idTeacher } });
+      await Activity_Team.destroy({ where: {idTeacher: idTeacher }});
       await Team_List.destroy({ where: { idTeacher: idTeacher } });
       await Activitys.destroy({ where: { idTeacher: idTeacher } });
       await Teams.destroy({ where: { idTeacher: idTeacher } });
       await Resources.destroy({ where: { idTeacher: idTeacher } });
       await Users.destroy({ where: { idTeacher: idTeacher } });
-
-
       res.json({ message: 'User deleted successfully' });
   } catch (error) {
       res.status(500).json({ message: 'Error deleting user', error });

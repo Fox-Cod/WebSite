@@ -59,8 +59,6 @@ const Activitys = sequelize.define('Activitys', {
   title: DataTypes.STRING,
   description: DataTypes.STRING,
   publishDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  viewsCount: { type: DataTypes.INTEGER, defaultValue: 0 },
-  commentsCount: { type: DataTypes.INTEGER, defaultValue: 0 },
   idSubject: { type: DataTypes.INTEGER, references: { model: Subjects, key: 'idSubject' } },
   idYear: { type: DataTypes.INTEGER, references: { model: Years, key: 'idYear' } },
   idEducation: { type: DataTypes.INTEGER, references: { model: Educations, key: 'idEducation' } },

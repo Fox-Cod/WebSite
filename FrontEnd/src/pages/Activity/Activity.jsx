@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { AddAndSearchActivity, Pagination } from '../../components/Other';
 import { Link } from "react-router-dom";
 import { activity } from '../../api/deviceAPI';
 import { useTranslation } from 'react-i18next';
 import { SearchComponentForActivities, FilterForActivity } from '../../components/specific/Search';
 import Cookies from 'js-cookie';
+import { Context } from "../../contexts/context";
 
 export default function Activity() {
+  const { user } = useContext(Context);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const postsPerPage = 8;
 
   const { t } = useTranslation();
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    const favsFromCookie = Cookies.get('favorites');
+    const favsFromCookie = Cookies.get('activityFavorites');
     if (favsFromCookie) {
       setFavorites(favsFromCookie.split(',').map(Number));
     }
@@ -31,6 +34,8 @@ export default function Activity() {
         setFilteredData(sortedData);
       } catch (err) {
         console.log(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -42,7 +47,7 @@ export default function Activity() {
       : [...favorites, id];
 
     setFavorites(updatedFavorites);
-    Cookies.set('favorites', updatedFavorites.join(','), { expires: 365 });
+    Cookies.set('activityFavorites', updatedFavorites.join(','), { expires: 365 });
   };
 
   const formatDate = (rawDate) => {
@@ -105,47 +110,60 @@ export default function Activity() {
             </div>
             <div className="d-grid d-sm-flex justify-content-md-end align-items-sm-center">
               <FilterForActivity onFilter={handleFilter} />
-              <AddAndSearchActivity />
+              {user._isAuth ? (<AddAndSearchActivity />) : (null)}
             </div>
           </div>
         </div>
-        {currentPosts.map(d => (
-          <div className="my-3 p-3 rounded shadow-sm card" key={d.idActivity} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-            <div className="d-flex align-items-start">
-              <div className="avatar avatar-sm avatar-circle me-2">
-                <span className="avatar-soft-dark" title={d.users.name}>
-                  <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{d.users.name.charAt(0).toUpperCase()}</span>
-                </span>
-              </div>
-              <div className="flex-grow-1">
-                <div className="d-flex justify-content-between align-items-center">
-                  <h5 className="mb-1">
-                    <small className="text-muted">
-                      <Link to={`/profile/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link> | {formatDate(d.publishDate)}
-                    </small>
-                  </h5>
-                  <i className={`bi ${favorites.includes(d.idActivity) ? 'bi-bookmark-fill bookmark' : 'bi-bookmark bookmark'}`} role='button' onClick={() => toggleFavorite(d.idActivity)}></i>
-                </div>
-                <div>
-                  <strong className="text-gray-dark">{d.title}</strong>
-                </div>
-                <div>
-                  <span className="text-gray-dark">
-                    {d.description.length > 200 ? `${d.description.substring(0, 200)}...` : d.description}
+        {loading ? (
+          <div className='container text-center mt-9'>
+            <img src="../assets/svg/illustrations/loading-spinner.svg" alt="Loading..." style={{ height: '15rem' }} />
+            <p>{t('loading')}</p>
+          </div>
+        ) : currentPosts.length > 0 ? (
+          currentPosts.map(d => (
+            <div className="my-3 p-3 rounded shadow-sm card" key={d.idActivity} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+              <div className="d-flex align-items-start">
+                <div className="avatar avatar-sm avatar-circle me-2">
+                  <span className="avatar-soft-dark" title={d.users.name}>
+                    <span className="bd-placeholder-img flex-shrink-0 me-2 rounded avatar-initials">{d.users.name.charAt(0).toUpperCase()}</span>
                   </span>
                 </div>
-                <div className="mb-2">
-                  <span className="badge bg-primary me-1">{d.subjects.nameSubject}</span>
-                  <span className="badge bg-success me-1">{d.educations.nameEducation}</span>
-                  <span className="badge bg-warning">{d.years.year}</span>
-                </div>
-                <div className="d-flex align-items-center">
-                  <Link to={`/activity/view-activity/${d.idActivity}`} className="link">{t('more')}</Link>
+                <div className="flex-grow-1">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h5 className="mb-1">
+                      <small className="text-muted">
+                        <Link to={`/profile/view-profile/${d.users.idTeacher}`}>{d.users.name}</Link> | {formatDate(d.publishDate)}
+                      </small>
+                    </h5>
+                    <i className={`bi ${favorites.includes(d.idActivity) ? 'bi-bookmark-fill bookmark' : 'bi-bookmark bookmark'}`} role='button' onClick={() => toggleFavorite(d.idActivity)}></i>
+                  </div>
+                  <div>
+                    <strong className="text-gray-dark">{d.title}</strong>
+                  </div>
+                  <div>
+                    <span className="text-gray-dark">
+                      {d.description.length > 200 ? `${d.description.substring(0, 200)}...` : d.description}
+                    </span>
+                  </div>
+                  <div className="mb-2">
+                    <span className="badge bg-primary me-1">{d.subjects.nameSubject}</span>
+                    <span className="badge bg-success me-1">{d.educations.nameEducation}</span>
+                    <span className="badge bg-warning">{d.years.year}</span>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <Link to={`/activity/view-activity/${d.idActivity}`} className="link">{t('more')}</Link>
+                  </div>
                 </div>
               </div>
             </div>
+          ))
+        ) : (
+          <div className='container text-center mt-9'>
+            <img src="../assets/svg/illustrations/oc-browse-file.svg" alt="Image Description" style={{ height: '15rem' }} />
+            <p>{t('no_activities')}</p>
           </div>
-        ))}
+        )}
+
 
         <Pagination
           postsPerPage={postsPerPage}

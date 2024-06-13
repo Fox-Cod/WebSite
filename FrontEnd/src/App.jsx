@@ -10,7 +10,7 @@ const Index = lazy(() => import('./pages/Index'));
 const Form = lazy(() => import('./pages/Form'));
 const Activity = lazy(() => import('./pages/Activity/Activity'));
 const Resources = lazy(() => import('./pages/Resource/Resources'));
-const Tools = lazy(() => import('./pages/Tools'));
+const Tools = lazy(() => import('./pages/Tool/Tools'));
 const About = lazy(() => import('./components/common/About'));
 const ViewActivity = lazy(() => import('./pages/Activity/View-Activity'));
 const ViewResources = lazy(() => import('./pages/Resource/View-Resources'));
@@ -38,7 +38,7 @@ const App = () => {
         user.setIsAuth(true);
         user.setUserId(isAuthenticated.token.idTeacher);
         user.setDefaultRole(isAuthenticated.token.role);
-        user.setUser(isAuthenticated.token); // Assuming `isAuthenticated.token` contains user info
+        user.setUser(isAuthenticated.token);
         console.log(user)
       } catch (error) {
         user.setIsAuth(false);

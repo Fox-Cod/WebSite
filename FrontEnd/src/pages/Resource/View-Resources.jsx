@@ -3,11 +3,12 @@ import ReactPlayer from 'react-player';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { oneResource } from '../../api/deviceAPI';
+import Cookies from 'js-cookie';
 
 export default function ViewResources() {
   const [dataResource, setOneResourceData] = useState({});
   const [loading, setLoading] = useState(true);
-
+  const [favorites, setFavorites] = useState([]);
   const { resourceId } = useParams();
   const { t } = useTranslation();
 
@@ -26,6 +27,25 @@ export default function ViewResources() {
 
     fetchData();
   }, [resourceId]);
+
+  const toggleFavorite = (id) => {
+    let updatedFavorites = [...favorites];
+    if (favorites.includes(id)) {
+      updatedFavorites = updatedFavorites.filter((favId) => favId !== id);
+    } else {
+      updatedFavorites.push(id);
+    }
+  
+    setFavorites(updatedFavorites);
+    Cookies.set('resourcesFavorites', updatedFavorites.join(','), { expires: 365 });
+  };
+
+  useEffect(() => {
+    const favsFromCookie = Cookies.get('resourcesFavorites');
+    if (favsFromCookie) {
+      setFavorites(favsFromCookie.split(',').map(Number));
+    }
+  }, []);
 
   const formatDate = (rawDate) => {
     const date = new Date(rawDate);
@@ -95,7 +115,7 @@ export default function ViewResources() {
             <div className="flex-grow-1">
               <div className="d-flex justify-content-between align-items-center">
                 <h5 className="mb-1">
-                  <small className="text-muted"><Link to={`/profile/view-profile/`}>{dataResource.users.name}</Link> | {formatDate(dataResource.publishDate)} | favorites </small>
+                  <small className="text-muted"><Link to={`/profile/view-profile/${dataResource.users.idTeacher}`}>{dataResource.users.name}</Link> | {formatDate(dataResource.publishDate)} | <i className={`bi ${favorites.includes(dataResource.idResource) ? 'bi-bookmark-fill bookmark' : 'bi-bookmark bookmark'}`} role='button' onClick={() => toggleFavorite(dataResource.idResource)}></i> </small>
                 </h5>
               </div>
               <div className="d-flex justify-content-between">
@@ -112,7 +132,7 @@ export default function ViewResources() {
                   <li className="list-group-item">
                     <div className="row align-items-center">
                       <div className="col-auto">
-                        <img className="avatar avatar-xs avatar-4x3" src="/assets/svg/components/placeholder-img-format.svg" alt="Img" />
+                        <img className="avatar avatar-xs avatar-4x3" src="/assets/svg/illustrations/placeholder-img-format.svg" alt="Img" />
                       </div>
                       <div className="col">
                         <h5 className="mb-0" title={t('download')}>

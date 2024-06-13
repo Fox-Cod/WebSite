@@ -107,7 +107,7 @@ export default function SignUp() {
       const res = await authGoogle(token);
       if (res.status === 'Success') {
         window.location.href = '/';
-        }
+      }
       console.log(res)
     } catch (error) {
       console.error('Authentication error Google:', error);
@@ -141,7 +141,7 @@ export default function SignUp() {
                       />
                     </div>
 
-                    <span class="divider-center text-muted mb-4">OR</span>
+                    <span class="divider-center text-muted mb-4">{t('or')}</span>
                   </div>
 
                   <div className="mb-4">
@@ -194,8 +194,8 @@ export default function SignUp() {
                       >
                         {showPassword ? <i class="bi bi-eye"></i> : <i class="bi bi-eye-slash"></i>}
                       </button>
+                      <span className="invalid-feedback">{formErrors.password}</span>
                     </div>
-                    <span className="invalid-feedback">{formErrors.password}</span>
                   </div>
 
                   <div className="mb-4">
@@ -218,8 +218,8 @@ export default function SignUp() {
                       >
                         {showConfirmPassword ? <i class="bi bi-eye"></i> : <i class="bi bi-eye-slash"></i>}
                       </button>
-                    </div>
                     <span className="invalid-feedback">{formErrors.confirmPassword}</span>
+                    </div>
                   </div>
 
                   <div className="mb-4">

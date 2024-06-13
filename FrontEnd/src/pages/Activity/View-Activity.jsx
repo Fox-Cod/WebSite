@@ -31,11 +31,11 @@ export default function ViewActivity() {
     }
   
     setFavorites(updatedFavorites);
-    Cookies.set('favorites', updatedFavorites.join(','), { expires: 365 });
+    Cookies.set('activityFavorites', updatedFavorites.join(','), { expires: 365 });
   };
 
   useEffect(() => {
-    const favsFromCookie = Cookies.get('favorites');
+    const favsFromCookie = Cookies.get('activityFavorites');
     if (favsFromCookie) {
       setFavorites(favsFromCookie.split(',').map(Number));
     }
@@ -169,7 +169,7 @@ export default function ViewActivity() {
             <div className="card" id="accordionExample">
               <div className="accordion-header collapsed" id="headingOne">
                 <a className="accordion-button link" role="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                   <i class="bi bi-chat"> {t('add_comments')} </i>
+                   <i class="bi bi-chat"></i>  {t('add_comments')} 
                 </a>
               </div>
               <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">

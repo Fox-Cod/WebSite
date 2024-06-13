@@ -80,7 +80,7 @@ export default function UserProfile() {
             <div className="col-lg-10">
               <div className="profile-cover">
                 <div className="profile-cover-img-wrapper">
-                  <img className="profile-cover-img" src="../assets/img/1920x400/img1.jpg" alt="Image Description" />
+                  <img className="profile-cover-img" src="/assets/img/1920x400/img1.jpg" alt="Image Description" />
                 </div>
               </div>
               <div className="text-center mb-5">
@@ -138,7 +138,7 @@ export default function UserProfile() {
                               {teams && teams.length > 0 ? (
                                 teams.map(team => (
                                   <Link key={team.idTeam} to={`/team/${team.idTeam}`} style={{ marginBottom: '10px' }}>
-                                    <i className="bi-people dropdown-item-icon"></i>#{team.nameTeam}
+                                    <i className="bi-people dropdown-item-icon"></i>{team.idTeam} - #{team.teams.nameTeam}
                                   </Link>
                                 ))
                               ) : (

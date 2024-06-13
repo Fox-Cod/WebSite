@@ -72,7 +72,7 @@ export default function SignIn() {
                       />
                     </div>
 
-                    <span className="divider-center text-muted mb-4">OR</span>
+                    <span className="divider-center text-muted mb-4">{t('or')}</span>
                   </div>
 
                   <div className="mb-4">

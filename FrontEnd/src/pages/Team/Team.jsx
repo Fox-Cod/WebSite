@@ -46,7 +46,7 @@ export default function Team() {
         fetchData();
     }, [auth.user._isAuth, teamId]);
 
-    
+
 
     const handleInviteButtonClick = async () => {
         const { email } = state.inviteFormData;
@@ -233,7 +233,7 @@ export default function Team() {
                             </div>
                             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                {isCurrentUserInTeam && <AddActivityTeam />}
+                                    {isCurrentUserInTeam && <AddActivityTeam />}
                                 </div>
                             </div>
                         </div>
@@ -290,7 +290,7 @@ export default function Team() {
                                                                                 <div className="col-sm-4">
                                                                                     <div className="d-flex">
                                                                                         <div className="flex-shrink-0">
-                                                                                            <img className="avatar avatar-xs" src="../assets/svg/components/placeholder-img-format.svg" alt="Image Description" />
+                                                                                            <img className="avatar avatar-xs" src="../assets/svg/illustrations/placeholder-img-format.svg" alt="Image Description" />
                                                                                         </div>
                                                                                         <div className="flex-grow-1 text-truncate ms-2">
                                                                                             <span>{activity.fileName}
@@ -317,7 +317,10 @@ export default function Team() {
                                                 </div>
                                             </div>
                                         </li>
-                                    )) : <p>{t('no_team_activity_data')}</p>}
+                                    )) : <div className='container text-center'>
+                                        <img src="../assets/svg/illustrations/oc-project-development.svg" alt="Image Description" style={{ height: '20rem' }}/>
+                                        <p>{t('no_team_activity_data')}</p>
+                                    </div>}
                                 </ul>
                             </div>
                         </div>
@@ -368,7 +371,7 @@ export default function Team() {
                                                     <div className="col-sm">
                                                         <h5 className="text-body mb-0">{member.users.name}</h5>
                                                         <span className="d-block fs-6">{member.users.email}</span>
-                                                    </div>                           
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -60,8 +60,11 @@ export default function Nav() {
     <div style={{ paddingTop: isHomePage() ? '0' : '60px' }}>
       <nav id="navbar" className='navbar navbar-expand-lg navbar-end fixed-top bg-body border-bottom shadow-sm'>
         <div className="container">
-          <Link to="/" className="navbar-brand">
-            <img src="/assets/img/logo/RbgBrain.png" alt="Default Avatar" className="bd-placeholder-img flex-shrink-0 me-2 rounded" width="38" height="38" />
+          <Link to="/" className="navbar-brand d-flex align-items-center">
+            <img src="/assets/img/logo/RbgBrain.png" alt="Default Avatar"className="bd-placeholder-img flex-shrink-0 me-2 rounded" width="38" height="38" />
+            <div>
+              <h2 className="mb-0 text-body">PRED</h2>
+            </div>
           </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
@@ -107,7 +110,7 @@ export default function Nav() {
                   </Link>
                   <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="accountNavbarDropdown" style={{ width: '16rem' }}>
                     <li className="dropdown-item-text">
-                      <h6 className="text-muted">{userProfile.role}</h6>
+                      {/* <h6 className="text-muted">{userProfile.role}</h6> */}
                       <div className="d-flex align-items-center">
                         <div className="avatar avatar-sm avatar-circle">
                           <span className="avatar-img avatar-soft-dark" title={userProfile.name}>
